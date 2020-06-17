@@ -1,7 +1,10 @@
 package se.foodload.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,14 +23,13 @@ import com.google.firebase.FirebaseOptions;
 @EnableWebSecurity
 public class config extends WebSecurityConfigurerAdapter {
 
-	@Value("${service.account.path}")
-	private String keyPath;
+	String serviceAccountJson = System.getenv("SERVICE_ACCOUNT_JSON");
 
 	@Bean
 	@Primary
 	public void firebaseInitialization() throws IOException {
-		Resource resource = new ClassPathResource(keyPath);
-		FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+		
+		InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8));
 		
 		FirebaseOptions options = new FirebaseOptions.Builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
