@@ -18,3 +18,5 @@ public class ClientInitService implements IClientInitService{
 		//Lägg till freezer/family/jadili. SENARE:
 	}
 }
+
+

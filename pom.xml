@@ -19,10 +19,24 @@
 	</properties>
 
 	<dependencies>
+	
+	
+		<dependency>
+  			<groupId>com.google.firebase</groupId>
+  			<artifactId>firebase-admin</artifactId>
+  			<version>6.2.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
+		
+		  <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        		<artifactId>spring-boot-starter-security</artifactId>
+   		 </dependency>
+
 			<!-- Bean Validation API and RI -->
   		<dependency>
     		<groupId>javax.validation</groupId>
@@ -34,10 +48,12 @@
     		<artifactId>hibernate-validator</artifactId>
     		<version>4.0.2.GA</version>
   		</dependency>
+  		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -49,16 +65,19 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -70,14 +89,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
 		<dependency>
     		<groupId>org.springframework.security</groupId>
     		<artifactId>spring-security-oauth2-client</artifactId>
 		</dependency>
+		
 		<dependency>
    			<groupId>org.springframework.security</groupId>
    			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
+		
 		<dependency>
   			<groupId>com.google.api-client</groupId>
   			<artifactId>google-api-client</artifactId>

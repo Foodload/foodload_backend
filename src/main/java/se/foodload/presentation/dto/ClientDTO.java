@@ -14,15 +14,23 @@ public class ClientDTO {
 	private String username;
 	@NotNull(message = "{personDto.firstName.missing}")
 	@NotBlank(message = "{personDto.firstName.blank}")
-	private String google_id;
-	@NotNull(message = "{personDto.firstName.missing}")
-	@NotBlank(message = "{personDto.firstName.blank}")
+	private String firebase_id;
+	
 	private String email;
 	
 	
-	public ClientDTO(String username, String google_id, String email) {
+	public ClientDTO(String username, String firebase_id, String email) {
 		this.username=username;
-		this.google_id= google_id;
+		this.firebase_id= firebase_id;
 		this.email= email;
+	}	
+	// If there is no email ( for future authentication purpouses)
+	public ClientDTO(String username, String firebase_id) {
+		this.username=username;
+		this.firebase_id= firebase_id;
+		
+	}	
+	public ClientDTO() {
+	
 	}	
 }

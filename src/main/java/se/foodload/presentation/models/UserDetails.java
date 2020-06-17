@@ -9,7 +9,7 @@ import lombok.Data;
 public class UserDetails {
 	@NotNull(message = "Id missing")
 	@NotBlank(message = "Id cannot be blank")
-	private final String google_id;
+	private final String firebase_id;
 	
 	@NotNull(message = "Email missing")
 	@NotBlank(message = "Email cannot be blank")

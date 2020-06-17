@@ -39,7 +39,7 @@ public class Client extends RepresentationModel<Client> {
 	
 	
 	public Client(ClientDTO clientDTO) {
-		this.google_id = clientDTO.getGoogle_id();
+		this.google_id = clientDTO.getFirebase_id();
 		this.username = clientDTO.getUsername();
 		this.email = clientDTO.getEmail();
 	}

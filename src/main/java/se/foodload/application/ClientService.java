@@ -12,14 +12,11 @@ public class ClientService implements IClientService{
 	ClientRepository clientRepo;
 	
 	@Override
-	public boolean findClient(ClientDTO clientDTO) {
-		Optional<Client> client = clientRepo.findByGoogleID(clientDTO.getGoogle_id());
-		if(client.isEmpty()) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	public Optional<Client> findClient(ClientDTO clientDTO) {
+		Optional<Client> client = clientRepo.findByFireBaseId(clientDTO.getFirebase_id());
+		return client;
+		
+		
 	}
 
 }
