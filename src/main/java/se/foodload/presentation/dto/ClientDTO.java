@@ -9,13 +9,9 @@ import lombok.Data;
 @Data
 public class ClientDTO {
 	
-	@NotNull(message = "{personDto.firstName.missing}")
-	@NotBlank(message = "{personDto.firstName.blank}")
-	private String username;
-	@NotNull(message = "{personDto.firstName.missing}")
-	@NotBlank(message = "{personDto.firstName.blank}")
-	private String firebase_id;
 	
+	private String username;
+	private String firebase_id;
 	private String email;
 	
 	

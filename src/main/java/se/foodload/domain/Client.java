@@ -26,7 +26,7 @@ public class Client extends RepresentationModel<Client> {
 	@Column(name = "application_id")
 	private Long id;
 	
-	private String google_id;
+	private String firebase_id;
 	
 	//private String facebook_id;
 	@NotNull(message = "{competence.name.missing}")
@@ -39,7 +39,7 @@ public class Client extends RepresentationModel<Client> {
 	
 	
 	public Client(ClientDTO clientDTO) {
-		this.google_id = clientDTO.getFirebase_id();
+		this.firebase_id = clientDTO.getFirebase_id();
 		this.username = clientDTO.getUsername();
 		this.email = clientDTO.getEmail();
 	}
