@@ -51,7 +51,6 @@ public class FirebaseFilter extends OncePerRequestFilter{
 			ClientDTO clientDTO = new ClientDTO();
 			clientDTO.setEmail(token.getEmail());
 			clientDTO.setFirebaseId(token.getUid());
-			
 			clientDTO.setUsername(token.getName());
 			
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

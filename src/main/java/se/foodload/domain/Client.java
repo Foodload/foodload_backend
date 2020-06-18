@@ -22,26 +22,12 @@ public class Client extends RepresentationModel<Client> {
 	
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "client_id")
-	private Long id;
-	
 	private String firebaseId;
 	
-	//private String facebook_id;
-	@NotNull(message = "{competence.name.missing}")
-	@NotBlank(message = "{competence.name.blank}")
-	private String username;
-	
-	@NotNull(message = "{competence.name.missing}")
-	@NotBlank(message = "{competence.name.blank}")
-	private String email;
-	
+
 	
 	public Client(ClientDTO clientDTO) {
 		this.firebaseId = clientDTO.getFirebaseId();
-		this.username = clientDTO.getUsername();
-		this.email = clientDTO.getEmail();
 	}
 	public Client() {
 		
