@@ -2,6 +2,8 @@ package se.foodload.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import se.foodload.application.Interfaces.IClientInitService;
 import se.foodload.domain.Client;
@@ -10,6 +12,7 @@ import se.foodload.repository.ClientRepository;
 import java.util.Optional;
 
 @Service
+@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 public class ClientInitService implements IClientInitService{
 	@Autowired 
 	ClientRepository clientRepository;

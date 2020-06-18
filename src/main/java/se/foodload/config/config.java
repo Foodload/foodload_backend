@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,21 +41,19 @@ public class config extends WebSecurityConfigurerAdapter {
 	private FirebaseFilter firebaseFilter;
 	
 //UNCOMMENT FÖR HERUKO.
-	String serviceAccountJson = System.getenv("SERVICE_ACCOUNT_JSON");
+    String serviceAccountJson = massageWhitespace(System.getenv("SERVICE_ACCOUNT_JSON"));
 
 	@Bean
 	@Primary
 	public void firebaseInitialization() throws IOException {
 		
-		InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8));
+		InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
 		
 		FirebaseOptions options = new FirebaseOptions.Builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 				.build();
-		if (FirebaseApp.getApps().isEmpty()) {
-			FirebaseApp.initializeApp(options);
+		FirebaseApp.initializeApp(options);
 		}
-	}
 	/*
 	 *LOCAL TESTING..
 	@Value("${service.account.path}")
@@ -89,6 +87,27 @@ public class config extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterBefore(firebaseFilter, UsernamePasswordAuthenticationFilter.class);
 	}	
 	
+	private static String massageWhitespace(String s) {
+
+        String newString = "";
+
+        for (Character c : s.toCharArray()) {
+
+            if ("00a0".equals(Integer.toHexString(c | 0x10000).substring(1))) {
+
+                newString += " ";
+
+            } else {
+
+                newString += c;
+
+            }
+
+        }
+
+        return newString;
+
+    }
 	
 	
 }
