@@ -23,7 +23,7 @@ public class Client extends RepresentationModel<Client> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "application_id")
+	@Column(name = "client_id")
 	private Long id;
 	
 	private String firebaseId;
@@ -42,6 +42,9 @@ public class Client extends RepresentationModel<Client> {
 		this.firebaseId = clientDTO.getFirebaseId();
 		this.username = clientDTO.getUsername();
 		this.email = clientDTO.getEmail();
+	}
+	public Client() {
+		
 	}
 
 }

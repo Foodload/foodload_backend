@@ -24,9 +24,7 @@ import se.foodload.presentation.dto.ClientDTO;
 
 @Component
 public class FirebaseFilter extends OncePerRequestFilter{
-	private final String AUTH_HEADER = FilterEnums.AUTH.getHeader(); // BÖR KANSKE HA OLIKA HEADERS BEROENDE PÅ VILKEN AUTH
-	// GREJ SOM ANVÄNTS, så vi vet vilken info vi har ? osäker omman får email osv från tex facebook alt om man har via telenummer?
-	
+	private final String AUTH_HEADER = FilterEnums.AUTH.getHeader(); 
 	private final String BEARER_START = FilterEnums.BEARER.getHeader();
 	
 	@Override
@@ -41,13 +39,13 @@ public class FirebaseFilter extends OncePerRequestFilter{
 			authToken = requestHeader.substring(BEARER_START.length());
 
 		} else {
-			logger.warn("Jwt Token does not begin with Bearer String"); // FIXA BÄTTRE?
+			logger.warn("Jwt Token does not begin with Bearer String"); // FIXA error som throwas och visar error för client
 		}
 		//Ta fram token med info från firebase.
 		try {
 			token= FirebaseAuth.getInstance().verifyIdToken(authToken);
 		}catch(FirebaseAuthException e) {
-			logger.error("FireBase Exception: "+e.getLocalizedMessage()); // FIXA BÄTTRE 
+			logger.error("FireBase Exception: "+e.getLocalizedMessage()); // FIXA error som throwas och visar error för client
 		}
 		if(token != null) {
 			ClientDTO clientDTO = new ClientDTO();
@@ -57,11 +55,9 @@ public class FirebaseFilter extends OncePerRequestFilter{
 			clientDTO.setUsername(token.getName());
 			
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    clientDTO, token);
+                    clientDTO, token, null);
 			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			System.out.println(request.getRequestURL().toString());
-		
 		}
 		filterChain.doFilter(request, response);
 	}

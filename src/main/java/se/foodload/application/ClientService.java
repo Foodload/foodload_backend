@@ -13,10 +13,12 @@ import java.util.Optional;
 public class ClientService implements IClientService{
 	@Autowired
 	ClientRepository clientRepo;
-	
+	@Autowired
+	ClientInitService clientInitService;
 	@Override
 	public Optional<Client> findClient(ClientDTO clientDTO) {
 		Optional<Client> client = clientRepo.findByfirebaseId(clientDTO.getFirebaseId());
+		
 		return client;
 		
 		

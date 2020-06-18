@@ -56,8 +56,9 @@ public class config extends WebSecurityConfigurerAdapter {
 			FirebaseApp.initializeApp(options);
 		}
 	}
-	
-	/*@Value("${service.account.path}")
+	/*
+	 *LOCAL TESTING..
+	@Value("${service.account.path}")
 	private String keyPath;
 
 	@Bean
