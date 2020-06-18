@@ -11,19 +11,19 @@ public class ClientDTO {
 	
 	
 	private String username;
-	private String firebase_id;
+	private String firebaseId;
 	private String email;
 	
 	
-	public ClientDTO(String username, String firebase_id, String email) {
+	public ClientDTO(String username, String firebaseId, String email) {
 		this.username=username;
-		this.firebase_id= firebase_id;
+		this.firebaseId= firebaseId;
 		this.email= email;
 	}	
 	// If there is no email ( for future authentication purpouses)
-	public ClientDTO(String username, String firebase_id) {
+	public ClientDTO(String username, String firebaseId) {
 		this.username=username;
-		this.firebase_id= firebase_id;
+		this.firebaseId= firebaseId;
 		
 	}	
 	public ClientDTO() {

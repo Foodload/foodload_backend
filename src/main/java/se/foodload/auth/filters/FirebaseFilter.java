@@ -32,7 +32,7 @@ public class FirebaseFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
+	
 		final String requestHeader = request.getHeader(AUTH_HEADER);
 		String authToken = null;
 		FirebaseToken token = null;
@@ -52,17 +52,18 @@ public class FirebaseFilter extends OncePerRequestFilter{
 		if(token != null) {
 			ClientDTO clientDTO = new ClientDTO();
 			clientDTO.setEmail(token.getEmail());
-			clientDTO.setFirebase_id(token.getUid());
+			clientDTO.setFirebaseId(token.getUid());
 			
 			clientDTO.setUsername(token.getName());
+			
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     clientDTO, token);
 			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			System.out.println(request.getRequestURL().toString());
+		
 		}
 		filterChain.doFilter(request, response);
-		
-		
 	}
 
 }

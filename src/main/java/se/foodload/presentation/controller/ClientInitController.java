@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,17 +28,20 @@ public class ClientInitController {
 	static final String LOGIN_URL = "/login";
 	
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping(LOGIN_URL)
+	//@PostMapping(LOGIN_URL)
+	@GetMapping(LOGIN_URL)
 	public void login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
+		System.out.println("Kommer vi ens hit?");
 		System.out.println(clientDTO);
 	
-		if(clientService.findClient(clientDTO).get()!=null) {
-			// ISÅFALL RETURNA FREEZER OCH ALLT ANNAT TILL USER?
-		}
-		else {
+		/*if(clientService.findClient(clientDTO).isEmpty()) {
 			clientInitService.registerClient(clientDTO);
 			// REGISTER FREEZER JADILI JADILI
 		}
+		else {
+			
+			// Hämta freezer osv osv
+		}*/
 	}
 	
 		

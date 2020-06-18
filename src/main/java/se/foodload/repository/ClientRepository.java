@@ -8,7 +8,7 @@ import se.foodload.domain.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 	
-	public Optional<Client> findByFireBaseId(String google_id);
+	public Optional<Client> findByfirebaseId(String firebaseId);
 	
 }
 
