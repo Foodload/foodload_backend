@@ -30,10 +30,10 @@ public class ClientInitController {
 	@ResponseStatus(HttpStatus.OK)
 	//@PostMapping(LOGIN_URL)
 	@GetMapping(LOGIN_URL)
-	public void login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
+	public ClientDTO login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
 		System.out.println("Kommer vi ens hit?");
 		System.out.println(clientDTO);
-	
+	return clientDTO;
 		/*if(clientService.findClient(clientDTO).isEmpty()) {
 			clientInitService.registerClient(clientDTO);
 			// REGISTER FREEZER JADILI JADILI
