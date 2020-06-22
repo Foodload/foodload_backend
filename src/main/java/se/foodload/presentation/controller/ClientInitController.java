@@ -33,12 +33,12 @@ public class ClientInitController {
 	@ResponseStatus(HttpStatus.OK)
 	//@PostMapping(LOGIN_URL)
 	@GetMapping(LOGIN_URL)
-	public Client login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
+	public void login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
 	
 		System.out.println(clientDTO);
 		
 	    Client client = clientInitService.initClient(clientDTO);
-		return client;
+	// RETURNA FREEZER /FRIDGE/PANTRY SEN.
 	}
 	
 		
