@@ -24,19 +24,27 @@ public class Client extends RepresentationModel<Client> {
 	
 
 	@Id
+	@Column(name = "clientId")
 	private String firebaseId;
 	
+	private String email;
 
 	@ManyToOne
-	@JoinColumn(name = "family_id", referencedColumnName = "family_id")
-	Family family_id;
+	@JoinColumn(name = "familyId")
+	Family family;
 	
 	
 	public Client(ClientDTO clientDTO) {
 		this.firebaseId = clientDTO.getFirebaseId();
+		this.email = clientDTO.getEmail();
 	}
 	
 	public Client() {
+		
+	}
+
+	public void addFamily(Family family) {
+		this.family = family;
 		
 	}
 

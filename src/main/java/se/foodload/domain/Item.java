@@ -1,17 +1,21 @@
 package se.foodload.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Data;
+@Entity
+@Data
 public class Item {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "item_id")
+	@Column(name = "itemId")
 	private long id;
 
 	String name;
@@ -21,9 +25,10 @@ public class Item {
 	String qrCode;
 	
 	@ManyToOne
-	@JoinColumn(name = "itemcategory_id", referencedColumnName = "itemcategory_id")
+	@JoinColumn(name = "itemcategoryId", referencedColumnName = "itemcategoryId")
 	ItemCategory itemCategory;
-	
+	@ManyToOne
+	@JoinColumn(name = "storagetypeId", referencedColumnName = "storagetypeId")
 	StorageType storageType;
 	
 	public Item() {}

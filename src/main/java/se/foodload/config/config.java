@@ -32,6 +32,7 @@ import se.foodload.auth.filters.FirebaseFilter;
 
 @Configuration
 @EnableWebSecurity
+
 public class config extends WebSecurityConfigurerAdapter {
 	
 	private static final String LOGIN_URL = "/login";
@@ -41,7 +42,7 @@ public class config extends WebSecurityConfigurerAdapter {
 	private FirebaseFilter firebaseFilter;
 	
 //UNCOMMENT FÖR HERUKO.
-    String serviceAccountJson = massageWhitespace(System.getenv("SERVICE_ACCOUNT_JSON"));
+   /* String serviceAccountJson = massageWhitespace(System.getenv("SERVICE_ACCOUNT_JSON"));
 
 	@Bean
 	@Primary
@@ -53,9 +54,9 @@ public class config extends WebSecurityConfigurerAdapter {
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
 				.build();
 		FirebaseApp.initializeApp(options);
-		}
-	/*
-	 *LOCAL TESTING..
+		}*/
+	
+	 //LOCAL TESTING..
 	@Value("${service.account.path}")
 	private String keyPath;
 
@@ -72,7 +73,7 @@ public class config extends WebSecurityConfigurerAdapter {
 			FirebaseApp.initializeApp(options);
 		}
 	}
-	*/
+	
 	/**
 	 * Layer below WebSecurity. Sets up security against the API and adds filters.
 	 * 

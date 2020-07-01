@@ -20,12 +20,20 @@ public class ClientService implements IClientService{
 	@Autowired
 	ClientInitService clientInitService;
 	@Override
-	public Optional<Client> findClient(ClientDTO clientDTO) {
+	public Optional<Client> optionalFindClient(ClientDTO clientDTO) {
 		Optional<Client> client = clientRepo.findByfirebaseId(clientDTO.getFirebaseId());
 		
 		return client;
 		
 		
+	}
+	@Override
+	public Client findClient(ClientDTO clientDTO) {
+		Optional<Client> client = clientRepo.findByfirebaseId(clientDTO.getFirebaseId());
+		if(client.isEmpty()) {
+			//Throw client not found error
+		}
+		return client.get();
 	}
 
 }

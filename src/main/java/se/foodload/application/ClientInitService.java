@@ -7,17 +7,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.foodload.application.Interfaces.IClientInitService;
 import se.foodload.domain.Client;
+import se.foodload.domain.Family;
 import se.foodload.presentation.dto.ClientDTO;
 import se.foodload.repository.ClientRepository;
+
+
 import java.util.Optional;
 
 @Service
 @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 public class ClientInitService implements IClientInitService{
+	
 	@Autowired 
 	ClientRepository clientRepository;
 	@Autowired
 	ClientService clientService;
+	@Autowired
+	FamilyService familyService;
+	@Autowired
+	StorageService storageService;
+	
+	
 	
 	/**
 	 * Initiates a client if not found in the database already.
@@ -25,15 +35,17 @@ public class ClientInitService implements IClientInitService{
 	 * @return the client.
 	 */
 	public Client initClient(ClientDTO clientDTO) {
-		Optional<Client> foundClient = clientService.findClient(clientDTO);
+		Optional<Client> foundClient = clientService.optionalFindClient(clientDTO);
 		Client client = foundClient.isPresent() ? foundClient.get() : registerClient(clientDTO);
+		System.out.println("CLIENT" +client);		
+		Family family = familyService.createFamily(client, clientDTO.getUsername());
+		storageService.initStorages(family);
 		return client;
 	}
 	@Override
 	public Client registerClient(ClientDTO clientDTO) {
 		Client newClient = new Client(clientDTO);
 		return clientRepository.save(newClient);
-		//Lägg till freezer/family/jadili. SENARE:
 	}
 }
 

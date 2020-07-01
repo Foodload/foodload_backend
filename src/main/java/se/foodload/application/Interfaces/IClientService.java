@@ -7,5 +7,7 @@ import se.foodload.presentation.dto.ClientDTO;
 
 public interface IClientService {
 
-	public Optional<Client> findClient(ClientDTO clientDTO);
+	public Optional<Client> optionalFindClient(ClientDTO clientDTO);
+	
+	public Client findClient(ClientDTO clientDTO);
 }

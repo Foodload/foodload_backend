@@ -30,7 +30,7 @@ public class FirebaseFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-	
+		System.out.println("TEST");
 		final String requestHeader = request.getHeader(AUTH_HEADER);
 		String authToken = null;
 		FirebaseToken token = null;

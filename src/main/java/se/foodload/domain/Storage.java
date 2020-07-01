@@ -1,29 +1,44 @@
 package se.foodload.domain;
 
+import java.util.Optional;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Data;
+@Entity
+@Data
 public class Storage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "storage_id")
+	@Column(name = "storageId")
 	private long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "storagetype_id", referencedColumnName = "storagetype_id")
+	@JoinColumn(name = "storagetypeId", referencedColumnName = "storagetypeId")
 	StorageType storageType;
 	
 	@ManyToOne
-	@JoinColumn(name = "family_id", referencedColumnName = "family_id")
-	Family family_id;
+	@JoinColumn(name = "familyId", referencedColumnName = "familyId")
+	Family familyId;
 	
 
 	public Storage(){
 		
 	}
+
+
+	public Storage(StorageType storageType, Family familyId) {
+		this.storageType =storageType;
+		this.familyId = familyId;
+	}
+
+
+	
 }
