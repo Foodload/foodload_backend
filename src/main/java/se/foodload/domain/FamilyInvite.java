@@ -28,4 +28,8 @@ public class FamilyInvite {
 	
 	
 	public FamilyInvite() {}
+	public FamilyInvite(Family family, Client client) {
+		this.clientId = client;
+		this.familyId = family;
+	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import se.foodload.domain.Client;
 import se.foodload.domain.Family;
+import se.foodload.domain.FamilyInvite;
 import se.foodload.domain.Storage;
 
 public interface IFamilyService {
@@ -19,5 +20,9 @@ public interface IFamilyService {
 
 	public Family changeFamilyName(long family_id, String familyName);
 	
-
+	public void inviteToFamily(Family family_id, String email);
+	
+	public FamilyInvite checkFamilyInvite(Client client);
+	
+	public void acceptFamilyInvite(long familyInviteId);
 }

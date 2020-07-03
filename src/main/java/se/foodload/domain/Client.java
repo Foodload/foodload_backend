@@ -29,7 +29,7 @@ public class Client extends RepresentationModel<Client> {
 	
 	private String email;
 
-	@ManyToOne
+	@ManyToOne // ÄNDRA MANY TO MANY??
 	@JoinColumn(name = "familyId")
 	Family family;
 	
@@ -42,10 +42,11 @@ public class Client extends RepresentationModel<Client> {
 	public Client() {
 		
 	}
-
+	// ändra så denna gör en lista med alla familjer clienten är med i.
 	public void addFamily(Family family) {
 		this.family = family;
 		
 	}
+	
 
 }
