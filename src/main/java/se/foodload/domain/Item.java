@@ -32,5 +32,10 @@ public class Item {
 	StorageType storageType;
 	
 	public Item() {}
-
+	public Item(String name, String brand, String qrCode, ItemCategory itemCategory) {
+		this.name = name;
+		this.brand = brand;
+		this.qrCode = qrCode;
+		this.itemCategory = itemCategory;
+	}
 }

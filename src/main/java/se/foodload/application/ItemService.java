@@ -46,12 +46,32 @@ public class ItemService implements IItemService {
 				if(itemCount.isEmpty()) {
 					ItemCount newItemCount = new ItemCount(storage, foundItem);
 					itemCountRepo.save(newItemCount);
-				}
+					}
 				itemCount.get().addItemCount();
 				itemCountRepo.save(itemCount.get());
 				}
 			}
 		}
+	@Override
+	public void deleteItem(Family family, String qrCode) {
+		List<Storage> storages = storageService.getStorages(family);
+		Optional<Item> item = itemRepo.findByqrCode(qrCode);
+		if(item.isEmpty()) {
+			//throw error item not found.
+		}
+		Item foundItem = item.get();
+		for(Storage storage : storages) {
+			if(storage.getStorageType() == foundItem.getStorageType()) {
+				Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage,foundItem);
+				if(itemCount.isEmpty()) {
+					//THROW ERROR ITEM IS NOT IN STORAGE TO BEGIN WITH.
+					}
+				itemCount.get().removeItemCount();
+				itemCountRepo.save(itemCount.get());
+			}
+		}
+		
+	}
 	}
 
 

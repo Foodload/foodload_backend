@@ -46,4 +46,10 @@ public class ItemCount {
 	public void addItemCount() {
 		this.count = this.count+1;
 	}
+
+
+	public void removeItemCount() {
+		this.count=this.count-1;
+		
+	}
 }

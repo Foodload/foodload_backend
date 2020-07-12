@@ -1,18 +1,18 @@
 package se.foodload.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import se.foodload.application.ClientService;
-import se.foodload.application.FamilyService;
+
 import se.foodload.application.ItemService;
 import se.foodload.domain.Client;
 import se.foodload.domain.Item;
@@ -31,6 +31,7 @@ public class ItemController {
 	
 	static final String SEARCH_ITEM = "/searchItem";
 	static final String ADD_ITEM_QR = "/addItemQR";
+	static final String REMOVE_ITEM_QR = "/removeItemQR";
 	
 	@GetMapping(SEARCH_ITEM)
 	public Item searchItem(@RequestBody ItemModel Item) {
@@ -42,6 +43,13 @@ public class ItemController {
 		Client client = clientService.findClient(clientDTO);
 
 		itemService.addItem(client.getFamily(), item.getQrCode());
+		
+	}
+	
+	@PostMapping(REMOVE_ITEM_QR)
+	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
+		Client client = clientService.findClient(clientDTO);
+		itemService.deleteItem(client.getFamily(), item.getQrCode());
 		
 	}
 

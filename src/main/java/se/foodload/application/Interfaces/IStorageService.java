@@ -3,7 +3,7 @@ package se.foodload.application.Interfaces;
 import java.util.List;
 
 import se.foodload.domain.Family;
-import se.foodload.domain.Item;
+
 import se.foodload.domain.Storage;
 import se.foodload.domain.StorageType;
 
@@ -17,6 +17,10 @@ public interface IStorageService {
 	
 	public void initStorages(Family family);
 
-	List<Storage> getStorages(Family family);
+	public List<Storage> getStorages(Family family);
+	
+	public Storage getFreezer(Family family);
+	public Storage getFridge(Family family);
+	public Storage getPantry(Family family);
 	
 }

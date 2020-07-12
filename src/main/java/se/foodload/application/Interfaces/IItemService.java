@@ -9,5 +9,6 @@ public interface IItemService {
 	
 
 
-	void addItem(Family family, String qrCode);
+	public void addItem(Family family, String qrCode);
+	public void deleteItem(Family family, String qrCode);
 }
