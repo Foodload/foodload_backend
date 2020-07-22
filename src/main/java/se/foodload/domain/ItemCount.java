@@ -40,11 +40,16 @@ public class ItemCount {
 		this.count = this.count++;
 		this.storageId = storage;
 	}
+	public ItemCount(Storage storage, Item item, int count) {
+		this.itemId = item;
+		this.count = count;
+		this.storageId = storage;
+	}
 
 
 	
-	public void addItemCount() {
-		this.count = this.count+1;
+	public void addItemCount(int ammount) {
+		this.count = this.count+ammount;
 	}
 
 

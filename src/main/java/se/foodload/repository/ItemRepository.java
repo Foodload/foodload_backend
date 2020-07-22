@@ -11,6 +11,6 @@ public interface ItemRepository  extends JpaRepository<Item, Long> {
 
 	public Optional<Item> findByName(String name);
 
-	public Optional<Item> findByqrCode(String qrCode);
+	public Optional<Item> findByQrCode(String qrCode);
 
 }

@@ -2,7 +2,7 @@ package se.foodload.enums;
 
 public enum StorageTypeEnums {
 	FREEZER("Freezer"),
-	FRIDGE("Fridge "),
+	FRIDGE("Fridge"),
 	PANTRY("Pantry");
 	
 	private String header;

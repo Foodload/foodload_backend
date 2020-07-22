@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
+
 @Entity
 @Data
 public class Storage {
@@ -19,26 +20,22 @@ public class Storage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "storageId")
 	private long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "storagetypeId", referencedColumnName = "storagetypeId")
 	StorageType storageType;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "familyId", referencedColumnName = "familyId")
 	Family familyId;
-	
 
-	public Storage(){
-		
+	public Storage() {
+
 	}
 
-
 	public Storage(StorageType storageType, Family familyId) {
-		this.storageType =storageType;
+		this.storageType = storageType;
 		this.familyId = familyId;
 	}
 
-
-	
 }

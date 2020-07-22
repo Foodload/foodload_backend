@@ -30,13 +30,14 @@ public class FirebaseFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		System.out.println("TEST");
+
 		final String requestHeader = request.getHeader(AUTH_HEADER);
 		String authToken = null;
 		FirebaseToken token = null;
 		//Parsa fram token.
 		if (requestHeader != null && requestHeader.startsWith(BEARER_START)) {
 			authToken = requestHeader.substring(BEARER_START.length());
+			//System.out.println(authToken);
 
 		} else {
 			logger.warn("Jwt Token does not begin with Bearer String"); // FIXA error som throwas och visar error för client

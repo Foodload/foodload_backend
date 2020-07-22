@@ -2,13 +2,13 @@ package se.foodload.application.Interfaces;
 
 import se.foodload.domain.Family;
 import se.foodload.domain.Item;
+import se.foodload.domain.StorageType;
 
 public interface IItemService {
-	
+
 	public Item findItem(String name);
-	
 
+	public void addItem(Family family, String qrCode, String storageType, int ammount);
 
-	public void addItem(Family family, String qrCode);
-	public void deleteItem(Family family, String qrCode);
+	public void deleteItem(Family family, String qrCode, String storageType);
 }

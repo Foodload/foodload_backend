@@ -4,13 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import se.foodload.application.Interfaces.IStorageService;
 import se.foodload.domain.Family;
-
+import se.foodload.domain.ItemCount;
 import se.foodload.domain.Storage;
 import se.foodload.domain.StorageType;
 import se.foodload.enums.StorageTypeEnums;
+import se.foodload.repository.ItemCountRepository;
 import se.foodload.repository.StorageRepository;
 import se.foodload.repository.StorageTypeRepository;
 
@@ -20,7 +22,8 @@ public class StorageService implements IStorageService{
 	StorageTypeRepository storageTypeRep;
 	@Autowired
 	StorageRepository storageRepo;
-	
+	@Autowired 
+	ItemCountRepository itemCountRepo;
 	private static final String PANTRY = StorageTypeEnums.PANTRY.getStorageType();
 	private static final String FREEZER = StorageTypeEnums.FREEZER.getStorageType();
 	private static final String FRIDGE = StorageTypeEnums.FRIDGE.getStorageType();
@@ -50,49 +53,54 @@ public class StorageService implements IStorageService{
 			//throw errors Family not found.
 		}
 		return storages;
+	}
+	
+	
+	@Override
+	public ItemCount getFreezer(Family family) {
+		
+		Storage freezer = getStorage(family, FREEZER);
+		
+		Optional<ItemCount> freezerCount = itemCountRepo.findBystorageId(freezer);
+		if(freezerCount.isEmpty()) {
+			//THROW ERRORS...
+		}
+		return freezerCount.get();
+	}
+	@Override
+	public ItemCount getFridge(Family family) {
+		
+		Storage fridge= getStorage(family, FRIDGE);
+		
+		Optional<ItemCount> fridgeCount = itemCountRepo.findBystorageId(fridge);
+		if(fridgeCount.isEmpty()) {
+			//THROW ERRORS...
+		}
+		return fridgeCount.get();
 		
 	}
-	
 	@Override
-	public Storage getFreezer(Family family) {
-		Storage freezer = null;
-		List<Storage> storages =getStorages(family);
-		for(Storage storage : storages) {
-			if(storage.getStorageType().getName() == FREEZER) {
-				freezer = storage;
-			}
+	public ItemCount getPantry(Family family) {
+		Storage pantry = getStorage(family, PANTRY);
+		Optional<ItemCount> pantryCount = itemCountRepo.findBystorageId(pantry);
+		if(pantryCount.isEmpty()) {
+			//THROW ERRORS...
 		}
-			
-		return freezer;
-	}
-	@Override
-	public Storage getFridge(Family family) {
-		Storage fridge = null;
-		List<Storage> storages =getStorages(family);
-		for(Storage storage : storages) {
-			if(storage.getStorageType().getName() == FRIDGE) {
-				fridge = storage;
-			}
-		}
-			
-		return fridge;
-	}
-	@Override
-	public Storage getPantry(Family family) {
-		Storage pantry = null;
-		List<Storage> storages =getStorages(family);
-		for(Storage storage : storages) {
-			if(storage.getStorageType().getName() == PANTRY) {
-				pantry = storage;
-			}
-		}
-			
-		return pantry;
+		return pantryCount.get();
 	}
 	
-
 	
-
+	private Storage getStorage(Family family, String storageTypeString) {
+		Optional<StorageType> storageType = storageTypeRep.findByName(storageTypeString);
+		if(storageType.isEmpty()) {
+			//THROW CANT FIND STORAGETYPE.
+		}
+		Optional<Storage> storage =storageRepo.findByfamilyIdAndStorageType(family, storageType.get());
+		if(storage.isEmpty()) {
+			//THROW CANT FIND STORAGE.
+		}
+		return storage.get();	
+	}
 	
 	
 }

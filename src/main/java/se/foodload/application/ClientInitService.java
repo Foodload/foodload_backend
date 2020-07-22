@@ -36,10 +36,17 @@ public class ClientInitService implements IClientInitService{
 	 */
 	public Client initClient(ClientDTO clientDTO) {
 		Optional<Client> foundClient = clientService.optionalFindClient(clientDTO);
-		Client client = foundClient.isPresent() ? foundClient.get() : registerClient(clientDTO);
-		System.out.println("CLIENT" +client);		
-		Family family = familyService.createFamily(client, clientDTO.getUsername());
-		storageService.initStorages(family);
+		Client client = null;
+		if(foundClient.isEmpty()) {
+			client = registerClient(clientDTO);
+			Family family = familyService.createFamily(client, clientDTO.getUsername());
+			storageService.initStorages(family);
+		}
+		else {
+			client = foundClient.get();
+		}
+		//Client client = foundClient.isPresent() ? foundClient.get() : registerClient(clientDTO);
+		
 		return client;
 	}
 	@Override

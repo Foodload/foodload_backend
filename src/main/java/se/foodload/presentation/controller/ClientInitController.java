@@ -41,6 +41,7 @@ public class ClientInitController {
 	//@PostMapping(LOGIN_URL)
 	@GetMapping(LOGIN_URL)
 	public List<Storage> login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
+		System.out.println("Test");
 		Client client = clientInitService.initClient(clientDTO);
 	    return storageService.getStorages(client.getFamily());
 	}
