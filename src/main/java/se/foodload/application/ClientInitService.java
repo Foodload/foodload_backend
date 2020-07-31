@@ -45,7 +45,7 @@ public class ClientInitService implements IClientInitService{
 		else {
 			client = foundClient.get();
 		}
-		//Client client = foundClient.isPresent() ? foundClient.get() : registerClient(clientDTO);
+		//Client client = foundClient.isPresent() ? foundClient.get() : registerClient(clientDTO); FUNKAR EJ dono whie
 		
 		return client;
 	}

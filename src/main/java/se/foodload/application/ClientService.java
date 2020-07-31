@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.foodload.application.Interfaces.IClientService;
+import se.foodload.application.exception.ClientNotFoundException;
 import se.foodload.domain.Client;
 import se.foodload.presentation.dto.ClientDTO;
 import se.foodload.repository.ClientRepository;
@@ -31,7 +32,7 @@ public class ClientService implements IClientService{
 	public Client findClient(ClientDTO clientDTO) {
 		Optional<Client> client = clientRepo.findByfirebaseId(clientDTO.getFirebaseId());
 		if(client.isEmpty()) {
-			//Throw client not found error
+			throw new ClientNotFoundException("No client could be found with email" + clientDTO.getEmail());
 		}
 		return client.get();
 	}

@@ -21,6 +21,7 @@ import se.foodload.application.ClientService;
 import se.foodload.application.FamilyService;
 import se.foodload.application.StorageService;
 import se.foodload.domain.Client;
+import se.foodload.domain.FamilyInvite;
 import se.foodload.domain.Storage;
 import se.foodload.presentation.dto.ClientDTO;
 
@@ -34,16 +35,19 @@ public class ClientInitController {
 	ClientService clientService;
 	@Autowired
 	StorageService storageService;
+	@Autowired
+	FamilyService  familyService;
 	
 	static final String LOGIN_URL = "/login";
 	
 	@ResponseStatus(HttpStatus.OK)
 	//@PostMapping(LOGIN_URL)
 	@GetMapping(LOGIN_URL)
-	public List<Storage> login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
+	public Client login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
 		System.out.println("Test");
 		Client client = clientInitService.initClient(clientDTO);
-	    return storageService.getStorages(client.getFamily());
+				
+	    return client;
 	}
 	
 		

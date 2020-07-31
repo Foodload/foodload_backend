@@ -19,9 +19,9 @@ public interface IStorageService {
 
 	public List<Storage> getStorages(Family family);
 	
-	public ItemCount getFreezer(Family family);
-	public ItemCount getFridge(Family family);
-	public ItemCount getPantry(Family family);
+	public List<ItemCount> getFreezer(Family family);
+	public List<ItemCount> getFridge(Family family);
+	public List<ItemCount> getPantry(Family family);
 
 
 	

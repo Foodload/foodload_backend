@@ -16,10 +16,13 @@ import se.foodload.presentation.dto.ClientDTO;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(value = { "firebaseId" }, allowSetters = true)
 public class Client extends RepresentationModel<Client> {
 	
 
@@ -29,7 +32,7 @@ public class Client extends RepresentationModel<Client> {
 	
 	private String email;
 
-	@ManyToOne // ÄNDRA MANY TO MANY??
+	@ManyToOne
 	@JoinColumn(name = "familyId")
 	Family family;
 	

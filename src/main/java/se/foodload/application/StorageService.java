@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import se.foodload.application.Interfaces.IStorageService;
+import se.foodload.application.exception.ItemCountNotFoundException;
+import se.foodload.application.exception.StorageNotFoundException;
+import se.foodload.application.exception.StorageTypeNotFoundException;
 import se.foodload.domain.Family;
 import se.foodload.domain.ItemCount;
 import se.foodload.domain.Storage;
@@ -50,41 +53,41 @@ public class StorageService implements IStorageService{
 	public List<Storage> getStorages(Family family) {
 		List<Storage> storages = storageRepo.findByfamilyId(family).get();
 		if(storages == null) {
-			//throw errors Family not found.
+			throw new StorageNotFoundException("No storage for family: "+family.getName() + " could be found");
 		}
 		return storages;
 	}
 	
 	
 	@Override
-	public ItemCount getFreezer(Family family) {
+	public List<ItemCount> getFreezer(Family family) {
 		
 		Storage freezer = getStorage(family, FREEZER);
 		
-		Optional<ItemCount> freezerCount = itemCountRepo.findBystorageId(freezer);
+		Optional<List<ItemCount>> freezerCount = itemCountRepo.findBystorageId(freezer);
 		if(freezerCount.isEmpty()) {
-			//THROW ERRORS...
+			throw new ItemCountNotFoundException("No item count for storagetype: "+FREEZER);
 		}
 		return freezerCount.get();
 	}
 	@Override
-	public ItemCount getFridge(Family family) {
+	public List<ItemCount> getFridge(Family family) {
 		
 		Storage fridge= getStorage(family, FRIDGE);
 		
-		Optional<ItemCount> fridgeCount = itemCountRepo.findBystorageId(fridge);
+		Optional<List<ItemCount>> fridgeCount = itemCountRepo.findBystorageId(fridge);
 		if(fridgeCount.isEmpty()) {
-			//THROW ERRORS...
+			throw new ItemCountNotFoundException("No item count for storagetype: "+FRIDGE);
 		}
 		return fridgeCount.get();
 		
 	}
 	@Override
-	public ItemCount getPantry(Family family) {
+	public List<ItemCount> getPantry(Family family) {
 		Storage pantry = getStorage(family, PANTRY);
-		Optional<ItemCount> pantryCount = itemCountRepo.findBystorageId(pantry);
+		Optional<List<ItemCount>> pantryCount = itemCountRepo.findBystorageId(pantry);
 		if(pantryCount.isEmpty()) {
-			//THROW ERRORS...
+			throw new ItemCountNotFoundException("No item count for storagetype: "+PANTRY);
 		}
 		return pantryCount.get();
 	}
@@ -93,11 +96,11 @@ public class StorageService implements IStorageService{
 	private Storage getStorage(Family family, String storageTypeString) {
 		Optional<StorageType> storageType = storageTypeRep.findByName(storageTypeString);
 		if(storageType.isEmpty()) {
-			//THROW CANT FIND STORAGETYPE.
+			throw new StorageTypeNotFoundException("No StorageType could be found by name: "+storageTypeString);
 		}
 		Optional<Storage> storage =storageRepo.findByfamilyIdAndStorageType(family, storageType.get());
 		if(storage.isEmpty()) {
-			//THROW CANT FIND STORAGE.
+			throw new StorageNotFoundException("Cant find storage for family: "+family.getName() +" with storageType: " +storageTypeString);
 		}
 		return storage.get();	
 	}

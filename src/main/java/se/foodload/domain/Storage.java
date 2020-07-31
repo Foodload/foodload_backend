@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Entity
@@ -23,6 +25,7 @@ public class Storage {
 
 	@ManyToOne
 	@JoinColumn(name = "storagetypeId", referencedColumnName = "storagetypeId")
+	@JsonIgnoreProperties(value = { "id"}, allowSetters = true)
 	StorageType storageType;
 
 	@ManyToOne

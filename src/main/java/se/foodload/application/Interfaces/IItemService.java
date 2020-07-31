@@ -10,5 +10,5 @@ public interface IItemService {
 
 	public void addItem(Family family, String qrCode, String storageType, int ammount);
 
-	public void deleteItem(Family family, String qrCode, String storageType);
+	public void deleteItem(Family family, String qrCode, String storageType, int ammount);
 }

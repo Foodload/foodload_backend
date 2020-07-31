@@ -53,12 +53,11 @@ public class DatabaseInit {
 			}*/
 			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) {
 				ItemCategory mejeri = itemCategoryRepo.findByName("Mejeri").get();
-				Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla", "07310865062024");
-				Item mellanMjölk = new Item("Laktosf eko standardmjölkdryck 3,0%", "Arla", "07310865875020");
+				Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla", "7310865062024");
+				Item mellanMjölk = new Item("Laktosf eko standardmjölkdryck 3,0%", "Arla", "7310865875020");
 				itemRepo.save(mellanEkoMjölk);
 				itemRepo.save(mellanMjölk);
 			}
-
 		};
 	}
 }

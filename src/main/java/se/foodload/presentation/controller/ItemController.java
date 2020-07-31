@@ -52,7 +52,8 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
-		itemService.deleteItem(client.getFamily(), item.getQrCode(), item.getStorageType());
+		System.out.println(item.getAmmount());
+		itemService.deleteItem(client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
 
 	}
 

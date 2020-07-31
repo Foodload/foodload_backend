@@ -10,17 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 @Entity
 @Data
+@JsonIgnoreProperties(value = { "storageId" }, allowSetters = true)
 public class ItemCount {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "itemcountId")
 	private long id;
+	
 	@ManyToOne
 	@JoinColumn(name = "itemId", referencedColumnName = "itemId")
+	@JsonIgnoreProperties(value = { "id" }, allowSetters = true)
 	Item itemId;
 	
 	int count;
@@ -53,8 +58,8 @@ public class ItemCount {
 	}
 
 
-	public void removeItemCount() {
-		this.count=this.count-1;
+	public void removeItemCount(int ammount) {
+		this.count=this.count-ammount;
 		
 	}
 }

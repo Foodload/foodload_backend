@@ -1,5 +1,7 @@
 package se.foodload.presentation.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,9 +33,9 @@ public class StorageController {
 
 	@GetMapping(CHECK_FRIDGE)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemCount checkFridge(@AuthenticationPrincipal ClientDTO clientDTO) {
+	public List<ItemCount> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
-		ItemCount fridge = storageService.getFridge(client.getFamily());
+		List<ItemCount> fridge = storageService.getFridge(client.getFamily());
 		
 		return fridge;
 
@@ -41,18 +43,18 @@ public class StorageController {
 
 	@GetMapping(CHECK_FREEZER)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemCount checkFreezer(@AuthenticationPrincipal ClientDTO clientDTO) {
+	public List<ItemCount> checkFreezer(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
-		ItemCount freezer = storageService.getFreezer(client.getFamily());
+		List<ItemCount> freezer = storageService.getFreezer(client.getFamily());
 		return freezer;
 
 	}
 
 	@GetMapping(CHECK_PANTRY)
 	@ResponseStatus(HttpStatus.OK)
-	public ItemCount checkPantry(@AuthenticationPrincipal ClientDTO clientDTO) {
+	public List<ItemCount> checkPantry(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
-		ItemCount pantry = storageService.getPantry(client.getFamily());
+		List<ItemCount> pantry = storageService.getPantry(client.getFamily());
 		return pantry;
 
 	}
