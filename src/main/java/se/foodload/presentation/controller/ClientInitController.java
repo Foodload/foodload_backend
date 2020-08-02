@@ -23,7 +23,9 @@ import se.foodload.application.StorageService;
 import se.foodload.domain.Client;
 import se.foodload.domain.FamilyInvite;
 import se.foodload.domain.Storage;
+import se.foodload.jwt.JwtTokenUtil;
 import se.foodload.presentation.dto.ClientDTO;
+import se.foodload.presentation.models.InitResponse;
 
 @RestController
 @Validated
@@ -37,17 +39,20 @@ public class ClientInitController {
 	StorageService storageService;
 	@Autowired
 	FamilyService  familyService;
+	@Autowired
+	JwtTokenUtil jwtTokenUtil;
 	
 	static final String LOGIN_URL = "/login";
 	
 	@ResponseStatus(HttpStatus.OK)
 	//@PostMapping(LOGIN_URL)
 	@GetMapping(LOGIN_URL)
-	public Client login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
+	public InitResponse login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
 		System.out.println("Test");
 		Client client = clientInitService.initClient(clientDTO);
-				
-	    return client;
+		String token = jwtTokenUtil.createToken(client);
+		InitResponse response = new InitResponse(client, token);
+	    return response;
 	}
 	
 		

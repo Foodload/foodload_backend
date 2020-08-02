@@ -1,5 +1,7 @@
 package se.foodload.config;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,7 @@ import se.foodload.domain.Item;
 import se.foodload.domain.ItemCategory;
 import se.foodload.domain.StorageType;
 import se.foodload.enums.StorageTypeEnums;
+import se.foodload.redis.RedisMessagePublisher;
 import se.foodload.repository.ItemCategoryRepository;
 import se.foodload.repository.ItemRepository;
 import se.foodload.repository.StorageTypeRepository;
@@ -24,6 +27,8 @@ public class DatabaseInit {
 	ItemCategoryRepository itemCategoryRepo;
 	@Autowired
 	ItemRepository itemRepo;
+	@Autowired 
+	RedisMessagePublisher redisMessagePublisher;
 
 	/**
 	 * Inits database with reused data.
@@ -32,7 +37,7 @@ public class DatabaseInit {
 	 * @return a <code>CommandLineRunner</code> for init.
 	 */
 	@Bean
-	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo) {
+	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo, RedisMessagePublisher redisMessagePublisher) {
 		return args -> {
 			if (storageTypeRepo.findByName(PANTRY).isEmpty()) {
 				StorageType pantry = new StorageType(PANTRY);
@@ -58,6 +63,8 @@ public class DatabaseInit {
 				itemRepo.save(mellanEkoMjölk);
 				itemRepo.save(mellanMjölk);
 			}
+			Optional<Item> item = itemRepo.findByQrCode("07310865062024");
+			redisMessagePublisher.publishMessage(true, item.get(), "1483982", 1, 2 );
 		};
 	}
 }

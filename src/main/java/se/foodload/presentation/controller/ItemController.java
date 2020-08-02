@@ -44,7 +44,8 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public void addItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
-		itemService.addItem(client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
+		
+		itemService.addItem(client.getFirebaseId(), client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
 
 	}
 
@@ -53,7 +54,7 @@ public class ItemController {
 	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
 		System.out.println(item.getAmmount());
-		itemService.deleteItem(client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
+		itemService.deleteItem(client.getFirebaseId(),client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
 
 	}
 

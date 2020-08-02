@@ -8,7 +8,7 @@ public interface IItemService {
 
 	public Item findItem(String name);
 
-	public void addItem(Family family, String qrCode, String storageType, int ammount);
+	public void addItem(String clientId, Family family, String qrCode, String storageType, int ammount);
 
-	public void deleteItem(Family family, String qrCode, String storageType, int ammount);
+	public void deleteItem(String clientId, Family family, String qrCode, String storageType, int ammount);
 }

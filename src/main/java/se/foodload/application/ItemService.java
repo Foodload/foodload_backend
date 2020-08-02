@@ -17,6 +17,7 @@ import se.foodload.domain.ItemCount;
 import se.foodload.domain.Storage;
 import se.foodload.domain.StorageType;
 import se.foodload.enums.StorageTypeEnums;
+import se.foodload.redis.RedisMessagePublisher;
 import se.foodload.repository.ItemCountRepository;
 import se.foodload.repository.ItemRepository;
 import se.foodload.repository.StorageRepository;
@@ -34,7 +35,9 @@ public class ItemService implements IItemService {
 	StorageRepository storageRepo;
 	@Autowired 
 	StorageTypeRepository storageTypeRepo;
-
+	@Autowired 
+	RedisMessagePublisher redisMessagePublisher;
+	
 	@Override
 	public Item findItem(String qrCode) {
 	
@@ -47,14 +50,14 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public void addItem(Family family, String qrCode, String storageName, int ammount) {
+	public void addItem(String clientId, Family family, String qrCode, String storageName, int ammount) {
 		
-		Item foundItem = findItem(qrCode);
+		Item item = findItem(qrCode);
 		StorageType storageType = findStorageType(storageName);
 		Storage storage = findStorage(family, storageType);
-		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, foundItem);
+		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, item);
 		if (itemCount.isEmpty()) {
-			ItemCount newItemCount = new ItemCount(storage, foundItem);
+			ItemCount newItemCount = new ItemCount(storage, item);
 			itemCountRepo.save(newItemCount);
 		}
 		else {
@@ -63,33 +66,11 @@ public class ItemService implements IItemService {
 			System.out.println(itemCount.get());
 		}
 		
-		/*
-		List<Storage> storages = storageService.getStorages(family);
-		Optional<Item> item = itemRepo.findByQrCode(qrCode);
-		if (item.isEmpty()) {
-			throw new ItemNotFoundException("Item with qrCode " +qrCode +" could not be found");
-		}
-		Item foundItem = item.get();
-		
-		for (Storage storage : storages) {
-			if (storage.getStorageType().getName().contentEquals(storageType)) {
-				Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, foundItem);
-				if (itemCount.isEmpty()) {
-					ItemCount newItemCount = new ItemCount(storage, foundItem);
-					itemCountRepo.save(newItemCount);
-				}
-				else {
-					itemCount.get().addItemCount(ammount);
-					itemCountRepo.save(itemCount.get());
-				}
-			} else {
-				throw new StorageTypeNotFoundException("No storagetype with name " + storageType+ " could be found.");
-			}
-		}*/
+		redisMessagePublisher.publishMessage(true, item, clientId, family.getId(), ammount );
 	}
 
 	@Override
-	public void deleteItem(Family family, String qrCode, String storageName, int ammount) {
+	public void deleteItem(String clientId, Family family, String qrCode, String storageName, int ammount) {
 		Item item = findItem(qrCode);
 		StorageType storageType = findStorageType(storageName);
 		Storage storage = findStorage(family, storageType);
@@ -99,8 +80,77 @@ public class ItemService implements IItemService {
 		}
 		itemCount.get().removeItemCount(ammount);
 		itemCountRepo.save(itemCount.get());
+		redisMessagePublisher.publishMessage(false, item, clientId, family.getId(), ammount);
+	}
+
+	public void alterStroage(Family family, String qrCode, String storageName, String newStorageName) {
+		Item item = findItem(qrCode);
+		StorageType storageType = findStorageType(storageName);
+		StorageType newStorageType = findStorageType(newStorageName);
+		Storage storage = findStorage(family, storageType);
+		Storage newStorage = findStorage(family, newStorageType);
 		
-		/*List<Storage> storages = storageService.getStorages(family);
+		ItemCount itemCount= findItemCount(storage, item);
+		itemCount.setStorageId(newStorage);
+		itemCountRepo.save(itemCount);
+		
+		
+	
+	}
+	private StorageType findStorageType(String storageName) {
+		Optional<StorageType> storageType = storageTypeRepo.findByName(storageName);
+		if(storageType.isEmpty()) {
+			throw new StorageTypeNotFoundException("No storagetype with name " + storageType+ " could be found.");
+		}
+		return storageType.get();
+	}
+	private Storage findStorage(Family family, StorageType storageType) {
+		Optional<Storage> storage = storageRepo.findByfamilyIdAndStorageType(family, storageType);
+		if(storage.isEmpty()) {
+			throw new StorageNotFoundException("Storage for family "+ family.getId()+ " with storageType "+storageType +" could not be found");
+		}
+		return storage.get();
+	}
+	private ItemCount findItemCount(Storage storage, Item item) {
+		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, item);
+		if (itemCount.isEmpty()) {
+			throw new ItemCountNotFoundException("Item with qrCode "+item.getQrCode()+" does not exist in "+ storage.getStorageType().getName());
+		}
+		return itemCount.get();
+	}
+}
+/*
+@Override
+public void addItem(Family family, String qrCode, String storageName, int ammount) {
+	
+
+	
+	List<Storage> storages = storageService.getStorages(family);
+	Optional<Item> item = itemRepo.findByQrCode(qrCode);
+	if (item.isEmpty()) {
+		throw new ItemNotFoundException("Item with qrCode " +qrCode +" could not be found");
+	}
+	Item foundItem = item.get();
+	
+	for (Storage storage : storages) {
+		if (storage.getStorageType().getName().contentEquals(storageType)) {
+			Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, foundItem);
+			if (itemCount.isEmpty()) {
+				ItemCount newItemCount = new ItemCount(storage, foundItem);
+				itemCountRepo.save(newItemCount);
+			}
+			else {
+				itemCount.get().addItemCount(ammount);
+				itemCountRepo.save(itemCount.get());
+			}
+		} else {
+			throw new StorageTypeNotFoundException("No storagetype with name " + storageType+ " could be found.");
+		}
+	}
+	@Override
+	public void deleteItem(Family family, String qrCode, String storageName, int ammount) {
+		
+		List<Storage> storages = storageService.getStorages(family);
 		Optional<Item> item = itemRepo.findByQrCode(qrCode);
 		if (item.isEmpty()) {
 			throw new ItemNotFoundException("Item with qrCode " +qrCode +" could not be found");
@@ -118,24 +168,13 @@ public class ItemService implements IItemService {
 			} else {
 				throw new StorageTypeNotFoundException("No storagetype with name " + storageType+" could be found.");
 			}
-		}*/
+		}
 
 	}
-
+	
+	
 	public void alterStroage(Family family, String qrCode, String storageName, String newStorageName) {
-		Item item = findItem(qrCode);
-		StorageType storageType = findStorageType(storageName);
-		StorageType newStorageType = findStorageType(newStorageName);
-		Storage storage = findStorage(family, storageType);
-		Storage newStorage = findStorage(family, newStorageType);
-		
-		ItemCount itemCount= findItemCount(storage, item);
-		itemCount.setStorageId(newStorage);
-		itemCountRepo.save(itemCount);
-		
-		
-		
-		/*List<Storage> storages = storageService.getStorages(family);
+		List<Storage> storages = storageService.getStorages(family);
 		Optional<Item> item = itemRepo.findByQrCode(qrCode);
 		if (item.isEmpty()) {
 			// throw error item not found.
@@ -159,29 +198,6 @@ public class ItemService implements IItemService {
 				throw new StorageTypeNotFoundException("No storagetype with name " + storageType+" could be found.");
 			}
 
-		}*/
-	}
-
-
-	private StorageType findStorageType(String storageName) {
-		Optional<StorageType> storageType = storageTypeRepo.findByName(storageName);
-		if(storageType.isEmpty()) {
-			throw new StorageTypeNotFoundException("No storagetype with name " + storageType+ " could be found.");
 		}
-		return storageType.get();
 	}
-	private Storage findStorage(Family family, StorageType storageType) {
-		Optional<Storage> storage = storageRepo.findByfamilyIdAndStorageType(family, storageType);
-		if(storage.isEmpty()) {
-			throw new StorageNotFoundException("Storage for family "+ family.getId()+ " with storageType "+storageType +" could not be found");
-		}
-		return storage.get();
-	}
-	private ItemCount findItemCount(Storage storage, Item item) {
-		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, item);
-		if (itemCount.isEmpty()) {
-			throw new ItemCountNotFoundException("Item with qrCode "+item.getQrCode()+" does not exist in "+ storage.getStorageType().getName());
-		}
-		return itemCount.get();
-	}
-}
+	*/

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,12 +22,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
+import redis.embedded.RedisServer;
 import se.foodload.auth.filters.FirebaseFilter;
+
+import se.foodload.redis.PublishItem;
+import se.foodload.redis.RedisMessageListner;
+
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 
 
@@ -89,26 +103,55 @@ public class config extends WebSecurityConfigurerAdapter {
 	}	
 	
 	private static String massageWhitespace(String s) {
-
         String newString = "";
-
         for (Character c : s.toCharArray()) {
-
             if ("00a0".equals(Integer.toHexString(c | 0x10000).substring(1))) {
-
                 newString += " ";
-
             } else {
-
                 newString += c;
-
             }
-
         }
-
         return newString;
 
     }
+	/*
+	 * 
+	 * REDIS CONFIGS BELOW
+	 * 
+	 */
+	@Bean
+	JedisConnectionFactory jedisConnectionFactory() {
+	    return new JedisConnectionFactory();
+	}
+
+	@Bean
+	ChannelTopic topic() {
+	    return new ChannelTopic("PublishItem");
+	}
 	
+
+	 @Bean
+	    public RedisTemplate<String, PublishItem> redisTemplate(JedisConnectionFactory connectionFactory) {
+	        RedisTemplate<String, PublishItem> template = new RedisTemplate<String, PublishItem>();
+	        template.setConnectionFactory(connectionFactory);
+	        template.setValueSerializer(new Jackson2JsonRedisSerializer<PublishItem>(PublishItem.class));
+	        return template;
+	    }
+	 /*
+	  * MESSAGE SUBSRCIBER FOR TEST
+	  */
+	  @Bean
+	    MessageListenerAdapter messageListener() {
+	        return new MessageListenerAdapter( new RedisMessageListner() );
+	    }
+
+	    @Bean
+	    RedisMessageListenerContainer redisContainer() {
+	        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+	        container.setConnectionFactory(jedisConnectionFactory());
+	        container.addMessageListener(messageListener(), topic());
+	        return container;
+	    }
+	  
 	
 }
