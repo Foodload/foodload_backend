@@ -10,14 +10,14 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 public class RedisListenerTestConfig {
-	/*@Autowired
+	@Autowired
 	JedisConnectionFactory jedisConnectionFactory;
 	@Autowired
-	ChannelTopic topic;*/
+	ChannelTopic topic;
 	 /*
 	  * MESSAGE SUBSRCIBER FOR TEST
 	  */
-	/*
+	
 	  @Bean
 	    MessageListenerAdapter messageListener() {
 	        return new MessageListenerAdapter( new RedisMessageListner() );
@@ -29,5 +29,5 @@ public class RedisListenerTestConfig {
 	        container.setConnectionFactory(jedisConnectionFactory);
 	        container.addMessageListener(messageListener(), topic);
 	        return container;
-	    }*/
+	    }
 }
