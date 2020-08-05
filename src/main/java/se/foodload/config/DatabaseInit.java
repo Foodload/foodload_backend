@@ -52,7 +52,7 @@ public class DatabaseInit {
 				storageTypeRepo.save(fridge);
 			}
 		
-			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) {
+			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) { 
 				Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla", "7310865062024");
 				Item mellanMjölk = new Item("Laktosf eko standardmjölkdryck 3,0%", "Arla", "7310865875020");
 				itemRepo.save(mellanEkoMjölk);
@@ -61,7 +61,7 @@ public class DatabaseInit {
 		
 			Optional<Item> item = itemRepo.findByQrCode("7310865062024");
 			
-			
+			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
 			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
 			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
 			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
