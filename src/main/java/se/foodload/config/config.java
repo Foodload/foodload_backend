@@ -31,8 +31,8 @@ import com.google.firebase.FirebaseOptions;
 import redis.embedded.RedisServer;
 import se.foodload.auth.filters.FirebaseFilter;
 
-import se.foodload.redis.PublishItem;
-import se.foodload.redis.RedisMessageListner;
+import se.foodload.redis.RedisItemUpdate;
+
 
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -131,27 +131,13 @@ public class config extends WebSecurityConfigurerAdapter {
 	
 
 	 @Bean
-	    public RedisTemplate<String, PublishItem> redisTemplate(JedisConnectionFactory connectionFactory) {
-	        RedisTemplate<String, PublishItem> template = new RedisTemplate<String, PublishItem>();
+	    public RedisTemplate<String, RedisItemUpdate> redisTemplate(JedisConnectionFactory connectionFactory) {
+	        RedisTemplate<String, RedisItemUpdate> template = new RedisTemplate<String, RedisItemUpdate>();
 	        template.setConnectionFactory(connectionFactory);
-	        template.setValueSerializer(new Jackson2JsonRedisSerializer<PublishItem>(PublishItem.class));
+	        template.setValueSerializer(new Jackson2JsonRedisSerializer<RedisItemUpdate>(RedisItemUpdate.class));
 	        return template;
 	    }
-	 /*
-	  * MESSAGE SUBSRCIBER FOR TEST
-	  */
-	  @Bean
-	    MessageListenerAdapter messageListener() {
-	        return new MessageListenerAdapter( new RedisMessageListner() );
-	    }
-
-	    @Bean
-	    RedisMessageListenerContainer redisContainer() {
-	        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-	        container.setConnectionFactory(jedisConnectionFactory());
-	        container.addMessageListener(messageListener(), topic());
-	        return container;
-	    }
+	
 	  
 	
 }

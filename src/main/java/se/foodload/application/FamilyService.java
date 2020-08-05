@@ -14,6 +14,7 @@ import se.foodload.domain.Client;
 import se.foodload.domain.Family;
 import se.foodload.domain.FamilyInvite;
 import se.foodload.domain.Storage;
+import se.foodload.redis.RedisMessagePublisher;
 import se.foodload.repository.ClientRepository;
 import se.foodload.repository.FamilyInviteRespository;
 import se.foodload.repository.FamilyRepository;
@@ -29,7 +30,8 @@ public class FamilyService implements IFamilyService{
 	StorageRepository storageRepo;
 	@Autowired
 	FamilyInviteRespository familyInviteRepo;
-	
+	@Autowired 
+	RedisMessagePublisher redisMessagePublisher;
 	@Override
 	public Family createFamily(Client client, String familyName) {
 		Family family = new Family(familyName);
@@ -53,12 +55,14 @@ public class FamilyService implements IFamilyService{
 
 	@Override
 	public void inviteToFamily(Family family, String email) {
+		
 		Optional<Client> client = clientRepo.findByEmail(email);
 		if(client.isEmpty()) {
 			throw new ClientNotFoundException("No client could be found with email" + email);
 		}
 		FamilyInvite familyInv = new FamilyInvite(family, client.get()); 
-		familyInviteRepo.save(familyInv);	
+		familyInviteRepo.save(familyInv);
+		redisMessagePublisher.publishFamilyInvite(client.get().getFirebaseId(), family.getId());
 	}
 
 	
@@ -90,6 +94,7 @@ public class FamilyService implements IFamilyService{
 		client.addFamily(familyInvite.get().getFamilyId());
 		clientRepo.save(client);
 		familyInviteRepo.delete(familyInvite.get());
+		redisMessagePublisher.publishChangeFamily(client.getFirebaseId(), familyInviteId, prevFamily.getId());
 		
 	}
 

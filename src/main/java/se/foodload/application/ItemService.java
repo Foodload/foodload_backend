@@ -66,7 +66,7 @@ public class ItemService implements IItemService {
 			System.out.println(itemCount.get());
 		}
 		
-		redisMessagePublisher.publishMessage(true, item, clientId, family.getId(), ammount );
+		redisMessagePublisher.publishItem( true, item, clientId, family.getId(), itemCount.get().getCount() );
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ItemService implements IItemService {
 		}
 		itemCount.get().removeItemCount(ammount);
 		itemCountRepo.save(itemCount.get());
-		redisMessagePublisher.publishMessage(false, item, clientId, family.getId(), ammount);
+		redisMessagePublisher.publishItem(false, item, clientId, family.getId(), itemCount.get().getCount());
 	}
 
 	public void alterStroage(Family family, String qrCode, String storageName, String newStorageName) {

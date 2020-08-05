@@ -6,12 +6,17 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import se.foodload.domain.Item;
+import se.foodload.enums.RedisMessageEnums;
+import se.foodload.enums.StorageTypeEnums;
 
 @Service
 public class RedisMessagePublisher {
-
+	
+	private static final String UPDATE_ITEM = RedisMessageEnums.UPDATE_ITEM.getMessageType();
+	private static final String CHANGE_FAMILY = RedisMessageEnums.CHANGE_FAMILY.getMessageType();
+	private static final String FAMILY_INVITE= RedisMessageEnums.FAMILY_INVITE.getMessageType();
     @Autowired
-    private RedisTemplate<String, PublishItem> redisTemplate;
+    private RedisTemplate<String, RedisItemUpdate> redisTemplate;
     @Autowired
     private ChannelTopic topic;
 
@@ -19,9 +24,20 @@ public class RedisMessagePublisher {
 
     public RedisMessagePublisher() {
     }
-    public void publishMessage(boolean operation, Item item, String  clientId, long familyId, int ammount) {
-    	PublishItem publishItem =  new PublishItem(operation, clientId, familyId, item.getName(), item.getBrand(), item.getQrCode(), ammount);
-        redisTemplate.convertAndSend(topic.getTopic(),publishItem);
+    public void publishItem( boolean operation, Item item, String  clientId, long familyId, int ammount) {
+    	RedisItemUpdate publishMsg =  new RedisItemUpdate(UPDATE_ITEM, operation, clientId, familyId, item.getName(), item.getBrand(), item.getQrCode(), ammount);
+        redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
+        System.out.println(topic.getTopic() + publishMsg +"PUBLISERAT ");
+    }
+    public void publishChangeFamily(String  clientId, long familyId, long oldFamilyId) {
+    	RedisChangeFamily publishMsg =  new RedisChangeFamily(CHANGE_FAMILY, clientId, familyId, oldFamilyId);
+        redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
+        System.out.println(topic.getTopic() + publishMsg +"PUBLISERAT ");
+    }
+    public void publishFamilyInvite(String clientId, long familyId) {
+    	RedisFamilyInvite publishMsg =  new RedisFamilyInvite(FAMILY_INVITE,clientId, familyId);
+        redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
+        System.out.println(topic.getTopic() + publishMsg +"PUBLISERAT ");
     }
 	
 }

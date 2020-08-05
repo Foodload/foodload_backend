@@ -51,11 +51,7 @@ public class DatabaseInit {
 				StorageType fridge = new StorageType(FRIDGE);
 				storageTypeRepo.save(fridge);
 			}
-			/*if (itemCategoryRepo.findByName("Mejeri").isEmpty()) { // fixa standard kategorier som alla prods ska in i?
-																	// ( enum)
-				ItemCategory mejeri = new ItemCategory("Mejeri");
-				itemCategoryRepo.save(mejeri);
-			}*/
+		
 			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) {
 				ItemCategory mejeri = itemCategoryRepo.findByName("Mejeri").get();
 				Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla", "7310865062024");
@@ -63,8 +59,16 @@ public class DatabaseInit {
 				itemRepo.save(mellanEkoMjölk);
 				itemRepo.save(mellanMjölk);
 			}
+		
 			Optional<Item> item = itemRepo.findByQrCode("07310865062024");
-			redisMessagePublisher.publishMessage(true, item.get(), "1483982", 1, 2 );
+			
+			
+			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
+			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
+			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
+			redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
+			redisMessagePublisher.publishFamilyInvite("12345", 1234);
+		
 		};
 	}
 }
