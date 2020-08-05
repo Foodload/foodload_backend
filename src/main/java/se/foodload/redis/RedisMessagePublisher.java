@@ -27,17 +27,17 @@ public class RedisMessagePublisher {
     public void publishItem( boolean operation, Item item, String  clientId, long familyId, int ammount) {
     	RedisItemUpdate publishMsg =  new RedisItemUpdate(UPDATE_ITEM, operation, clientId, familyId, item.getName(), item.getBrand(), item.getQrCode(), ammount);
         redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
-        System.out.println(topic.getTopic() + publishMsg +"PUBLISERAT ");
+       
     }
     public void publishChangeFamily(String  clientId, long familyId, long oldFamilyId) {
     	RedisChangeFamily publishMsg =  new RedisChangeFamily(CHANGE_FAMILY, clientId, familyId, oldFamilyId);
         redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
-        System.out.println(topic.getTopic() + publishMsg +"PUBLISERAT ");
+  
     }
     public void publishFamilyInvite(String clientId, long familyId) {
     	RedisFamilyInvite publishMsg =  new RedisFamilyInvite(FAMILY_INVITE,clientId, familyId);
         redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
-        System.out.println(topic.getTopic() + publishMsg +"PUBLISERAT ");
+     
     }
 	
 }

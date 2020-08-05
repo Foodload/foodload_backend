@@ -29,6 +29,7 @@ public class FoodloadBackendApplication {
 		// redisServer  = RedisServer.builder()
 	    		  //.setting("heapdir E:\\redis").port(6379).build();
 	      redisServer.start();
+	   
 	   }
 
 	   @PreDestroy

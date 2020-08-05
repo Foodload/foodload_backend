@@ -2,6 +2,8 @@ package se.foodload.presentation.error;
 
 import java.util.List;
 
+import javax.servlet.ServletException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -29,6 +31,8 @@ public class ExceptionHandlers {
 	private final String INVALID_METHOD_ARGUMENTS = "Invalid method arguments";
 	private final String METHOD_ARGUMENT_TYPE_MISMATCH = "The type of the given arguments are wrong";
 
+	
+	
 	/**
 	 * Handles <code>ClientNotFoundException</code>.
 	 * 
@@ -111,6 +115,13 @@ public class ExceptionHandlers {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
 	
+	
+	@ExceptionHandler(ServletException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	ErrorResponse noServletException(ServletException exc) {
+		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage());
+		
+	}
 	/**
 	 * Handler for invalid method arguments. For example, missing fields in
 	 * <code>Application</code>s.
