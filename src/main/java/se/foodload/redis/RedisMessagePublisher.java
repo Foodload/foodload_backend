@@ -16,7 +16,7 @@ public class RedisMessagePublisher {
 	private static final String CHANGE_FAMILY = RedisMessageEnums.CHANGE_FAMILY.getMessageType();
 	private static final String FAMILY_INVITE= RedisMessageEnums.FAMILY_INVITE.getMessageType();
     @Autowired
-    private RedisTemplate<String, RedisItemUpdate> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private ChannelTopic topic;
 

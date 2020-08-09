@@ -32,8 +32,10 @@ import redis.embedded.RedisServer;
 import se.foodload.auth.filters.FirebaseFilter;
 
 import se.foodload.redis.RedisItemUpdate;
+import se.foodload.redis.RedisMessageSubscriber;
 
-
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -54,8 +56,15 @@ public class config extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private FirebaseFilter firebaseFilter;
+	@Value("${redis.host}")
+	private String REDIS_HOST;
+	@Value("${redis.port}")
+	private int REDIS_PORT;
+	@Value("${redis.pw}")
+	private String REDIS_PW;
 	
 //UNCOMMENT FÖR HERUKO.
+	
     String serviceAccountJson = massageWhitespace(System.getenv("SERVICE_ACCOUNT_JSON"));
 
 	@Bean
@@ -121,9 +130,13 @@ public class config extends WebSecurityConfigurerAdapter {
 	 * REDIS CONFIGS BELOW
 	 * 
 	 */
+	
+	
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
-	    return new JedisConnectionFactory();
+		  RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(REDIS_HOST, REDIS_PORT);
+		    redisStandaloneConfiguration.setPassword(RedisPassword.of(REDIS_PW));
+		    return new JedisConnectionFactory(redisStandaloneConfiguration);
 	}
 
 	@Bean
@@ -133,13 +146,26 @@ public class config extends WebSecurityConfigurerAdapter {
 	
 
 	 @Bean
-	    public RedisTemplate<String, RedisItemUpdate> redisTemplate(JedisConnectionFactory connectionFactory) {
-	        RedisTemplate<String, RedisItemUpdate> template = new RedisTemplate<String, RedisItemUpdate>();
+	    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory connectionFactory) {
+	        RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
 	        template.setConnectionFactory(connectionFactory);
-	        template.setValueSerializer(new Jackson2JsonRedisSerializer<RedisItemUpdate>(RedisItemUpdate.class));
+	        template.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
 	        return template;
 	    }
-	
+	 
+	 // LISTNER
+	 @Bean
+	 MessageListenerAdapter messageListener() { 
+	     return new MessageListenerAdapter(new RedisMessageSubscriber());
+	 }
+	 @Bean
+	 RedisMessageListenerContainer redisContainer() {
+	     RedisMessageListenerContainer container 
+	       = new RedisMessageListenerContainer(); 
+	     container.setConnectionFactory(jedisConnectionFactory()); 
+	     container.addMessageListener(messageListener(), topic()); 
+	     return container; 
+	 }
 	  
 	
 }

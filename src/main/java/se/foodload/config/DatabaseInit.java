@@ -59,12 +59,10 @@ public class DatabaseInit {
 				itemRepo.save(mellanMjölk);
 			}
 		
+			//Optional<Item> item = itemRepo.findByQrCode("07310865062024");
 			Optional<Item> item = itemRepo.findByQrCode("7310865062024");
-			
 			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
-			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
-			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
-			redisMessagePublisher.publishItem(true, item.get(), "1483982", 1, 2 );
+		
 			redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
 			redisMessagePublisher.publishFamilyInvite("12345", 1234);
 		
