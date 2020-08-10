@@ -24,8 +24,8 @@ public class RedisMessagePublisher {
 
     public RedisMessagePublisher() {
     }
-    public void publishItem( boolean operation, Item item, String  clientId, long familyId, int ammount) {
-    	RedisItemUpdate publishMsg =  new RedisItemUpdate(UPDATE_ITEM, operation, clientId, familyId, item.getName(), item.getBrand(), item.getQrCode(), ammount);
+    public void publishItem( Item item, String  clientId, long familyId, int ammount) {
+    	RedisItemUpdate publishMsg =  new RedisItemUpdate(UPDATE_ITEM, clientId, familyId, item.getName(), item.getBrand(), item.getQrCode(), ammount);
         redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
        
     }

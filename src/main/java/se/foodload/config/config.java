@@ -14,24 +14,21 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
+
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 
-import redis.embedded.RedisServer;
+import se.foodload.auth.filters.FirebaseExceptionHandlerFilter;
 import se.foodload.auth.filters.FirebaseFilter;
 
-import se.foodload.redis.RedisItemUpdate;
 import se.foodload.redis.RedisMessageSubscriber;
 
 import org.springframework.data.redis.connection.RedisPassword;
@@ -56,6 +53,7 @@ public class config extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private FirebaseFilter firebaseFilter;
+	@Autowired FirebaseExceptionHandlerFilter firebaseExcFilter;
 	@Value("${redis.host}")
 	private String REDIS_HOST;
 	@Value("${redis.port}")
@@ -110,7 +108,7 @@ public class config extends WebSecurityConfigurerAdapter {
 		.sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers(ALL_URL).permitAll()
 		.anyRequest().authenticated();
-		httpSecurity.addFilterBefore(firebaseFilter, UsernamePasswordAuthenticationFilter.class);
+		httpSecurity.addFilterBefore(firebaseFilter, UsernamePasswordAuthenticationFilter.class).addFilterBefore(firebaseExcFilter, FirebaseFilter.class);
 	}	
 	
 	private static String massageWhitespace(String s) {

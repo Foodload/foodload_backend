@@ -48,7 +48,6 @@ public class ClientInitController {
 	//@PostMapping(LOGIN_URL)
 	@GetMapping(LOGIN_URL)
 	public InitResponse login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
-		System.out.println("Test");
 		Client client = clientInitService.initClient(clientDTO);
 		String token = jwtTokenUtil.createToken(client);
 		InitResponse response = new InitResponse(client, token);

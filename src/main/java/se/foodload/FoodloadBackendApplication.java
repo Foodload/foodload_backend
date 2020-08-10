@@ -8,8 +8,6 @@ import javax.annotation.PreDestroy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import redis.embedded.RedisServer;
-import redis.embedded.RedisServerBuilder;
 
 @SpringBootApplication
 public class FoodloadBackendApplication {
