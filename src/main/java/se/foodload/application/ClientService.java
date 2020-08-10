@@ -22,7 +22,7 @@ public class ClientService implements IClientService{
 	ClientInitService clientInitService;
 	@Override
 	public Optional<Client> optionalFindClient(ClientDTO clientDTO) {
-		Optional<Client> client = clientRepo.findByfirebaseId(clientDTO.getFirebaseId());
+		Optional<Client> client = clientRepo.findByClientId(clientDTO.getFirebaseId());
 		
 		return client;
 		
@@ -30,7 +30,7 @@ public class ClientService implements IClientService{
 	}
 	@Override
 	public Client findClient(ClientDTO clientDTO) {
-		Optional<Client> client = clientRepo.findByfirebaseId(clientDTO.getFirebaseId());
+		Optional<Client> client = clientRepo.findByClientId(clientDTO.getFirebaseId());
 		if(client.isEmpty()) {
 			throw new ClientNotFoundException("No client could be found with email" + clientDTO.getEmail());
 		}
