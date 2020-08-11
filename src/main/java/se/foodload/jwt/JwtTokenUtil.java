@@ -90,6 +90,6 @@ public class JwtTokenUtil {
 	}
 
 	private Claims exctractAllTokenClaims(String token) {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
 	}
 }
