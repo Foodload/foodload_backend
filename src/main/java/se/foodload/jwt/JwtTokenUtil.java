@@ -68,7 +68,8 @@ public class JwtTokenUtil {
 	 * @return a generated JWT.
 	 */
 	public String createToken(Client client) {
-		System.out.println(secret);
+		System.out.println("Secret: "+secret);
+		System.out.println("Secret in bytes: "+ secret.getBytes());
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("family", client.getFamily().getId());
 		return generateToken(claims, client.getFirebaseId() );
