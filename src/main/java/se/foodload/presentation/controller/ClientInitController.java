@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.jsonwebtoken.Claims;
 import se.foodload.application.ClientInitService;
 import se.foodload.application.ClientService;
 import se.foodload.application.FamilyService;
@@ -50,7 +51,10 @@ public class ClientInitController {
 	public InitResponse login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception{
 		Client client = clientInitService.initClient(clientDTO);
 		String token = jwtTokenUtil.createToken(client);
+		System.out.println(token);
+		System.out.println(jwtTokenUtil.exctractTokenClaim(token, Claims::getSubject));
 		InitResponse response = new InitResponse(client, token);
+		
 	    return response;
 	}
 	

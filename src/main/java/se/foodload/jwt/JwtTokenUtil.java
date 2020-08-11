@@ -68,18 +68,19 @@ public class JwtTokenUtil {
 	 * @return a generated JWT.
 	 */
 	public String createToken(Client client) {
+		System.out.println(secret);
 		Map<String, Object> claims = new HashMap<>();
-		return generateToken(claims, client.getFirebaseId(), client.getFamily().getId());
+		claims.put("family", client.getFamily().getId());
+		return generateToken(claims, client.getFirebaseId() );
 	}
 
 
-	private String generateToken(Map<String, Object> claims, String clientId, long familyId) {
+	private String generateToken(Map<String, Object> claims, String clientId) {
 		return Jwts.builder()
 				.setClaims(claims)
 				.setSubject(clientId)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
-				.claim("family", familyId)
 				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
 	}
