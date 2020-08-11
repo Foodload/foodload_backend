@@ -53,11 +53,11 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
-		System.out.println(item.getAmmount());
+		
 		itemService.deleteItem(client.getFirebaseId(),client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
 
 	}
-
+	//TODO alter storage.
 	@PostMapping(ALTER_STORAGE)
 	@ResponseStatus(HttpStatus.OK)
 	public void alterStorage(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {

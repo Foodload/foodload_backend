@@ -80,7 +80,7 @@ public class JwtTokenUtil {
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
 				.claim("family", familyId)
-				.signWith(SignatureAlgorithm.HS512, secret)
+				.signWith(SignatureAlgorithm.HS256, secret)
 				.compact();
 	}
 
