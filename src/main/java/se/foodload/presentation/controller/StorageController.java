@@ -40,6 +40,7 @@ public class StorageController {
 		fridge.forEach(item->{
 			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
 		});
+		System.out.println(itemList);
 		return itemList;
 
 	}
