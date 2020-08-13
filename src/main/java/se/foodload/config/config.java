@@ -97,8 +97,8 @@ public class config extends WebSecurityConfigurerAdapter {
 			FirebaseApp.initializeApp(options);
 		}
 	}
-	*/
 	
+	*/
 	/**
 	 * Layer below WebSecurity. Sets up security against the API and adds filters.
 	 * 

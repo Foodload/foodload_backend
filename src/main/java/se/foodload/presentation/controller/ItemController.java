@@ -28,10 +28,10 @@ public class ItemController {
 	@Autowired
 	ClientService clientService;
 
-	static final String SEARCH_ITEM = "/searchItem";
-	static final String ADD_ITEM_QR = "/addItemQR";
-	static final String REMOVE_ITEM_QR = "/removeItemQR";
-	static final String ALTER_STORAGE = "/alterStorage";
+	static final String SEARCH_ITEM = "/search-item";
+	static final String ADD_ITEM_QR = "/add-item";
+	static final String REMOVE_ITEM_QR = "/remove-item";
+	static final String ALTER_STORAGE = "/alter-storage";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -44,7 +44,10 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public void addItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
-		
+	
+		if(item.getAmmount() ==0) {
+			item.setAmmount(1);
+		}
 		itemService.addItem(client.getFirebaseId(), client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
 
 	}
@@ -53,7 +56,9 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
-		
+		if(item.getAmmount() ==0) {
+			item.setAmmount(1);
+		}
 		itemService.deleteItem(client.getFirebaseId(),client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
 
 	}

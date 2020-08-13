@@ -10,13 +10,16 @@ public class ItemModel {
 
 	@NotNull(message = "qrCode missing")
 	@NotBlank(message = "qrCode cannot be blank")
-	private final String qrCode;
+	private  String qrCode;
 
-	private final String storageType;
+	private  String storageType;
 
-	private final String newStorageType;
-	private final int ammount;
+	private  String newStorageType;
+	private  int ammount;
 	// private final String brand;
 	// private final String qrCode;
-
+	
+	public ItemModel() {
+		
+	}
 }

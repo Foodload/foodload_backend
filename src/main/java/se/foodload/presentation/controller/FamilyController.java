@@ -27,10 +27,10 @@ public class FamilyController {
 	ClientService clientService;
 	@Autowired
 	FamilyService familyService;
-	static final String CHANGE_FAMILY_NAME = "/changeFamilyName";
-	static final String INVITE_TO_FAMILY = "/inviteToFamily";
-	static final String CHECK_FAMILY_INVITE = "/checkFamilyInvite";
-	static final String ACCEPT_FAMILY_INVITE = "/acceptFamilyInvite";
+	static final String CHANGE_FAMILY_NAME = "/change-familyname";
+	static final String INVITE_TO_FAMILY = "/invite-to-family";
+	static final String CHECK_FAMILY_INVITE = "/check-familyinvite";
+	static final String ACCEPT_FAMILY_INVITE = "/accept-familyinvite";
 	
 	/**
 	 * Enables logged in user to change family name.

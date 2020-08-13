@@ -10,12 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 @Entity
 @Data
-@JsonIgnoreProperties(value = { "storageId" }, allowSetters = true)
+@JsonIgnoreProperties(value = { "Storage" }, allowSetters = true)
 public class ItemCount {
 
 	@Id
@@ -26,13 +27,13 @@ public class ItemCount {
 	@ManyToOne
 	@JoinColumn(name = "itemId", referencedColumnName = "itemId")
 	@JsonIgnoreProperties(value = { "id" }, allowSetters = true)
-	Item itemId;
+	Item item;
 	
 	int count;
 
 	@ManyToOne
 	@JoinColumn(name = "storageId", referencedColumnName = "storageId")
-	Storage storageId;
+	Storage storage;
 	
 	
 	public ItemCount() {
@@ -41,14 +42,14 @@ public class ItemCount {
 
 
 	public ItemCount(Storage storage, Item item) {
-		this.itemId = item;
+		this.item = item;
 		this.count = this.count++;
-		this.storageId = storage;
+		this.storage = storage;
 	}
 	public ItemCount(Storage storage, Item item, int count) {
-		this.itemId = item;
+		this.item = item;
 		this.count = count;
-		this.storageId = storage;
+		this.storage = storage;
 	}
 
 

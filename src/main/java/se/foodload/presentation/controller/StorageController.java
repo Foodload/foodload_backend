@@ -1,5 +1,6 @@
 package se.foodload.presentation.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +9,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import se.foodload.application.ClientService;
 import se.foodload.application.StorageService;
 import se.foodload.domain.Client;
 import se.foodload.domain.ItemCount;
-import se.foodload.domain.Storage;
 import se.foodload.presentation.dto.ClientDTO;
+import se.foodload.presentation.models.ItemResponse;
 
 @RestController
 @Validated
@@ -27,17 +27,20 @@ public class StorageController {
 	@Autowired
 	ClientService clientService;
 	
-	static final String CHECK_FRIDGE = "/checkFridge";
-	static final String CHECK_FREEZER = "/checkFreezer";
-	static final String CHECK_PANTRY = "/checkPantry";
+	static final String CHECK_FRIDGE = "/check-fridge";
+	static final String CHECK_FREEZER = "/check-freezer";
+	static final String CHECK_PANTRY = "/check-pantry";
 
 	@GetMapping(CHECK_FRIDGE)
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemCount> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO) {
+	public List<ItemResponse> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
+		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> fridge = storageService.getFridge(client.getFamily());
-		
-		return fridge;
+		fridge.forEach(item->{
+			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
+		});
+		return itemList;
 
 	}
 
@@ -45,7 +48,11 @@ public class StorageController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<ItemCount> checkFreezer(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
+		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> freezer = storageService.getFreezer(client.getFamily());
+		freezer.forEach(item->{
+			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
+		});
 		return freezer;
 
 	}
@@ -54,7 +61,11 @@ public class StorageController {
 	@ResponseStatus(HttpStatus.OK)
 	public List<ItemCount> checkPantry(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
+		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> pantry = storageService.getPantry(client.getFamily());
+		pantry.forEach(item->{
+			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
+		});
 		return pantry;
 
 	}

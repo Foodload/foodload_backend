@@ -55,7 +55,7 @@ public class ItemService implements IItemService {
 		Item item = findItem(qrCode);
 		StorageType storageType = findStorageType(storageName);
 		Storage storage = findStorage(family, storageType);
-		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, item);
+		Optional<ItemCount> itemCount = itemCountRepo.findByStorageAndItem(storage, item); 
 		if (itemCount.isEmpty()) {
 			ItemCount newItemCount = new ItemCount(storage, item);
 			itemCountRepo.save(newItemCount);
@@ -63,7 +63,6 @@ public class ItemService implements IItemService {
 		else {
 			itemCount.get().addItemCount(ammount);
 			itemCountRepo.save(itemCount.get());
-			System.out.println(itemCount.get());
 		}
 		
 		redisMessagePublisher.publishItem(item, clientId, family.getId(), itemCount.get().getCount() );
@@ -74,7 +73,7 @@ public class ItemService implements IItemService {
 		Item item = findItem(qrCode);
 		StorageType storageType = findStorageType(storageName);
 		Storage storage = findStorage(family, storageType);
-		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, item);
+		Optional<ItemCount> itemCount = itemCountRepo.findByStorageAndItem(storage, item);
 		if (itemCount.isEmpty()) {
 			throw new ItemCountNotFoundException("Item with qrCode "+qrCode+" does not exist in "+ storageType);
 		}
@@ -91,7 +90,7 @@ public class ItemService implements IItemService {
 		Storage newStorage = findStorage(family, newStorageType);
 		
 		ItemCount itemCount= findItemCount(storage, item);
-		itemCount.setStorageId(newStorage);
+		itemCount.setStorage(newStorage);
 		itemCountRepo.save(itemCount);
 		
 		
@@ -112,7 +111,7 @@ public class ItemService implements IItemService {
 		return storage.get();
 	}
 	private ItemCount findItemCount(Storage storage, Item item) {
-		Optional<ItemCount> itemCount = itemCountRepo.findBystorageIdAndItemId(storage, item);
+		Optional<ItemCount> itemCount = itemCountRepo.findByStorageAndItem(storage, item);
 		if (itemCount.isEmpty()) {
 			throw new ItemCountNotFoundException("Item with qrCode "+item.getQrCode()+" does not exist in "+ storage.getStorageType().getName());
 		}
