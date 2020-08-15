@@ -64,7 +64,7 @@ public class config extends WebSecurityConfigurerAdapter {
 	private String REDIS_PW;
 	
 //UNCOMMENT FÖR HERUKO.
-	/*
+	
     String serviceAccountJson = massageWhitespace(System.getenv("SERVICE_ACCOUNT_JSON"));
 
 	@Bean
@@ -78,9 +78,9 @@ public class config extends WebSecurityConfigurerAdapter {
 				.build();
 		FirebaseApp.initializeApp(options);
 		}
-	*/
-	 //LOCAL TESTING..
 	
+	 //LOCAL TESTING..
+	/*
 	@Value("${service.account.path}")
 	private String keyPath;
 
@@ -97,7 +97,7 @@ public class config extends WebSecurityConfigurerAdapter {
 			FirebaseApp.initializeApp(options);
 		}
 	}
-	
+	*/
 	
 	/**
 	 * Layer below WebSecurity. Sets up security against the API and adds filters.
