@@ -99,7 +99,7 @@ public class StorageService implements IStorageService{
 		if(storageType.isEmpty()) {
 			throw new StorageTypeNotFoundException("No StorageType could be found by name: "+storageTypeString);
 		}
-		Optional<Storage> storage =storageRepo.findByfamilyIdAndStorageType(family, storageType.get());
+		Optional<Storage> storage =storageRepo.findByFamilyIdAndStorageType(family, storageType.get());
 		if(storage.isEmpty()) {
 			throw new StorageNotFoundException("Cant find storage for family: "+family.getName() +" with storageType: " +storageTypeString);
 		}

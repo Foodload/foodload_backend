@@ -15,7 +15,7 @@ public class ItemModel {
 	private  String storageType;
 
 	private  String newStorageType;
-	private  int ammount;
+	private  int amount;
 	// private final String brand;
 	// private final String qrCode;
 	

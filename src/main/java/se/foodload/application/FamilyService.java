@@ -86,7 +86,7 @@ public class FamilyService implements IFamilyService{
 		Client client = familyInvite.get().getClientId();
 		Family prevFamily = client.getFamily();
 
-		Optional<List<Client>> clients = clientRepo.findByFamily(prevFamily);
+		Optional<List<Client>> clients = clientRepo.findByFamilyId(prevFamily);
 		if(clients.isEmpty()) {
 			familyRepo.delete(prevFamily); //tar bort tidigare family, finns risk att man måste ta bort storages osv för sig.
 		}

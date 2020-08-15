@@ -54,13 +54,13 @@ public class ItemCount {
 
 
 	
-	public void addItemCount(int ammount) {
-		this.count = this.count+ammount;
+	public void addItemCount(int amount) {
+		this.count = this.count+amount;
 	}
 
 
-	public void removeItemCount(int ammount) {
-		this.count=this.count-ammount;
+	public void removeItemCount(int amount) {
+		this.count=this.count-amount;
 		
 	}
 }

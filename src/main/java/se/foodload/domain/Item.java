@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class Item {
 
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "itemId")

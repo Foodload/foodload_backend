@@ -11,6 +11,7 @@ import lombok.Data;
 @Entity
 public class Family {
 	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "familyId")

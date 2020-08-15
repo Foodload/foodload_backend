@@ -45,10 +45,10 @@ public class ItemController {
 	public void addItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
 	
-		if(item.getAmmount() ==0) {
-			item.setAmmount(1);
+		if(item.getAmount() ==0) {
+			item.setAmount(1);
 		}
-		itemService.addItem(client.getFirebaseId(), client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
+		itemService.addItem(client.getFirebaseId(), client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmount());
 
 	}
 
@@ -56,10 +56,10 @@ public class ItemController {
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
 		Client client = clientService.findClient(clientDTO);
-		if(item.getAmmount() ==0) {
-			item.setAmmount(1);
+		if(item.getAmount() ==0) {
+			item.setAmount(1);
 		}
-		itemService.deleteItem(client.getFirebaseId(),client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmmount());
+		itemService.deleteItem(client.getFirebaseId(),client.getFamily(), item.getQrCode(), item.getStorageType(), item.getAmount());
 
 	}
 	//TODO alter storage.
