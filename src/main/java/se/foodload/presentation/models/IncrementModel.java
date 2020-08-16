@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 public class IncrementModel {
-	@NotNull(message = "qrCode missing")
-	@NotBlank(message = "qrCode cannot be blank")
+	@NotNull(message = "id missing")
+	@NotBlank(message = "id cannot be blank")
 	private long id;
 	
 	public IncrementModel() {
