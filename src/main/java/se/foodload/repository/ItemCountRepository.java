@@ -28,7 +28,7 @@ public interface ItemCountRepository  extends JpaRepository<ItemCount, Long> {
 	 */
 	
 	@Transactional
-	@Query(value= "SELECT * FROM item_count WHERE itemcount_id = :id AND storage IN (SELECT storage_id FROM storage WHERE family_id = :familyId)", nativeQuery = true)
+	@Query(value= "SELECT * FROM item_count WHERE itemcount_id = :id AND storage_id IN (SELECT storage_id FROM storage WHERE family_id = :familyId)", nativeQuery = true)
 	public Optional<ItemCount> findByItemCountIdAndFamilyId(@Param("id") long id,@Param("familyId") long familyId);
 	/**
 	 * Custom query to find Itemcount in case of adding a new item, makes sure no doublets of items exists if found increment else add new itemcount.
