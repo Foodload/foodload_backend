@@ -33,7 +33,7 @@ public class ItemController {
 	static final String ADD_ITEM_QR = "/add-item";
 	static final String REMOVE_ITEM_QR = "/remove-item";
 	static final String ALTER_STORAGE = "/alter-storage";
-	static final String INCREMENT_ITEM = "/Increment-item";
+	static final String INCREMENT_ITEM = "/increment-item";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
