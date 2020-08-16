@@ -38,7 +38,7 @@ public class StorageController {
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> fridge = storageService.getFridge(client.getFamily());
 		fridge.forEach(item->{
-			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
+			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
 		});
 		System.out.println(itemList);
 		return itemList;
@@ -52,7 +52,7 @@ public class StorageController {
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> freezer = storageService.getFreezer(client.getFamily());
 		freezer.forEach(item->{
-			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
+			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
 		});
 		return freezer;
 
@@ -65,7 +65,7 @@ public class StorageController {
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> pantry = storageService.getPantry(client.getFamily());
 		pantry.forEach(item->{
-			itemList.add(new ItemResponse(item.getItem(), item.getCount()));
+			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
 		});
 		return pantry;
 

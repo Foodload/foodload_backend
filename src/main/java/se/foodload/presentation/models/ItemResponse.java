@@ -4,6 +4,7 @@ import lombok.Data;
 import se.foodload.domain.Item;
 @Data
 public class ItemResponse {
+	private long id;
 	private String qrCode;
 	private String name;
 	private String brand;
@@ -12,7 +13,8 @@ public class ItemResponse {
 	public ItemResponse() {
 		
 	}
-	public ItemResponse(Item item, int ammount) {
+	public ItemResponse(long id, Item item, int ammount) {
+		this.id= id;
 		this.qrCode= item.getQrCode();
 		this.name = item.getName();
 		this.brand = item.getBrand();
