@@ -53,7 +53,9 @@ public class ItemCount {
 	}
 
 
-	
+	public void incrementItemCount() {
+		this.count ++;
+	}
 	public void addItemCount(int amount) {
 		this.count = this.count+amount;
 	}

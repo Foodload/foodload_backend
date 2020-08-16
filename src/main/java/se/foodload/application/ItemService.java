@@ -49,12 +49,12 @@ public class ItemService implements IItemService {
 
 	}
 	
-	public void incrementItem(long itemcountId, long familyId, int ammount) {
+	public void incrementItem(long itemcountId, long familyId) {
 		Optional<ItemCount> itemCount= itemCountRepo.findByItemCountIdAndFamilyId(itemcountId, familyId);
 		if (itemCount.isEmpty()) {
-			//THROW ITEMCOUNT DOES NOT BELONG TO U.
+			throw new ItemCountNotFoundException("ItemCount with id: "+itemcountId+" does not belong to familyId: "+familyId);
 		}
-			itemCount.get().addItemCount(ammount);
+			itemCount.get().incrementItemCount();
 			itemCountRepo.save(itemCount.get());
 	
 	}

@@ -17,6 +17,7 @@ import se.foodload.application.ItemService;
 import se.foodload.domain.Client;
 import se.foodload.domain.Item;
 import se.foodload.presentation.dto.ClientDTO;
+import se.foodload.presentation.models.IncrementModel;
 import se.foodload.presentation.models.ItemModel;
 
 @RestController
@@ -32,6 +33,7 @@ public class ItemController {
 	static final String ADD_ITEM_QR = "/add-item";
 	static final String REMOVE_ITEM_QR = "/remove-item";
 	static final String ALTER_STORAGE = "/alter-storage";
+	static final String INCREMENT_ITEM = "/Increment-item";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -39,7 +41,14 @@ public class ItemController {
 		return itemService.findItem(Item.getQrCode());
 	}
 
-	// KANSKE EGENTLIGEN ÄR STORAGE?
+	@PostMapping(INCREMENT_ITEM)
+	@ResponseStatus(HttpStatus.OK)
+	public void incrementItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody IncrementModel itemCount) {
+		Client client = clientService.findClient(clientDTO);
+		long familyId = client.getFamily().getId();
+		itemService.incrementItem(itemCount.getId(), familyId);
+	}
+	
 	@PostMapping(ADD_ITEM_QR)
 	@ResponseStatus(HttpStatus.OK)
 	public void addItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel item) {
