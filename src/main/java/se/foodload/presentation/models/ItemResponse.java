@@ -8,17 +8,17 @@ public class ItemResponse {
 	private String qrCode;
 	private String name;
 	private String brand;
-	private int ammount;
+	private int amount;
 	
 	public ItemResponse() {
 		
 	}
-	public ItemResponse(long id, Item item, int ammount) {
+	public ItemResponse(long id, Item item, int amount) {
 		this.id= id;
 		this.qrCode= item.getQrCode();
 		this.name = item.getName();
 		this.brand = item.getBrand();
-		this.ammount = ammount;
+		this.amount = amount;
 		
 	}
 }
