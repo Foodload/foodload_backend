@@ -49,13 +49,14 @@ public class ItemService implements IItemService {
 
 	}
 	
-	public void incrementItem(long itemcountId, long familyId) {
+	public void incrementItem(String clientId, long itemcountId, long familyId) {
 		Optional<ItemCount> itemCount= itemCountRepo.findByItemCountIdAndFamilyId(itemcountId, familyId);
 		if (itemCount.isEmpty()) {
 			throw new ItemCountNotFoundException("ItemCount with id: "+itemcountId+" does not belong to familyId: "+familyId);
 		}
 			itemCount.get().incrementItemCount();
 			itemCountRepo.save(itemCount.get());
+			redisMessagePublisher.publishItem(itemCount.get().getItem(), clientId, familyId, itemCount.get().getCount() );
 	
 	}
 	

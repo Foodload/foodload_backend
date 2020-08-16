@@ -46,7 +46,7 @@ public class ItemController {
 	public void incrementItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody IncrementModel itemCount) {
 		Client client = clientService.findClient(clientDTO);
 		long familyId = client.getFamily().getId();
-		itemService.incrementItem(itemCount.getId(), familyId);
+		itemService.incrementItem(client.getFirebaseId(), itemCount.getId(), familyId);
 	}
 	
 	@PostMapping(ADD_ITEM_QR)
