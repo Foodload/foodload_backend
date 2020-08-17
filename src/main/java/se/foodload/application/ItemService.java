@@ -53,10 +53,14 @@ public class ItemService implements IItemService {
 		Optional<ItemCount> itemCount= itemCountRepo.findByItemCountIdAndFamilyId(itemcountId, familyId);
 		if (itemCount.isEmpty()) {
 			throw new ItemCountNotFoundException("ItemCount with id: "+itemcountId+" does not belong to familyId: "+familyId);
-		}
-			itemCount.get().incrementItemCount();
-			itemCountRepo.save(itemCount.get());
-			redisMessagePublisher.publishItem(itemCount.get().getItem(), clientId, familyId, itemCount.get().getCount() );
+		}	
+			ItemCount ic = itemCount.get();
+			ic.incrementItemCount();
+			itemCountRepo.save(ic);
+			Item item = ic.getItem();
+			int amount = ic.getCount();
+			
+			redisMessagePublisher.publishItem(itemcountId , item, clientId, familyId, amount );
 	
 	}
 	
@@ -66,12 +70,22 @@ public class ItemService implements IItemService {
 		Optional<ItemCount> itemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(), storageName);
 		if (itemCount.isEmpty()) {
 			int iCount = itemCountRepo.insertItemCount(qrCode, family.getId(), storageName, amount);
-			redisMessagePublisher.publishItem(item, clientId, family.getId(), 1 );
+			if(iCount == 0) {
+				//Throw insert failed..
+			}
+			Optional<ItemCount> ic = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(), storageName);			
+			if(ic.isEmpty()) {
+				throw new ItemCountNotFoundException("Item with qrCode "+qrCode+" does not exist in "+ storageName +" for family: "+family.getId());
+			}
+			long itemcountId = ic.get().getId();
+			redisMessagePublisher.publishItem(itemcountId,item, clientId, family.getId(), 1 );
 		}
 		else {
 			itemCount.get().addItemCount(amount);
 			itemCountRepo.save(itemCount.get());
-			redisMessagePublisher.publishItem(item, clientId, family.getId(), itemCount.get().getCount() );
+			int newAmount = itemCount.get().getCount();
+			long itemcoundId = itemCount.get().getId();
+			redisMessagePublisher.publishItem(itemcoundId,item, clientId, family.getId(), newAmount );
 		}
 	
 		
@@ -80,16 +94,17 @@ public class ItemService implements IItemService {
 	@Override
 	public void deleteItem(String clientId, Family family, String qrCode, String storageName, int amount) {
 		Item item = findItem(qrCode);
-		//StorageType storageType = findStorageType(storageName);
-		//Storage storage = findStorage(family, storageType);
-		//Optional<ItemCount> itemCount = itemCountRepo.findByStorageAndItem(storage, item);
+		
 		Optional<ItemCount> itemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(), storageName);
 		if (itemCount.isEmpty()) {
-			throw new ItemCountNotFoundException("Item with qrCode "+qrCode+" does not exist in "+ storageName);
+			throw new ItemCountNotFoundException("Item with qrCode "+qrCode+" does not exist in "+ storageName +" for family: "+family.getId());
 		}
-		itemCount.get().removeItemCount(amount);
-		itemCountRepo.save(itemCount.get());
-		redisMessagePublisher.publishItem( item, clientId, family.getId(), itemCount.get().getCount());
+		ItemCount ic = itemCount.get();
+		ic.removeItemCount(amount);
+		itemCountRepo.save(ic);
+		long itemcountId = ic.getId();
+		int newAmount = ic.getCount();
+		redisMessagePublisher.publishItem( itemcountId, item, clientId, family.getId(), newAmount);
 	}
 
 	public void alterStroage(Family family, String qrCode, String storageName, String newStorageName) {
