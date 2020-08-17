@@ -2,7 +2,6 @@ package se.foodload.application.Interfaces;
 
 import se.foodload.domain.Family;
 import se.foodload.domain.Item;
-import se.foodload.domain.StorageType;
 
 public interface IItemService {
 
@@ -11,4 +10,6 @@ public interface IItemService {
 	public void addItem(String clientId, Family family, String qrCode, String storageType, int ammount);
 
 	public void deleteItem(String clientId, Family family, String qrCode, String storageType, int ammount);
+	public void incrementItem(String clientId, long itemcountId, long familyId);
+	public void decrementItem(String clientId, long itemcountId, long familyId);
 }

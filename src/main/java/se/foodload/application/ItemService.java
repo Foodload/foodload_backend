@@ -48,7 +48,7 @@ public class ItemService implements IItemService {
 		return item.get();
 
 	}
-	
+	@Override
 	public void incrementItem(String clientId, long itemcountId, long familyId) {
 		Optional<ItemCount> itemCount= itemCountRepo.findByItemCountIdAndFamilyId(itemcountId, familyId);
 		if (itemCount.isEmpty()) {
@@ -56,6 +56,21 @@ public class ItemService implements IItemService {
 		}	
 			ItemCount ic = itemCount.get();
 			ic.incrementItemCount();
+			itemCountRepo.save(ic);
+			Item item = ic.getItem();
+			int amount = ic.getCount();
+			
+			redisMessagePublisher.publishItem(itemcountId , item, clientId, familyId, amount );
+	
+	}
+	@Override
+	public void decrementItem(String clientId, long itemcountId, long familyId) {
+		Optional<ItemCount> itemCount= itemCountRepo.findByItemCountIdAndFamilyId(itemcountId, familyId);
+		if (itemCount.isEmpty()) {
+			throw new ItemCountNotFoundException("ItemCount with id: "+itemcountId+" does not belong to familyId: "+familyId);
+		}	
+			ItemCount ic = itemCount.get();
+			ic.decrementItemCount();
 			itemCountRepo.save(ic);
 			Item item = ic.getItem();
 			int amount = ic.getCount();

@@ -34,13 +34,22 @@ public class ItemController {
 	static final String REMOVE_ITEM_QR = "/remove-item";
 	static final String ALTER_STORAGE = "/alter-storage";
 	static final String INCREMENT_ITEM = "/increment-item";
+	static final String DECREMENT_ITEM = "decrement-item";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public Item searchItem(@RequestBody ItemModel Item) {
 		return itemService.findItem(Item.getQrCode());
 	}
-
+	
+	@PostMapping(DECREMENT_ITEM)
+	@ResponseStatus(HttpStatus.OK)
+	public void decrementItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody IncrementModel itemCount) {
+		Client client = clientService.findClient(clientDTO);
+		long familyId = client.getFamily().getId();
+		itemService.decrementItem(client.getFirebaseId(), itemCount.getId(), familyId);
+	}
+	
 	@PostMapping(INCREMENT_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public void incrementItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody IncrementModel itemCount) {
