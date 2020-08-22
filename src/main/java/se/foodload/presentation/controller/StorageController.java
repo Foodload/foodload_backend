@@ -3,12 +3,15 @@ package se.foodload.presentation.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import se.foodload.application.ClientService;
@@ -33,17 +36,19 @@ public class StorageController {
 
 	@GetMapping(CHECK_FRIDGE)
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemResponse> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO) {
+	public List<ItemResponse> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO ) {
 		Client client = clientService.findClient(clientDTO);
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> fridge = storageService.getFridge(client.getFamily());
 		fridge.forEach(item->{
 			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
 		});
+		
 		System.out.println(itemList);
 		return itemList;
 
 	}
+	
 
 	@GetMapping(CHECK_FREEZER)
 	@ResponseStatus(HttpStatus.OK)
@@ -70,4 +75,5 @@ public class StorageController {
 		return pantry;
 
 	}
+	
 }

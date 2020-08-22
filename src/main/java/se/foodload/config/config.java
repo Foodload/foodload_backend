@@ -98,7 +98,6 @@ public class config extends WebSecurityConfigurerAdapter {
 		}
 	}
 	*/
-	
 	/**
 	 * Layer below WebSecurity. Sets up security against the API and adds filters.
 	 * 
