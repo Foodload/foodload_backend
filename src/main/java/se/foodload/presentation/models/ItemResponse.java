@@ -10,8 +10,19 @@ public class ItemResponse {
 	private String name;
 	private String brand;
 	private int amount;
+	private String storage;
 
 	public ItemResponse() {
+
+	}
+
+	public ItemResponse(long id, Item item, int amount, String storage) {
+		this.id = id;
+		this.qrCode = item.getQrCode();
+		this.name = item.getName();
+		this.brand = item.getBrand();
+		this.amount = amount;
+		this.storage = storage;
 
 	}
 

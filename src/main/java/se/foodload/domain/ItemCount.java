@@ -30,23 +30,35 @@ public class ItemCount {
 	int count;
 
 	@ManyToOne
-	@JoinColumn(name = "storageId", referencedColumnName = "storageId")
-	Storage storage;
+	@JoinColumn(name = "storagetypeId", referencedColumnName = "storagetypeId")
+	@JsonIgnoreProperties(value = { "id" }, allowSetters = true)
+	StorageType storageType;
+	@ManyToOne
+	@JoinColumn(name = "familyId", referencedColumnName = "familyId")
+	Family familyId;
+	// @ManyToOne
+	// @JoinColumn(name = "storageId", referencedColumnName = "storageId")
+	// Storage storage;
 
 	public ItemCount() {
 
 	}
 
-	public ItemCount(Storage storage, Item item) {
+	public ItemCount(Item item, Family family, StorageType storageType) {
 		this.item = item;
+		this.familyId = family;
+		this.storageType = storageType;
 		this.count = this.count++;
-		this.storage = storage;
+
+		// this.storage = storage;
 	}
 
-	public ItemCount(Storage storage, Item item, int count) {
+	public ItemCount(Item item, Family family, StorageType storageType, int count) {
 		this.item = item;
+		this.familyId = family;
+		this.storageType = storageType;
 		this.count = count;
-		this.storage = storage;
+		// this.storage = storage;
 	}
 
 	public void incrementItemCount() {

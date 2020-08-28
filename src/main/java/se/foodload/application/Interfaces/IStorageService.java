@@ -4,8 +4,6 @@ import java.util.List;
 
 import se.foodload.domain.Family;
 import se.foodload.domain.ItemCount;
-import se.foodload.domain.Storage;
-import se.foodload.domain.StorageType;
 
 public interface IStorageService {
 	/**
@@ -14,11 +12,12 @@ public interface IStorageService {
 	 * @param <code>StorageType</code> The storage type to register.
 	 * @return <code>Storage</code>
 	 */
-	public Storage createStorage(StorageType storageType, Family family);
+	// public Storage createStorage(StorageType storageType, Family family);
 
-	public void initStorages(Family family);
+	// public void initStorages(Family family);
 
-	public List<Storage> getStorages(Family family);
+	// public List<Storage> getStorages(Family family);
+	public List<ItemCount> getItemCounts(Family family);
 
 	public List<ItemCount> getFreezer(Family family);
 

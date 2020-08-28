@@ -25,8 +25,8 @@ import se.foodload.repository.StorageTypeRepository;
 @Service
 public class ItemService implements IItemService {
 	private final String STORAGE_TYPE_NOT_FOUND = ErrorEnums.STORAGETYPENOTFOUND.getErrorMsg();
-	private final String STORAGE_NOT_FOUND_FAMILY = ErrorEnums.STORAGENOTFOUNDFAMILY.getErrorMsg();
-	private final String STORAGE_NOT_FOUND_FAMILY_2 = ErrorEnums.STORAGENOTFOUNDFAMILY2.getErrorMsg();
+	//private final String STORAGE_NOT_FOUND_FAMILY = ErrorEnums.STORAGENOTFOUNDFAMILY.getErrorMsg();
+	//private final String STORAGE_NOT_FOUND_FAMILY_2 = ErrorEnums.STORAGENOTFOUNDFAMILY2.getErrorMsg();
 	private final String ITEM_NOT_FOUND = ErrorEnums.ITEMNOTFOUND.getErrorMsg();
 	private final String ITEM_COUNT_NOT_FOUND_ID = ErrorEnums.ITEMCOUNTNOTFOUNDID.getErrorMsg();
 	private final String ITEM_COUNT_NOT_FOUND_ID_2 = ErrorEnums.ITEMCOUNTNOTFOUNDID2.getErrorMsg();
@@ -142,11 +142,9 @@ public class ItemService implements IItemService {
 		Item item = findItem(qrCode);
 		StorageType storageType = findStorageType(storageName);
 		StorageType newStorageType = findStorageType(newStorageName);
-		Storage storage = findStorage(family, storageType);
-		Storage newStorage = findStorage(family, newStorageType);
 
-		ItemCount itemCount = findItemCount(storage, item);
-		itemCount.setStorage(newStorage);
+		ItemCount itemCount = findItemCount(storageType, item);
+		itemCount.setStorageType(newStorageType);
 		itemCountRepo.save(itemCount);
 
 	}
@@ -159,20 +157,20 @@ public class ItemService implements IItemService {
 		return storageType.get();
 	}
 
-	private Storage findStorage(Family family, StorageType storageType) {
+	/*private Storage findStorage(Family family, StorageType storageType) {
 		Optional<Storage> storage = storageRepo.findByFamilyIdAndStorageType(family, storageType);
 		if (storage.isEmpty()) {
 			throw new StorageNotFoundException(
 					STORAGE_NOT_FOUND_FAMILY + family.getId() + STORAGE_NOT_FOUND_FAMILY_2 + storageType);
 		}
 		return storage.get();
-	}
+	}*/
 
-	private ItemCount findItemCount(Storage storage, Item item) {
-		Optional<ItemCount> itemCount = itemCountRepo.findByStorageAndItem(storage, item);
+	private ItemCount findItemCount(StorageType storageType, Item item) {
+		Optional<ItemCount> itemCount = itemCountRepo.findByStorageTypeAndItem(storageType, item);
 		if (itemCount.isEmpty()) {
 			throw new ItemCountNotFoundException(
-					ITEM_COUNT_QFS + item.getQrCode() + ITEM_COUNT_QFS_2 + storage.getStorageType().getName());
+					ITEM_COUNT_QFS + item.getQrCode() + ITEM_COUNT_QFS_2 + storageType.getName());
 		}
 		return itemCount.get();
 	}

@@ -31,6 +31,20 @@ public class StorageController {
 	static final String CHECK_FRIDGE = "/check-fridge";
 	static final String CHECK_FREEZER = "/check-freezer";
 	static final String CHECK_PANTRY = "/check-pantry";
+	static final String CHECK_STORAGES = "/check-storages";
+
+	@GetMapping(CHECK_STORAGES)
+	@ResponseStatus(HttpStatus.OK)
+	public List<ItemResponse> checkStorages(@AuthenticationPrincipal ClientDTO clientDTO) {
+		Client client = clientService.findClient(clientDTO);
+		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
+		List<ItemCount> storages = storageService.getItemCounts(client.getFamily());
+		storages.forEach(item -> {
+			itemList.add(
+					new ItemResponse(item.getId(), item.getItem(), item.getCount(), item.getStorageType().getName()));
+		});
+		return itemList;
+	}
 
 	@GetMapping(CHECK_FRIDGE)
 	@ResponseStatus(HttpStatus.OK)
@@ -42,7 +56,6 @@ public class StorageController {
 			itemList.add(new ItemResponse(item.getId(), item.getItem(), item.getCount()));
 		});
 
-		System.out.println(itemList);
 		return itemList;
 
 	}

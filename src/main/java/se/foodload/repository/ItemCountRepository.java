@@ -9,15 +9,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import se.foodload.domain.Family;
 import se.foodload.domain.Item;
 import se.foodload.domain.ItemCount;
-import se.foodload.domain.Storage;
+import se.foodload.domain.StorageType;
 
 public interface ItemCountRepository extends JpaRepository<ItemCount, Long> {
 
-	public Optional<List<ItemCount>> findByStorage(Storage storage);
+	public Optional<List<ItemCount>> findByStorageTypeAndFamily(StorageType storageType, Family family);
 
-	public Optional<ItemCount> findByStorageAndItem(Storage storage, Item foundItem);
+	public Optional<List<ItemCount>> findByFamily(Family family);
+
+	public Optional<ItemCount> findByStorageTypeAndItem(StorageType storageType, Item foundItem);
 
 	/**
 	 * Custom query to increment ammount on itemcount.

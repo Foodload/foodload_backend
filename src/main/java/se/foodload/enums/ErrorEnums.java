@@ -13,10 +13,12 @@ public enum ErrorEnums {
 
 	ITEMCOUNTNOTFOUNDID("ItemCount with id: "), ITEMCOUNTNOTFOUNDID2(" does not belong to familyId: "),
 	ITEMCOUNTQFS("Item with qrCode "), ITEMCOUNTQSF2(" does not exist in "), ITEMCOUNTQSF3(" for family: "),
+	ITEMCOUNTDOESNOTEXIST("No item counts exist for familyid: "),
 
 	// STORAGE NOT FOUND ERRORS
 
-	STORAGENOTFOUNDFAMILY("No storage could be found for family: "), STORAGENOTFOUNDFAMILY2(" with storageType "),
+	// STORAGENOTFOUNDFAMILY("No storage could be found for family: "),
+	// STORAGENOTFOUNDFAMILY2(" with storageType "),
 
 	// STORAGETYPE NOT FOUND ERRORS
 
