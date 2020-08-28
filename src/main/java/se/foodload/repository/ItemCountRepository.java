@@ -16,7 +16,7 @@ import se.foodload.domain.StorageType;
 
 public interface ItemCountRepository extends JpaRepository<ItemCount, Long> {
 
-	public Optional<List<ItemCount>> findByStorageTypeAndfamilyId(StorageType storageType, Family family);
+	public Optional<List<ItemCount>> findByStorageTypeAndFamilyId(StorageType storageType, Family family);
 
 	public Optional<List<ItemCount>> findByfamilyId(Family family);
 
