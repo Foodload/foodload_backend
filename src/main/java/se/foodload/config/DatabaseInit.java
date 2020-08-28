@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import se.foodload.domain.Item;
-import se.foodload.domain.ItemCategory;
 import se.foodload.domain.StorageType;
 import se.foodload.enums.StorageTypeEnums;
 import se.foodload.redis.RedisMessagePublisher;
@@ -27,7 +26,7 @@ public class DatabaseInit {
 	ItemCategoryRepository itemCategoryRepo;
 	@Autowired
 	ItemRepository itemRepo;
-	@Autowired 
+	@Autowired
 	RedisMessagePublisher redisMessagePublisher;
 
 	/**
@@ -37,7 +36,8 @@ public class DatabaseInit {
 	 * @return a <code>CommandLineRunner</code> for init.
 	 */
 	@Bean
-	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo, RedisMessagePublisher redisMessagePublisher) {
+	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo,
+			RedisMessagePublisher redisMessagePublisher) {
 		return args -> {
 			if (storageTypeRepo.findByName(PANTRY).isEmpty()) {
 				StorageType pantry = new StorageType(PANTRY);
@@ -51,21 +51,21 @@ public class DatabaseInit {
 				StorageType fridge = new StorageType(FRIDGE);
 				storageTypeRepo.save(fridge);
 			}
-		
-			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) { 
+
+			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) {
 				Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla", "7310865062024");
 				Item mellanMjölk = new Item("Laktosf eko standardmjölkdryck 3,0%", "Arla", "7310865875020");
 				itemRepo.save(mellanEkoMjölk);
 				itemRepo.save(mellanMjölk);
 			}
-		
-			//Optional<Item> item = itemRepo.findByQrCode("07310865062024");
+
+			// Optional<Item> item = itemRepo.findByQrCode("07310865062024");
 			Optional<Item> item = itemRepo.findByQrCode("7310865062024");
-			redisMessagePublisher.publishItem(11,item.get(), "1483982", 1, 2 );
-		
+			redisMessagePublisher.publishItem(11, item.get(), "1483982", 1, 2);
+
 			redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
 			redisMessagePublisher.publishFamilyInvite("12345", 1234);
-		
+
 		};
 	}
 }

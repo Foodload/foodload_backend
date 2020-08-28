@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import se.foodload.domain.Item;
 
-
-public interface ItemRepository  extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository<Item, Long> {
 
 	public Optional<Item> findByName(String name);
 

@@ -7,10 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+
 @Data
 @Entity
 public class Family {
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +18,11 @@ public class Family {
 	private long id;
 
 	String name;
-	
-	public Family() {}
+
+	public Family() {
+	}
+
 	public Family(String name) {
-		this.name=name;
+		this.name = name;
 	}
 }

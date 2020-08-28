@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+
 @Entity
 @Data
 public class StorageType {
@@ -15,13 +16,13 @@ public class StorageType {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "storagetypeId")
 	private long id;
-	
 
 	String name;
-	
+
 	public StorageType(String name) {
 		this.name = name;
 	}
+
 	public StorageType() {
 	}
 }

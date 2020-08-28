@@ -5,12 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 import lombok.Data;
 
 @Entity
 @Data
 public class Item {
-
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +23,9 @@ public class Item {
 
 	String qrCode;
 
-	//@ManyToOne
-	//@JoinColumn(name = "itemcategoryId", referencedColumnName = "itemcategoryId")
-	//ItemCategory itemCategory;
+	// @ManyToOne
+	// @JoinColumn(name = "itemcategoryId", referencedColumnName = "itemcategoryId")
+	// ItemCategory itemCategory;
 	/*
 	 * @ManyToOne
 	 * 
@@ -36,10 +36,10 @@ public class Item {
 	public Item() {
 	}
 
-	public Item(String name, String brand, String qrCode/*,ItemCategory itemCategory*/) {
+	public Item(String name, String brand, String qrCode/* ,ItemCategory itemCategory */) {
 		this.name = name;
 		this.brand = brand;
 		this.qrCode = qrCode;
-		//this.itemCategory = itemCategory;
+		// this.itemCategory = itemCategory;
 	}
 }

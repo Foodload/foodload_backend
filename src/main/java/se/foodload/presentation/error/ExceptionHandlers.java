@@ -24,15 +24,12 @@ import se.foodload.application.exception.ItemNotFoundException;
 import se.foodload.application.exception.StorageNotFoundException;
 import se.foodload.application.exception.StorageTypeNotFoundException;
 
-
 @ControllerAdvice
 @ResponseBody
 public class ExceptionHandlers {
 	private final String INVALID_METHOD_ARGUMENTS = "Invalid method arguments";
 	private final String METHOD_ARGUMENT_TYPE_MISMATCH = "The type of the given arguments are wrong";
 
-	
-	
 	/**
 	 * Handles <code>ClientNotFoundException</code>.
 	 * 
@@ -41,10 +38,10 @@ public class ExceptionHandlers {
 	 */
 	@ExceptionHandler(ClientNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse invalidCredentials(ClientNotFoundException exc) {
+	ErrorResponse ClientNotFoundException(ClientNotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
-	
+
 	/**
 	 * Handles <code>FamilyInviteNotFoundException</code>.
 	 * 
@@ -56,6 +53,7 @@ public class ExceptionHandlers {
 	ErrorResponse familyInviteNotFoundException(FamilyInviteNotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
+
 	/**
 	 * Handles <code>FamilyNotFoundException</code>.
 	 * 
@@ -67,7 +65,7 @@ public class ExceptionHandlers {
 	ErrorResponse familyNotFoundException(FamilyNotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
-	
+
 	/**
 	 * Handles <code>ItemCountNotFoundException</code>.
 	 * 
@@ -79,7 +77,7 @@ public class ExceptionHandlers {
 	ErrorResponse itemCountNotFoundException(ItemCountNotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
-	
+
 	/**
 	 * Handles <code>ItemNotFoundException</code>.
 	 * 
@@ -89,7 +87,7 @@ public class ExceptionHandlers {
 	@ExceptionHandler(ItemNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	ErrorResponse itemNotFoundException(ItemNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(),exc.getErrorCode());
+		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
 
 	/**
@@ -103,6 +101,7 @@ public class ExceptionHandlers {
 	ErrorResponse storageNotFoundException(StorageNotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
+
 	/**
 	 * Handles <code>StorageTypeNotFoundException</code>.
 	 * 
@@ -114,14 +113,14 @@ public class ExceptionHandlers {
 	ErrorResponse storageTypeNotFound(StorageTypeNotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
-	
-	
+
 	@ExceptionHandler(ServletException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ErrorResponse noServletException(ServletException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage());
-		
+
 	}
+
 	/**
 	 * Handler for invalid method arguments. For example, missing fields in
 	 * <code>Application</code>s.
@@ -150,7 +149,7 @@ public class ExceptionHandlers {
 	@ExceptionHandler(NoHandlerFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	ErrorResponse noHandlerFoundExceptionHandler(NoHandlerFoundException exc) {
-		
+
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage());
 	}
 
@@ -163,7 +162,7 @@ public class ExceptionHandlers {
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ErrorResponse missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException exc) {
-	
+
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(), exc.getMessage());
 	}
 
@@ -176,7 +175,7 @@ public class ExceptionHandlers {
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	ErrorResponse methodNotAllowedHandler(HttpRequestMethodNotSupportedException exc) {
-	
+
 		return new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(), exc.getMessage());
 	}
 
@@ -184,12 +183,13 @@ public class ExceptionHandlers {
 	 * Handler for method argument type mismatches.
 	 * 
 	 * @param exc The <code>MethodArgumentTypeMismatchException</code>.
-	 * @return the <code>ErrorResponse</code> with the exception message with the expected type.
+	 * @return the <code>ErrorResponse</code> with the exception message with the
+	 *         expected type.
 	 */
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ErrorResponse methodArgumentTypeMismatchHandler(MethodArgumentTypeMismatchException exc) {
-	
+
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(),
 				METHOD_ARGUMENT_TYPE_MISMATCH + ", expected: " + exc.getRequiredType().getSimpleName());
 	}
@@ -203,7 +203,7 @@ public class ExceptionHandlers {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ErrorResponse messageNotReadableExceptionHandler(HttpMessageNotReadableException exc) {
-	
+
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Could not read the message!:(");
 	}
 

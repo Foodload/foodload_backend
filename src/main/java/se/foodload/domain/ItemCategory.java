@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+
 @Entity
 @Data
 public class ItemCategory {
@@ -17,8 +18,9 @@ public class ItemCategory {
 	private long id;
 
 	String name;
-	
-	public ItemCategory() {}
+
+	public ItemCategory() {
+	}
 
 	public ItemCategory(String name) {
 		this.name = name;

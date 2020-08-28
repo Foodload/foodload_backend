@@ -1,7 +1,5 @@
 package se.foodload.domain;
 
-import java.util.Optional;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +22,7 @@ public class Storage {
 
 	@ManyToOne
 	@JoinColumn(name = "storagetypeId", referencedColumnName = "storagetypeId")
-	@JsonIgnoreProperties(value = { "id"}, allowSetters = true)
+	@JsonIgnoreProperties(value = { "id" }, allowSetters = true)
 	StorageType storageType;
 
 	@ManyToOne

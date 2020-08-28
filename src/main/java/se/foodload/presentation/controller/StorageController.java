@@ -3,17 +3,15 @@ package se.foodload.presentation.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.foodload.application.ClientService;
 import se.foodload.application.StorageService;
 import se.foodload.domain.Client;
@@ -29,26 +27,25 @@ public class StorageController {
 	StorageService storageService;
 	@Autowired
 	ClientService clientService;
-	
+
 	static final String CHECK_FRIDGE = "/check-fridge";
 	static final String CHECK_FREEZER = "/check-freezer";
 	static final String CHECK_PANTRY = "/check-pantry";
 
 	@GetMapping(CHECK_FRIDGE)
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemResponse> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO ) {
+	public List<ItemResponse> checkFridge(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientService.findClient(clientDTO);
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> fridge = storageService.getFridge(client.getFamily());
-		fridge.forEach(item->{
-			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
+		fridge.forEach(item -> {
+			itemList.add(new ItemResponse(item.getId(), item.getItem(), item.getCount()));
 		});
-		
+
 		System.out.println(itemList);
 		return itemList;
 
 	}
-	
 
 	@GetMapping(CHECK_FREEZER)
 	@ResponseStatus(HttpStatus.OK)
@@ -56,8 +53,8 @@ public class StorageController {
 		Client client = clientService.findClient(clientDTO);
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> freezer = storageService.getFreezer(client.getFamily());
-		freezer.forEach(item->{
-			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
+		freezer.forEach(item -> {
+			itemList.add(new ItemResponse(item.getId(), item.getItem(), item.getCount()));
 		});
 		return freezer;
 
@@ -69,11 +66,11 @@ public class StorageController {
 		Client client = clientService.findClient(clientDTO);
 		List<ItemResponse> itemList = new ArrayList<ItemResponse>();
 		List<ItemCount> pantry = storageService.getPantry(client.getFamily());
-		pantry.forEach(item->{
-			itemList.add(new ItemResponse(item.getId(),item.getItem(), item.getCount()));
+		pantry.forEach(item -> {
+			itemList.add(new ItemResponse(item.getId(), item.getItem(), item.getCount()));
 		});
 		return pantry;
 
 	}
-	
+
 }

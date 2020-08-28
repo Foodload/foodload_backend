@@ -6,19 +6,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import se.foodload.domain.Client;
-import se.foodload.domain.Family;
 
 /**
- * Component that helps to handle JSON Web Tokens (JWTs) such as: generating new JWTs,
- * validation, and extraction.
- *
+ * Component that helps to handle JSON Web Tokens (JWTs) such as: generating new
+ * JWTs, validation, and extraction.
+ * 
  */
 @Component
 public class JwtTokenUtil {
@@ -47,7 +45,6 @@ public class JwtTokenUtil {
 		return exctractTokenClaim(token, Claims::getExpiration);
 	}
 
-
 	/**
 	 * Extracts specified info from the JWT.
 	 * 
@@ -68,24 +65,18 @@ public class JwtTokenUtil {
 	 * @return a generated JWT.
 	 */
 	public String createToken(Client client) {
-		System.out.println("Secret: "+secret);
-		System.out.println("Secret in bytes: "+ secret.getBytes());
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("family", client.getFamily().getId());
-		return generateToken(claims, client.getFirebaseId() );
+		return generateToken(claims, client.getFirebaseId());
 	}
-
 
 	private String generateToken(Map<String, Object> claims, String clientId) {
-		return Jwts.builder()
-				.setClaims(claims)
-				.setSubject(clientId)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().setClaims(claims).setSubject(clientId).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS256,  secret.getBytes())
-				.compact();
+				.signWith(SignatureAlgorithm.HS256, secret.getBytes()).compact();
 	}
 
+	@SuppressWarnings("unused")
 	private boolean isTokenExpired(String token) {
 		return getTokenExpirationDate(token).before(new Date());
 	}

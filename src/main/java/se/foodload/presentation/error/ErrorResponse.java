@@ -1,4 +1,5 @@
 package se.foodload.presentation.error;
+
 /**
  * Returns an error response to the client.
  *
@@ -22,9 +23,9 @@ public class ErrorResponse {
 	/**
 	 * Creates an instance of <code>ErrorResponse</code>.
 	 * 
-	 * @param logRef The error.
+	 * @param logRef  The error.
 	 * @param message The error message.
-	 * @param code The error code.
+	 * @param code    The error code.
 	 */
 	ErrorResponse(String logRef, String message, int code) {
 		this.logRef = logRef;

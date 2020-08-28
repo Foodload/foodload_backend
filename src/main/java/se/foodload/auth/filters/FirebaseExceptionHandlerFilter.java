@@ -8,24 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-
-
 /**
- * A filter to handle exceptions thrown in the
- * <code>FirbaseFilter</code>.
+ * A filter to handle exceptions thrown in the <code>FirbaseFilter</code>.
  */
 @Component
 public class FirebaseExceptionHandlerFilter extends OncePerRequestFilter {
+	static final String CONTENT_TYPE = "application/json";
 
 	/**
 	 * Try-catch of the exceptions thrown by the <code>JwtRequestFilter</code>.
@@ -38,14 +32,14 @@ public class FirebaseExceptionHandlerFilter extends OncePerRequestFilter {
 		} catch (IllegalArgumentException exc) {
 			logger.error(exc.getMessage());
 			sendErrorResponse(HttpStatus.BAD_REQUEST, exc.getMessage(), response);
-		} 
+		}
 	}
 
 	private void sendErrorResponse(HttpStatus httpStatus, String msg, HttpServletResponse response)
 			throws JsonProcessingException, IOException {
 		response.setStatus(httpStatus.value());
 		ErrorResponse errorResponse = new ErrorResponse(httpStatus.getReasonPhrase(), msg);
-		response.setContentType("application/json");
+		response.setContentType(CONTENT_TYPE);
 		response.getWriter().write(convertToJson(errorResponse));
 	}
 
