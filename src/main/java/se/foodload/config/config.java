@@ -59,6 +59,7 @@ public class config extends WebSecurityConfigurerAdapter {
 	String serviceAccountJson = massageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
 
 	@Bean
+
 	@Primary
 	public void firebaseInitialization() throws IOException {
 
@@ -80,11 +81,11 @@ public class config extends WebSecurityConfigurerAdapter {
 	 * new FileInputStream(resource.getFile());
 	 * 
 	 * FirebaseOptions options = new FirebaseOptions.Builder()
-	 * .setCredentials(GoogleCredentials.fromStream(serviceAccount)) .build(); if
-	 * (FirebaseApp.getApps().isEmpty()) { FirebaseApp.initializeApp(options); } }
-	 */
-	/**
-	 * Layer below WebSecurity. Sets up security against the API and adds filters.
+	 * .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build(); if
+	 * (FirebaseApp.getApps().isEmpty()) { FirebaseApp.initializeApp(options); } }/*
+	 * 
+	 * /** Layer below WebSecurity. Sets up security against the API and adds
+	 * filters.
 	 * 
 	 * @param httpSecurity The <code>HttpSecurity</code> to configure.
 	 */

@@ -1,5 +1,6 @@
 package se.foodload.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,10 +69,10 @@ public class StorageService implements IStorageService {
 		}
 
 		Optional<List<ItemCount>> fridgeCount = itemCountRepo.findByStorageTypeAndFamilyId(fridge.get(), family);
-		/*
-		 * if (fridgeCount.isEmpty()) { throw new
-		 * ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + FRIDGE); }
-		 */
+		if (fridgeCount.isEmpty()) {
+			return new ArrayList<ItemCount>();
+			// throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + FRIDGE);
+		}
 
 		return fridgeCount.get();
 
@@ -85,7 +86,8 @@ public class StorageService implements IStorageService {
 		}
 		Optional<List<ItemCount>> pantryCount = itemCountRepo.findByStorageTypeAndFamilyId(pantry.get(), family);
 		if (pantryCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + PANTRY);
+			return new ArrayList<ItemCount>();
+			// throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + PANTRY);
 		}
 		return pantryCount.get();
 	}
@@ -94,7 +96,8 @@ public class StorageService implements IStorageService {
 	public List<ItemCount> getItemCounts(Family family) {
 		Optional<List<ItemCount>> storages = itemCountRepo.findByfamilyId(family);
 		if (storages.isEmpty()) {
-			throw new ItemCountNotFoundException(ITEMCOUNTDOESNOTEXIST + PANTRY);
+			return new ArrayList<ItemCount>();
+			// throw new ItemCountNotFoundException(ITEMCOUNTDOESNOTEXIST + PANTRY);
 		}
 		return storages.get();
 	}

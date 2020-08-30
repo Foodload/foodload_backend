@@ -43,6 +43,7 @@ public class StorageController {
 			itemList.add(
 					new ItemResponse(item.getId(), item.getItem(), item.getCount(), item.getStorageType().getName()));
 		});
+
 		return itemList;
 	}
 
