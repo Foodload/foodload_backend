@@ -26,7 +26,8 @@ public enum ErrorEnums {
 
 	// ITEM NOT FOUND ERRORS
 
-	ITEMNOTFOUND("Item could not be found with qrCode ");
+	ITEMNOTFOUND("Item could not be found with qrCode "),
+	ITEMNOTFOUNDCONTAININGNAME("No items could be found containing name: ");
 
 	private String errorMsg;
 

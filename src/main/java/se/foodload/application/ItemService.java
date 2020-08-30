@@ -1,5 +1,6 @@
 package se.foodload.application;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,10 @@ import org.springframework.stereotype.Service;
 import se.foodload.application.Interfaces.IItemService;
 import se.foodload.application.exception.ItemCountNotFoundException;
 import se.foodload.application.exception.ItemNotFoundException;
-import se.foodload.application.exception.StorageNotFoundException;
 import se.foodload.application.exception.StorageTypeNotFoundException;
 import se.foodload.domain.Family;
 import se.foodload.domain.Item;
 import se.foodload.domain.ItemCount;
-import se.foodload.domain.Storage;
 import se.foodload.domain.StorageType;
 import se.foodload.enums.ErrorEnums;
 import se.foodload.redis.RedisMessagePublisher;
@@ -25,9 +24,12 @@ import se.foodload.repository.StorageTypeRepository;
 @Service
 public class ItemService implements IItemService {
 	private final String STORAGE_TYPE_NOT_FOUND = ErrorEnums.STORAGETYPENOTFOUND.getErrorMsg();
-	//private final String STORAGE_NOT_FOUND_FAMILY = ErrorEnums.STORAGENOTFOUNDFAMILY.getErrorMsg();
-	//private final String STORAGE_NOT_FOUND_FAMILY_2 = ErrorEnums.STORAGENOTFOUNDFAMILY2.getErrorMsg();
+	// private final String STORAGE_NOT_FOUND_FAMILY =
+	// ErrorEnums.STORAGENOTFOUNDFAMILY.getErrorMsg();
+	// private final String STORAGE_NOT_FOUND_FAMILY_2 =
+	// ErrorEnums.STORAGENOTFOUNDFAMILY2.getErrorMsg();
 	private final String ITEM_NOT_FOUND = ErrorEnums.ITEMNOTFOUND.getErrorMsg();
+	private final String ITEM_NOT_FOUND_CONTAININ = ErrorEnums.ITEMNOTFOUNDCONTAININGNAME.getErrorMsg();
 	private final String ITEM_COUNT_NOT_FOUND_ID = ErrorEnums.ITEMCOUNTNOTFOUNDID.getErrorMsg();
 	private final String ITEM_COUNT_NOT_FOUND_ID_2 = ErrorEnums.ITEMCOUNTNOTFOUNDID2.getErrorMsg();
 	private final String ITEM_COUNT_QFS = ErrorEnums.ITEMCOUNTQFS.getErrorMsg();
@@ -56,6 +58,14 @@ public class ItemService implements IItemService {
 		}
 		return item.get();
 
+	}
+
+	public List<Item> findItemName(String name) {
+		Optional<List<Item>> items = itemRepo.findByNameContaining(name);
+		if (items.isEmpty()) {
+			throw new ItemNotFoundException(ITEM_NOT_FOUND_CONTAININ + name);
+		}
+		return items.get();
 	}
 
 	@Override
@@ -92,6 +102,10 @@ public class ItemService implements IItemService {
 
 	}
 
+	/**
+	 * Alter how the item is created, dont use custom sql, instead inserat new
+	 * itemcount ... for optimisation.
+	 */
 	@Override
 	public void addItem(String clientId, Family family, String qrCode, String storageName, int amount) {
 		Item item = findItem(qrCode);
@@ -157,14 +171,13 @@ public class ItemService implements IItemService {
 		return storageType.get();
 	}
 
-	/*private Storage findStorage(Family family, StorageType storageType) {
-		Optional<Storage> storage = storageRepo.findByFamilyIdAndStorageType(family, storageType);
-		if (storage.isEmpty()) {
-			throw new StorageNotFoundException(
-					STORAGE_NOT_FOUND_FAMILY + family.getId() + STORAGE_NOT_FOUND_FAMILY_2 + storageType);
-		}
-		return storage.get();
-	}*/
+	/*
+	 * private Storage findStorage(Family family, StorageType storageType) {
+	 * Optional<Storage> storage = storageRepo.findByFamilyIdAndStorageType(family,
+	 * storageType); if (storage.isEmpty()) { throw new StorageNotFoundException(
+	 * STORAGE_NOT_FOUND_FAMILY + family.getId() + STORAGE_NOT_FOUND_FAMILY_2 +
+	 * storageType); } return storage.get(); }
+	 */
 
 	private ItemCount findItemCount(StorageType storageType, Item item) {
 		Optional<ItemCount> itemCount = itemCountRepo.findByStorageTypeAndItem(storageType, item);
@@ -174,4 +187,5 @@ public class ItemService implements IItemService {
 		}
 		return itemCount.get();
 	}
+
 }

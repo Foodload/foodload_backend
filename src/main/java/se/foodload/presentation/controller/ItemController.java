@@ -1,5 +1,7 @@
 package se.foodload.presentation.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +35,8 @@ public class ItemController {
 	static final String ALTER_STORAGE = "/alter-storage";
 	static final String INCREMENT_ITEM = "/increment-item";
 	static final String DECREMENT_ITEM = "decrement-item";
+	static final String FIND_ITEM_QR = "find-itemqr";
+	static final String FIND_ITEM_NAME = "find-itemname";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -90,4 +94,18 @@ public class ItemController {
 
 	}
 
+	@PostMapping(FIND_ITEM_QR)
+	@ResponseStatus(HttpStatus.OK)
+	public Item findItemQr(@AuthenticationPrincipal ClientDTO clientDTO, ItemModel itemModel) {
+		Item item = itemService.findItem(itemModel.getQrCode());
+		return item;
+	}
+
+	@PostMapping(FIND_ITEM_NAME)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO, ItemModel itemModel) {
+		List<Item> item = itemService.findItemName(itemModel.getName());
+		return item;
+
+	}
 }
