@@ -68,9 +68,10 @@ public class StorageService implements IStorageService {
 		}
 
 		Optional<List<ItemCount>> fridgeCount = itemCountRepo.findByStorageTypeAndFamilyId(fridge.get(), family);
-		if (fridgeCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + FRIDGE);
-		}
+		/*
+		 * if (fridgeCount.isEmpty()) { throw new
+		 * ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + FRIDGE); }
+		 */
 
 		return fridgeCount.get();
 
