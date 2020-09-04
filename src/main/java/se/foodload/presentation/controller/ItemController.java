@@ -35,9 +35,9 @@ public class ItemController {
 	static final String REMOVE_ITEM_QR = "/remove-item";
 	static final String ALTER_STORAGE = "/alter-storage";
 	static final String INCREMENT_ITEM = "/increment-item";
-	static final String DECREMENT_ITEM = "decrement-item";
-	static final String FIND_ITEM_QR = "find-itemqr";
-	static final String FIND_ITEM_NAME = "find-itemname";
+	static final String DECREMENT_ITEM = "/decrement-item";
+	static final String FIND_ITEM_QR = "/find-item-by-qr";
+	static final String FIND_ITEM_NAME = "/find-item-by-name";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
