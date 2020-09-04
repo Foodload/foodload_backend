@@ -19,6 +19,7 @@ import se.foodload.domain.Item;
 import se.foodload.presentation.dto.ClientDTO;
 import se.foodload.presentation.models.IncrementModel;
 import se.foodload.presentation.models.ItemModel;
+import se.foodload.presentation.models.ItemPatternModel;
 
 @RestController
 @Validated
@@ -103,8 +104,13 @@ public class ItemController {
 
 	@PostMapping(FIND_ITEM_NAME)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO, ItemModel itemModel) {
-		List<Item> item = itemService.findItemName(itemModel.getName());
+	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO, ItemPatternModel itemModel) {
+		List<Item> item = null;
+		if (itemModel.getName().length() == 1) {
+			item = itemService.findItemStartingWith(itemModel.getName());
+		} else {
+			item = itemService.findItemPattern(itemModel.getName(), itemModel.getStart(), itemModel.getIndex());
+		}
 		return item;
 
 	}

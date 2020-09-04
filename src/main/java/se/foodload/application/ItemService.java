@@ -1,5 +1,6 @@
 package se.foodload.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,10 +61,20 @@ public class ItemService implements IItemService {
 
 	}
 
-	public List<Item> findItemName(String name) {
-		Optional<List<Item>> items = itemRepo.findByNameContaining(name);
+	@Override
+	public List<Item> findItemPattern(String pattern, int start, int index) {
+		Optional<List<Item>> items = itemRepo.findMatchingItems(pattern, start, index);
 		if (items.isEmpty()) {
-			throw new ItemNotFoundException(ITEM_NOT_FOUND_CONTAININ + name);
+			return new ArrayList<Item>();
+		}
+		return items.get();
+	}
+
+	@Override
+	public List<Item> findItemStartingWith(String name) {
+		Optional<List<Item>> items = itemRepo.findByNameStartingWith(name);
+		if (items.isEmpty()) {
+			return new ArrayList<Item>();
 		}
 		return items.get();
 	}
@@ -152,6 +163,7 @@ public class ItemService implements IItemService {
 		redisMessagePublisher.publishItem(itemcountId, item, clientId, family.getId(), newAmount);
 	}
 
+	@Override
 	public void alterStroage(Family family, String qrCode, String storageName, String newStorageName) {
 		Item item = findItem(qrCode);
 		StorageType storageType = findStorageType(storageName);
@@ -178,7 +190,6 @@ public class ItemService implements IItemService {
 	 * STORAGE_NOT_FOUND_FAMILY + family.getId() + STORAGE_NOT_FOUND_FAMILY_2 +
 	 * storageType); } return storage.get(); }
 	 */
-
 	private ItemCount findItemCount(StorageType storageType, Item item) {
 		Optional<ItemCount> itemCount = itemCountRepo.findByStorageTypeAndItem(storageType, item);
 		if (itemCount.isEmpty()) {
