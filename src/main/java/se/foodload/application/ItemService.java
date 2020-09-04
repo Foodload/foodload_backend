@@ -72,7 +72,7 @@ public class ItemService implements IItemService {
 
 	@Override
 	public List<Item> findItemStartingWith(String name) {
-		Optional<List<Item>> items = itemRepo.findFirst10ByNameStartingWith(name);
+		Optional<List<Item>> items = itemRepo.findFirst10ByNameStartingWithIgnoreCase(name);
 		if (items.isEmpty()) {
 			return new ArrayList<Item>();
 		}
