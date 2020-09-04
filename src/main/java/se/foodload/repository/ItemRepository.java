@@ -19,7 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	public Optional<List<Item>> findByNameContaining(String name);
 
 	@Transactional
-	@Query(value = "SELECT * FROM item WHERE lower(name) LIKE '%:pattern%' LIMIT 20 OFFSET :start", nativeQuery = true)
+	@Query(value = "SELECT * FROM item WHERE lower(name) LIKE %:pattern% LIMIT 20 OFFSET :start", nativeQuery = true)
 	// @Query(value = "SELECT * FROM item WHERE lower(Name) LIKE
 	// %?#{escape(:pattern)} ?#{escapeCharacter()} LIMIT 20 OFFSET :start",
 	// nativeQuery = true)
