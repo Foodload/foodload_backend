@@ -97,15 +97,16 @@ public class ItemController {
 
 	@PostMapping(FIND_ITEM_QR)
 	@ResponseStatus(HttpStatus.OK)
-	public Item findItemQr(@AuthenticationPrincipal ClientDTO clientDTO, ItemModel itemModel) {
+	public Item findItemQr(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemModel itemModel) {
 		Item item = itemService.findItem(itemModel.getQrCode());
 		return item;
 	}
 
 	@PostMapping(FIND_ITEM_NAME)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO, ItemPatternModel itemModel) {
-		System.out.println(itemModel);
+	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO,
+			@RequestBody ItemPatternModel itemModel) {
+
 		List<Item> item = null;
 		if (itemModel.getName().length() == 1) {
 			item = itemService.findItemStartingWith(itemModel.getName());
