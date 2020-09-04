@@ -113,6 +113,7 @@ public class ItemController {
 		} else {
 			item = itemService.findItemPattern(itemModel.getName(), itemModel.getStart());
 		}
+		System.out.println("ITEMS: " + item);
 		return item;
 
 	}
