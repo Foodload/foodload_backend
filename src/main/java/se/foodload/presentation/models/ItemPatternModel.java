@@ -6,15 +6,13 @@ import lombok.Data;
 public class ItemPatternModel {
 
 	private String name;
-	private int index;
 	private int start;
 
 	ItemPatternModel() {
 	}
 
-	ItemPatternModel(String name, int index, int start) {
+	ItemPatternModel(String name, int start) {
 		this.name = name;
-		this.index = index;
 		this.start = start;
 	}
 }

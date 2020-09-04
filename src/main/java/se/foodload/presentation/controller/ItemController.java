@@ -109,7 +109,7 @@ public class ItemController {
 		if (itemModel.getName().length() == 1) {
 			item = itemService.findItemStartingWith(itemModel.getName());
 		} else {
-			item = itemService.findItemPattern(itemModel.getName(), itemModel.getStart(), itemModel.getIndex());
+			item = itemService.findItemPattern(itemModel.getName(), itemModel.getStart());
 		}
 		return item;
 

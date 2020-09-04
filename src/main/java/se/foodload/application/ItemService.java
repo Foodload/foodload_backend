@@ -62,8 +62,8 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
-	public List<Item> findItemPattern(String pattern, int start, int index) {
-		Optional<List<Item>> items = itemRepo.findMatchingItems(pattern, start, index);
+	public List<Item> findItemPattern(String pattern, int start) {
+		Optional<List<Item>> items = itemRepo.findMatchingItems(pattern, start);
 		if (items.isEmpty()) {
 			return new ArrayList<Item>();
 		}
