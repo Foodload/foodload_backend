@@ -105,6 +105,7 @@ public class ItemController {
 	@PostMapping(FIND_ITEM_NAME)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO, ItemPatternModel itemModel) {
+		System.out.println(itemModel);
 		List<Item> item = null;
 		if (itemModel.getName().length() == 1) {
 			item = itemService.findItemStartingWith(itemModel.getName());
