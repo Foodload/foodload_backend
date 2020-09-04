@@ -23,5 +23,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	public Optional<List<Item>> findMatchingItems(@Param("pattern") String pattern, @Param("start") int start,
 			@Param("index") int index);
 
-	public Optional<List<Item>> findByNameStartingWith(String name);
+	public Optional<List<Item>> findFirst10ByNameStartingWith(String name);
 }
