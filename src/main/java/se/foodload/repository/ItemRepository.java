@@ -3,6 +3,7 @@ package se.foodload.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,11 +20,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	public Optional<List<Item>> findByNameContaining(String name);
 
 	@Transactional
-	@Query(value = "SELECT * FROM item WHERE lower(name) LIKE %:pattern% LIMIT 20 OFFSET :start", nativeQuery = true)
-	// @Query(value = "SELECT * FROM item WHERE lower(Name) LIKE
-	// %?#{escape(:pattern)} ?#{escapeCharacter()} LIMIT 20 OFFSET :start",
-	// nativeQuery = true)
-	public Optional<List<Item>> findMatchingItems(@Param("pattern") String pattern, @Param("start") int start);
+	@Query(value = "SELECT i FROM Item i WHERE lower(i.name) LIKE %?#{escape([0])}% escape ?#{escapeCharacter()} order by (case when lower(i.name) like ?#{escape([0])}% escape ?#{escapeCharacter()} then 1 when lower(i.name) like %?#{escape([0])} escape ?#{escapeCharacter()} then 3 else 2 end), lower(i.name)")
+	public Optional<List<Item>> findMatchingItems(String pattern, Pageable pageable);
 
-	public Optional<List<Item>> findFirst10ByNameStartingWithIgnoreCase(String name);
+	public Optional<List<Item>> findByNameStartingWithIgnoreCase(String name, Pageable pageable);
 }

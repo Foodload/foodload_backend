@@ -17,9 +17,7 @@ public interface IItemService {
 
 	public void decrementItem(String clientId, long itemcountId, long familyId);
 
-	List<Item> findItemStartingWith(String name);
-
-	List<Item> findItemPattern(String pattern, int start);
+	public List<Item> findItemPattern(String pattern, int start);
 
 	void alterStroage(Family family, String qrCode, String storageName, String newStorageName);
 }

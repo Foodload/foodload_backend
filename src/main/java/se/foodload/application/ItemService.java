@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import se.foodload.application.Interfaces.IItemService;
@@ -63,20 +64,21 @@ public class ItemService implements IItemService {
 
 	@Override
 	public List<Item> findItemPattern(String pattern, int start) {
-		Optional<List<Item>> items = itemRepo.findMatchingItems(pattern, start);
-		if (items.isEmpty()) {
+		String trimmedPattern = pattern.trim();
+		Optional<List<Item>> result = null;
+		if(trimmedPattern.length() == 0) {
 			return new ArrayList<Item>();
+		} else if(trimmedPattern.length() == 1) {
+			result = itemRepo.findByNameStartingWithIgnoreCase(trimmedPattern, PageRequest.of(start, 10));
+		} else {
+			result = itemRepo.findMatchingItems(trimmedPattern.toLowerCase(), PageRequest.of(start, 10));
 		}
-		return items.get();
-	}
-
-	@Override
-	public List<Item> findItemStartingWith(String name) {
-		Optional<List<Item>> items = itemRepo.findFirst10ByNameStartingWithIgnoreCase(name);
-		if (items.isEmpty()) {
+		
+		if (result.isEmpty()) {
 			return new ArrayList<Item>();
+		} else {
+			return result.get();
 		}
-		return items.get();
 	}
 
 	@Override

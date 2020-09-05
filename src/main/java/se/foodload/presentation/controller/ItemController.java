@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import se.foodload.application.ClientService;
 import se.foodload.application.ItemService;
+import se.foodload.application.Interfaces.IItemService;
 import se.foodload.domain.Client;
 import se.foodload.domain.Item;
 import se.foodload.presentation.dto.ClientDTO;
@@ -26,7 +27,7 @@ import se.foodload.presentation.models.ItemPatternModel;
 @CrossOrigin
 public class ItemController {
 	@Autowired
-	ItemService itemService;
+	IItemService itemService;
 	@Autowired
 	ClientService clientService;
 
@@ -105,16 +106,9 @@ public class ItemController {
 	@PostMapping(FIND_ITEM_NAME)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Item> findItemName(@AuthenticationPrincipal ClientDTO clientDTO,
-			@RequestBody ItemPatternModel itemModel) {
-
-		List<Item> item = null;
-		if (itemModel.getName().length() == 1) {
-			item = itemService.findItemStartingWith(itemModel.getName());
-		} else {
-			item = itemService.findItemPattern(itemModel.getName(), itemModel.getStart());
-		}
-		System.out.println("ITEMS: " + item);
-		return item;
-
+			@RequestBody ItemPatternModel itemPatternModel) {
+		List<Item> items = null;
+		items = itemService.findItemPattern(itemPatternModel.getName(), itemPatternModel.getStart());
+		return items;
 	}
 }
