@@ -68,12 +68,10 @@ public class ItemService implements IItemService {
 		Optional<List<Item>> result = null;
 		if(trimmedPattern.length() == 0) {
 			return new ArrayList<Item>();
-		} else if(trimmedPattern.length() == 1) {
-			result = itemRepo.findByNameStartingWithIgnoreCase(trimmedPattern, PageRequest.of(start, 10));
-		} else {
-			result = itemRepo.findMatchingItems(trimmedPattern.toLowerCase(), PageRequest.of(start, 10));
-		}
+		} 
 		
+		result = itemRepo.findMatchingItems(trimmedPattern.toLowerCase(), PageRequest.of(start, 10));
+			
 		if (result.isEmpty()) {
 			return new ArrayList<Item>();
 		} else {
