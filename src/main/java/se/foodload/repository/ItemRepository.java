@@ -19,7 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	public Optional<List<Item>> findByNameContaining(String name);
 
 	@Transactional
-	@Query(value = "select i from Item i where lower(i.name) like %?#{escape([0])}% escape ?#{emescapeCharacter()} or lower(i.brand) LIKE %?#{escape([0])}% escape ?#{escapeCharacter()} order by (case when lower(i.name) like ?#{escape([0])}% escape ?#{escapeCharacter()} then 1 when lower(i.name) like %?#{escape([0])} escape ?#{escapeCharacter()} then 3 else 2 end), i.name")
+	@Query(value = "select i from Item i where lower(i.name) like %?#{escape([0])}% escape ?#{escapeCharacter()} or lower(i.brand) like %?#{escape([0])}% escape ?#{escapeCharacter()} order by (case when lower(i.name) like ?#{escape([0])}% escape ?#{escapeCharacter()} then 1 when lower(i.name) like %?#{escape([0])} escape ?#{escapeCharacter()} then 3 else 2 end), i.name, i.brand")
 	public Optional<List<Item>> findMatchingItems(String pattern, Pageable pageable);
 
 }

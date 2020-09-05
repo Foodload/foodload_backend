@@ -22,6 +22,7 @@ import se.foodload.repository.ItemCountRepository;
 import se.foodload.repository.ItemRepository;
 import se.foodload.repository.StorageRepository;
 import se.foodload.repository.StorageTypeRepository;
+import se.foodload.repository.utils.OffsetLimitPageable;
 
 @Service
 public class ItemService implements IItemService {
@@ -70,7 +71,7 @@ public class ItemService implements IItemService {
 			return new ArrayList<Item>();
 		} 
 		
-		result = itemRepo.findMatchingItems(trimmedPattern.toLowerCase(), PageRequest.of(start, 10));
+		result = itemRepo.findMatchingItems(trimmedPattern.toLowerCase(), new OffsetLimitPageable(start, 30));
 			
 		if (result.isEmpty()) {
 			return new ArrayList<Item>();
