@@ -28,6 +28,8 @@ public class DatabaseInit {
 	ItemRepository itemRepo;
 	@Autowired
 	RedisMessagePublisher redisMessagePublisher;
+	@Autowired
+	CsvHelper csvH;
 
 	/**
 	 * Inits database with reused data.
@@ -37,7 +39,7 @@ public class DatabaseInit {
 	 */
 	@Bean
 	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo,
-			RedisMessagePublisher redisMessagePublisher) {
+			RedisMessagePublisher redisMessagePublisher, CsvHelper csvH) {
 		return args -> {
 			if (storageTypeRepo.findByName(PANTRY).isEmpty()) {
 				StorageType pantry = new StorageType(PANTRY);
@@ -52,20 +54,21 @@ public class DatabaseInit {
 				storageTypeRepo.save(fridge);
 			}
 
-			if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) {
-				Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla", "7310865062024");
-				Item mellanMjölk = new Item("Laktosf eko standardmjölkdryck 3,0%", "Arla", "7310865875020");
-				itemRepo.save(mellanEkoMjölk);
-				itemRepo.save(mellanMjölk);
-			}
+			/*
+			 * if (itemRepo.findByName("Laktosf eko standardmjölkdryck 3,0%").isEmpty()) {
+			 * Item mellanEkoMjölk = new Item("Ekologisk färsk mellanmjölk 1,5%", "Arla",
+			 * "7310865062024"); Item mellanMjölk = new
+			 * Item("Laktosf eko standardmjölkdryck 3,0%", "Arla", "7310865875020");
+			 * itemRepo.save(mellanEkoMjölk); itemRepo.save(mellanMjölk); }
+			 */
 
-			// Optional<Item> item = itemRepo.findByQrCode("07310865062024");
-			Optional<Item> item = itemRepo.findByQrCode("7310865062024");
-			redisMessagePublisher.publishItem(11, item.get(), "1483982", 1, 2);
+			// Optional<Item> item = itemRepo.findByQrCode("07310865062024"); // LOKALT
+			// Optional<Item> item = itemRepo.findByQrCode("7310865062024"); // HEORKU
+			// redisMessagePublisher.publishItem(11, item.get(), "1483982", 1, 2);
 
-			redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
-			redisMessagePublisher.publishFamilyInvite("12345", 1234);
-
+			// redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
+			// redisMessagePublisher.publishFamilyInvite("12345", 1234);
+			csvH.csvToItem();
 		};
 	}
 }
