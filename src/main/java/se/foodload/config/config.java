@@ -59,7 +59,6 @@ public class config extends WebSecurityConfigurerAdapter {
 	String serviceAccountJson = massageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
 
 	@Bean
-
 	@Primary
 	public void firebaseInitialization() throws IOException {
 
@@ -89,6 +88,7 @@ public class config extends WebSecurityConfigurerAdapter {
 	 * 
 	 * @param httpSecurity The <code>HttpSecurity</code> to configure.
 	 */
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable().formLogin().disable().httpBasic().disable().cors().and().sessionManagement()

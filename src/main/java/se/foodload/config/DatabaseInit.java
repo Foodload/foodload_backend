@@ -2,6 +2,8 @@ package se.foodload.config;
 
 import java.util.Optional;
 
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +62,8 @@ public class DatabaseInit {
 			}
 
 			// Optional<Item> item = itemRepo.findByQrCode("07310865062024");
+			System.out.println("FÖRSTA SÖKEN: \n" + itemRepo.fullTextItemSearchs("arla mjölk"));
+			System.out.println("ANDRA SÖKEN: \n" + itemRepo.fullTextItemSearchs("mjölk arla"));
 			Optional<Item> item = itemRepo.findByQrCode("7310865062024");
 			redisMessagePublisher.publishItem(11, item.get(), "1483982", 1, 2);
 
