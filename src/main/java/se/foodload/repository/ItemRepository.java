@@ -24,7 +24,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	public Optional<List<Item>> findMatchingItems(String pattern, Pageable pageable);
 
 	@Transactional
-	@Query(value = "select from Item where fts(pg_catalog.swedish, name, :string) AND fts(pg_catalog.swedish, brand, :string)")
+	@Query(value = "select i from Item where fts(pg_catalog.swedish, i.name, :string) AND fts(pg_catalog.swedish, i.brand, :string)")
 	public Optional<List<Item>> fullTextItemSearchs(@Param("string") String string);
 
 }
