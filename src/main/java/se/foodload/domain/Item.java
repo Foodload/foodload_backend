@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-@Table(indexes = { @Index(columnList = "name, brand") })
+//@Table(indexes = { @Index(columnList = "name, brand") })
 @Entity
 @Data
 

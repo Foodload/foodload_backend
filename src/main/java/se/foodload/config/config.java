@@ -58,66 +58,63 @@ public class config extends WebSecurityConfigurerAdapter {
 	private String REDIS_PW;
 
 //UNCOMMENT FÖR HERUKO.
-	/*-
-		String serviceAccountJson = massageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
-	
-		@Bean
-		@Primary
-		public void firebaseInitialization() throws IOException {
-	
-			InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
-	
-			FirebaseOptions options = new FirebaseOptions.Builder()
-					.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
-			FirebaseApp.initializeApp(options);
-		}
-	*/
-	// LOCAL TESTING..
 
-	@Value("${service.account.path}")
-	private String keyPath;
+	String serviceAccountJson = massageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
 
 	@Bean
-
 	@Primary
 	public void firebaseInitialization() throws IOException {
-		Resource resource = new ClassPathResource(keyPath);
-		FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+
+		InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
 
 		FirebaseOptions options = new FirebaseOptions.Builder()
 				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
-		if (FirebaseApp.getApps().isEmpty()) {
-			FirebaseApp.initializeApp(options);
+		FirebaseApp.initializeApp(options);
+	}
+
+	// LOCAL TESTING..
+	/*
+	 * @Value("${service.account.path}") private String keyPath;
+	 * 
+	 * @Bean
+	 * 
+	 * @Primary public void firebaseInitialization() throws IOException { Resource
+	 * resource = new ClassPathResource(keyPath); FileInputStream serviceAccount =
+	 * new FileInputStream(resource.getFile());
+	 * 
+	 * FirebaseOptions options = new FirebaseOptions.Builder()
+	 * .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build(); if
+	 * (FirebaseApp.getApps().isEmpty()) { FirebaseApp.initializeApp(options); } }
+	 */
+	/**
+	 * Layer below WebSecurity. Sets up security against the API and adds filters.
+	 * 
+	 * @param httpSecurity The <code>HttpSecurity</code> to configure.
+	 * 
+	 **/
+	@Override
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.csrf().disable().formLogin().disable().httpBasic().disable().cors().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers(ALL_URL)
+				.permitAll().anyRequest().authenticated();
+		httpSecurity.addFilterBefore(firebaseFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(firebaseExcFilter, FirebaseFilter.class);
+	}
+
+	private static String massageWhitespace(String s) {
+		String newString = "";
+		for (Character c : s.toCharArray()) {
+			if (MESSAGE_WHITE_SPACE.equals(Integer.toHexString(c | 0x10000).substring(1))) {
+				newString += " ";
+			} else {
+				newString += c;
+			}
 		}
-	}/*
-		 * 
-		 * /** Layer below WebSecurity. Sets up security against the API and adds
-		 * filters.
-		 * 
-		 * @param httpSecurity The <code>HttpSecurity</code> to configure.
-		 * 
-		 * 
-		 * @Override protected void configure(HttpSecurity httpSecurity) throws
-		 * Exception {
-		 * httpSecurity.csrf().disable().formLogin().disable().httpBasic().disable().
-		 * cors().and().sessionManagement()
-		 * .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
-		 * authorizeRequests().antMatchers(ALL_URL)
-		 * .permitAll().anyRequest().authenticated();
-		 * httpSecurity.addFilterBefore(firebaseFilter,
-		 * UsernamePasswordAuthenticationFilter.class)
-		 * .addFilterBefore(firebaseExcFilter, FirebaseFilter.class); }
-		 * 
-		 * private static String massageWhitespace(String s) { String newString = "";
-		 * for (Character c : s.toCharArray()) { if
-		 * (MESSAGE_WHITE_SPACE.equals(Integer.toHexString(c | 0x10000).substring(1))) {
-		 * newString += " "; } else { newString += c; } } return newString;
-		 * 
-		 * } /*
-		 * 
-		 * REDIS CONFIGS BELOW
-		 * 
-		 */
+		return newString;
+
+	}
+
+	// REDIS CONFIGS BELOW
 
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
