@@ -1,7 +1,14 @@
 package se.foodload.config;
 
+import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +37,8 @@ public class DatabaseInit {
 	ItemRepository itemRepo;
 	@Autowired
 	RedisMessagePublisher redisMessagePublisher;
+	@PersistenceContext
+	EntityManager em;
 
 	/**
 	 * Inits database with reused data.
@@ -39,8 +48,10 @@ public class DatabaseInit {
 	 */
 	@Bean
 	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo,
-			RedisMessagePublisher redisMessagePublisher) {
+			RedisMessagePublisher redisMessagePublisher, EntityManager em) {
 		return args -> {
+
+			String name = "skinka";
 			if (storageTypeRepo.findByName(PANTRY).isEmpty()) {
 				StorageType pantry = new StorageType(PANTRY);
 				storageTypeRepo.save(pantry);
@@ -61,14 +72,18 @@ public class DatabaseInit {
 				itemRepo.save(mellanMjölk);
 			}
 
-			// Optional<Item> item = itemRepo.findByQrCode("07310865062024");
-			System.out.println("FÖRSTA SÖKEN: \n" + itemRepo.fullTextItemSearchs("arla mjölk"));
-			System.out.println("ANDRA SÖKEN: \n" + itemRepo.fullTextItemSearchs("mjölk arla"));
-			Optional<Item> item = itemRepo.findByQrCode("7310865062024");
-			redisMessagePublisher.publishItem(11, item.get(), "1483982", 1, 2);
+			List<Item> listResults = em.createQuery("select b from Item b where (fts(b.name, b.brand,'bröd') = true)")
+					.setMaxResults(10).getResultList();
 
-			redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
-			redisMessagePublisher.publishFamilyInvite("12345", 1234);
+			System.out.println(listResults);
+
+			// Optional<Item> item = itemRepo.findByQrCode("07310865062024");
+
+			// Optional<Item> item = itemRepo.findByQrCode("7310865062024");
+			// redisMessagePublisher.publishItem(11, item.get(), "1483982", 1, 2);
+
+			// redisMessagePublisher.publishChangeFamily("1234", 1234, 3211);
+			// redisMessagePublisher.publishFamilyInvite("12345", 1234);
 
 		};
 	}

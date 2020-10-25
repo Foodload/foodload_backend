@@ -15,7 +15,7 @@ public class PgFullTextFunction implements SQLFunction {
 	@Override
 	public String render(Type type, List args, SessionFactoryImplementor sessionFactoryImplementor)
 			throws QueryException {
-		if (args == null || args.size() < 2) {
+		if (args != null && args.size() < 2) {
 
 			throw new IllegalArgumentException("The function must be passed at least 2 arguments");
 
@@ -28,17 +28,19 @@ public class PgFullTextFunction implements SQLFunction {
 		String field = null;
 
 		String value = null;
+		String field2 = null;
 
 		if (args.size() == 3) {
 
-			ftsConfiguration = (String) args.get(0);
-
-			field = (String) args.get(1);
-
+			field = (String) args.get(0);
+			field2 = (String) args.get(1);
 			value = (String) args.get(2);
+			System.out.println(value);
+			System.out.println(field);
+			System.out.println(field2);
 
-			fragment = "to_tsvector(" + ftsConfiguration + ", " + field + ") @@ " + "plainto_tsquery("
-					+ ftsConfiguration + ", " + value + ")";
+			fragment = "to_tsvector(" + field + ") @@ " + "plainto_tsquery(" + value + ")  OR to_tsvector(" + field2
+					+ ") @@ " + "plainto_tsquery(" + value + ")";
 
 		} else {
 
@@ -46,7 +48,7 @@ public class PgFullTextFunction implements SQLFunction {
 
 			value = (String) args.get(1);
 
-			fragment = "to_tsvector(" + field + ") @@ " + "plainto_tsquery('" + value + "')";
+			fragment = "to_tsvector(" + field + ") @@ " + "plainto_tsquery(" + value + ")";
 
 		}
 
