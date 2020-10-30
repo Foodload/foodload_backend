@@ -31,7 +31,7 @@ public interface ItemCountRepository extends JpaRepository<ItemCount, Long> {
 	 */
 
 	@Transactional
-	@Query(value = "SELECT * FROM item_count WHERE itemcount_id = :id AND storage_id IN (SELECT storage_id FROM storage WHERE family_id = :familyId)", nativeQuery = true)
+	@Query(value = "SELECT * FROM item_count WHERE itemcount_id = :id AND family_id = :familyId", nativeQuery = true)
 	public Optional<ItemCount> findByItemCountIdAndFamilyId(@Param("id") long id, @Param("familyId") long familyId);
 
 	/**
@@ -45,7 +45,7 @@ public interface ItemCountRepository extends JpaRepository<ItemCount, Long> {
 	 */
 
 	@Transactional
-	@Query(value = "SELECT * FROM item_count WHERE item_id = (SELECT item_id FROM item WHERE qr_code = :qrCode) AND storage_id = (SELECT storage_id FROM storage WHERE family_id = :familyId AND storagetype_id = (SELECT storagetype_id FROM storage_type WHERE name = :storageName))", nativeQuery = true)
+	@Query(value = "SELECT * FROM item_count WHERE item_id = (SELECT item_id FROM item WHERE qr_code = :qrCode) AND storagetype_id = (SELECT storagetype_id FROM storage_type WHERE name = :storageName) AND family_id = :familyId", nativeQuery = true)
 	public Optional<ItemCount> findByQrcodeAndFamilyIdAndStorageType(@Param("qrCode") String qrCode,
 			@Param("familyId") long familyId, @Param("storageName") String storageName);
 
@@ -54,8 +54,7 @@ public interface ItemCountRepository extends JpaRepository<ItemCount, Long> {
 	 */
 	@Modifying
 	@Transactional
-	@Query(value = "INSERT INTO item_count (item_id, storage_id, count) SELECT item_id, storage_id, :amount as count FROM item, storage WHERE (qr_code = :qrCode) AND storagetype_id = (SELECT storagetype_id FROM storage_type WHERE name = :storageName) AND family_id = :familyId", nativeQuery = true)
-
+	@Query(value = "INSERT INTO item_count (item_id, family_id, storagetype_id, count) VALUES ((SELECT item_id FROM item WHERE qr_code = :qrCode), :familyId, (SELECT storagetype_id FROM storage_type WHERE name = :storageName), :amount)", nativeQuery = true)
 	public int insertItemCount(@Param("qrCode") String qrCode, @Param("familyId") long familyId,
 			@Param("storageName") String storageName, @Param("amount") int amount);
 }

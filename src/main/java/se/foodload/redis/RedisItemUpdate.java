@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class RedisItemUpdate {
 	private String messageType;
-	private long itemcountId;
+	private long itemCountId;
 	private String userId;
 	private long familyId;
 	private String name;
@@ -13,10 +13,10 @@ public class RedisItemUpdate {
 	private String qrCode;
 	private int amount;
 
-	public RedisItemUpdate(long itemcountId, String messageType, String clientId, long familyId, String name,
+	public RedisItemUpdate(long itemCountId, String messageType, String clientId, long familyId, String name,
 			String brand, String qrCode, int amount) {
 		this.messageType = messageType;
-		this.itemcountId = itemcountId;
+		this.itemCountId = itemCountId;
 		this.userId = clientId;
 		this.familyId = familyId;
 		this.name = name;
