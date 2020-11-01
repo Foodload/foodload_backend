@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.foodload.application.Interfaces.IStorageService;
+import se.foodload.application.interfaces.IStorageService;
 import se.foodload.application.exception.ItemCountNotFoundException;
 import se.foodload.application.exception.StorageTypeNotFoundException;
 import se.foodload.domain.Family;

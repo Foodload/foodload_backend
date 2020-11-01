@@ -1,4 +1,4 @@
-package se.foodload.application.Interfaces;
+package se.foodload.application.interfaces;
 
 import se.foodload.domain.Client;
 import se.foodload.domain.Family;

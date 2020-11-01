@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import se.foodload.application.Interfaces.IClientInitService;
+import se.foodload.application.interfaces.IClientInitService;
 import se.foodload.domain.Client;
 import se.foodload.domain.Family;
 import se.foodload.presentation.dto.ClientDTO;

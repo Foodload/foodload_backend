@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import se.foodload.application.Interfaces.IFamilyService;
+import se.foodload.application.interfaces.IFamilyService;
 import se.foodload.application.exception.ClientNotFoundException;
 import se.foodload.application.exception.FamilyInviteNotFoundException;
 import se.foodload.application.exception.FamilyNotFoundException;

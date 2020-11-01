@@ -1,4 +1,4 @@
-package se.foodload.application.Interfaces;
+package se.foodload.application.interfaces;
 
 import java.util.List;
 
