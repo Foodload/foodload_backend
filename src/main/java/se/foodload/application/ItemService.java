@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import se.foodload.application.Interfaces.IItemService;
+import se.foodload.application.interfaces.IItemService;
 import se.foodload.application.exception.ItemCountNotFoundException;
 import se.foodload.application.exception.ItemNotFoundException;
 import se.foodload.application.exception.StorageTypeNotFoundException;
@@ -60,7 +59,6 @@ public class ItemService implements IItemService {
             throw new ItemNotFoundException(ITEM_NOT_FOUND + qrCode);
         }
         return item.get();
-
     }
 
     @Override
@@ -92,8 +90,8 @@ public class ItemService implements IItemService {
         itemCountRepo.save(ic);
         Item item = ic.getItem();
         int amount = ic.getCount();
-
-        redisMessagePublisher.publishItem(itemcountId, item, clientId, familyId, amount);
+        String storageType = ic.getStorageType().getName();
+        redisMessagePublisher.publishItem(itemcountId, item, clientId, familyId, amount, storageType);
 
     }
 
@@ -109,9 +107,8 @@ public class ItemService implements IItemService {
         itemCountRepo.save(ic);
         Item item = ic.getItem();
         int amount = ic.getCount();
-
-        redisMessagePublisher.publishItem(itemcountId, item, clientId, familyId, amount);
-
+        String storageType = ic.getStorageType().getName();
+        redisMessagePublisher.publishItem(itemcountId, item, clientId, familyId, amount, storageType);
     }
 
     /**
@@ -119,53 +116,62 @@ public class ItemService implements IItemService {
      * itemcount ... for optimisation.
      */
     @Override
-    public void addItem(String clientId, Family family, String qrCode, String storageName, int amount) {
+    public void addItem(String clientId, Family family, String qrCode, String storageType, int amount) {
         Item item = findItem(qrCode);
         Optional<ItemCount> itemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
-                storageName);
+                storageType);
         if (itemCount.isEmpty()) {
-            int iCount = itemCountRepo.insertItemCount(qrCode, family.getId(), storageName, amount);
+            int iCount = itemCountRepo.insertItemCount(qrCode, family.getId(), storageType, amount);
             if (iCount == 0) {
                 // Throw insert failed..
             }
             Optional<ItemCount> ic = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
-                    storageName);
+                    storageType);
             if (ic.isEmpty()) {
                 throw new ItemCountNotFoundException(
-                        ITEM_COUNT_QFS + qrCode + ITEM_COUNT_QFS_2 + storageName + ITEM_COUNT_QFS_3 + family.getId());
+                        ITEM_COUNT_QFS + qrCode + ITEM_COUNT_QFS_2 + storageType + ITEM_COUNT_QFS_3 + family.getId());
             }
             long itemCountId = ic.get().getId();
-            redisMessagePublisher.publishItem(itemCountId, item, clientId, family.getId(), amount);
+            redisMessagePublisher.publishItem(itemCountId, item, clientId, family.getId(), amount, storageType);
         } else {
             itemCount.get().addItemCount(amount);
             itemCountRepo.save(itemCount.get());
             int newAmount = itemCount.get().getCount();
             long itemCountId = itemCount.get().getId();
-            redisMessagePublisher.publishItem(itemCountId, item, clientId, family.getId(), newAmount);
+            redisMessagePublisher.publishItem(itemCountId, item, clientId, family.getId(), newAmount, storageType);
         }
 
     }
 
     @Override
-    public void deleteItem(String clientId, Family family, String qrCode, String storageName, int amount) {
+    public void deleteItem(String clientId, Family family, String qrCode, String storageType, int amount) {
         Item item = findItem(qrCode);
 
         Optional<ItemCount> itemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
-                storageName);
+                storageType);
         if (itemCount.isEmpty()) {
             throw new ItemCountNotFoundException(
-                    ITEM_COUNT_QFS + qrCode + ITEM_COUNT_QFS_2 + storageName + ITEM_COUNT_QFS_3 + family.getId());
+                    ITEM_COUNT_QFS + qrCode + ITEM_COUNT_QFS_2 + storageType + ITEM_COUNT_QFS_3 + family.getId());
         }
         ItemCount ic = itemCount.get();
         ic.removeItemCount(amount);
         itemCountRepo.save(ic);
         long itemcountId = ic.getId();
         int newAmount = ic.getCount();
-        redisMessagePublisher.publishItem(itemcountId, item, clientId, family.getId(), newAmount);
+        redisMessagePublisher.publishItem(itemcountId, item, clientId, family.getId(), newAmount, storageType);
     }
 
     @Override
-    public void alterStroage(Family family, String qrCode, String storageName, String newStorageName) {
+    public List<ItemCount> getAllItemCounts(Family family){
+        Optional<List<ItemCount>> itemCounts = itemCountRepo.findByfamilyId(family);
+        if (itemCounts.isEmpty()) {
+            return new ArrayList<ItemCount>();
+        }
+        return itemCounts.get();
+    }
+
+    @Override
+    public void alterStorage(Family family, String qrCode, String storageName, String newStorageName) {
         Item item = findItem(qrCode);
         StorageType storageType = findStorageType(storageName);
         StorageType newStorageType = findStorageType(newStorageName);
