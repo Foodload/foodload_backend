@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import se.foodload.application.Interfaces.IClientService;
+import se.foodload.application.interfaces.IClientService;
 import se.foodload.application.exception.ClientNotFoundException;
 import se.foodload.domain.Client;
 import se.foodload.enums.ErrorEnums;
