@@ -11,10 +11,11 @@ public class RedisItemUpdate {
 	private String name;
 	private String brand;
 	private String qrCode;
+	private String storageType;
 	private int amount;
 
 	public RedisItemUpdate(long itemCountId, String messageType, String clientId, long familyId, String name,
-			String brand, String qrCode, int amount) {
+			String brand, String qrCode, int amount, String storageType) {
 		this.messageType = messageType;
 		this.itemCountId = itemCountId;
 		this.userId = clientId;
@@ -23,6 +24,7 @@ public class RedisItemUpdate {
 		this.brand = brand;
 		this.qrCode = qrCode;
 		this.amount = amount;
+		this.storageType = storageType;
 	}
 
 	public RedisItemUpdate() {

@@ -5,33 +5,31 @@ import se.foodload.domain.Item;
 
 @Data
 public class ItemResponse {
-	private long id;
+	private long itemCountId;
 	private String qrCode;
 	private String name;
 	private String brand;
 	private int amount;
-	private String storage;
+	private String storageType;
 
 	public ItemResponse() {
 
 	}
 
 	public ItemResponse(long id, Item item, int amount, String storage) {
-		this.id = id;
+		this.itemCountId = id;
 		this.qrCode = item.getQrCode();
 		this.name = item.getName();
 		this.brand = item.getBrand();
 		this.amount = amount;
-		this.storage = storage;
-
+		this.storageType = storage;
 	}
 
 	public ItemResponse(long id, Item item, int amount) {
-		this.id = id;
+		this.itemCountId = id;
 		this.qrCode = item.getQrCode();
 		this.name = item.getName();
 		this.brand = item.getBrand();
 		this.amount = amount;
-
 	}
 }

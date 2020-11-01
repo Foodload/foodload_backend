@@ -22,9 +22,9 @@ public class RedisMessagePublisher {
 	public RedisMessagePublisher() {
 	}
 
-	public void publishItem(long itemCountId, Item item, String clientId, long familyId, int amount) {
+	public void publishItem(long itemCountId, Item item, String clientId, long familyId, int amount, String storageType) {
 		RedisItemUpdate publishMsg = new RedisItemUpdate(itemCountId, UPDATE_ITEM, clientId, familyId, item.getName(),
-				item.getBrand(), item.getQrCode(), amount);
+				item.getBrand(), item.getQrCode(), amount, storageType);
 		redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
 
 	}
