@@ -37,7 +37,7 @@ public class ItemController {
 	static final String DECREMENT_ITEM = "/decrement-item";
 	static final String FIND_ITEM_QR = "/find-item-by-qr";
 	static final String FIND_ITEM_NAME = "/find-item-by-name";
-	static final String GET_ALL_ITEMS = "/get-all-items";
+	static final String GET_ALL_ITEM_COUNTS = "/get-all-item-counts";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -86,9 +86,9 @@ public class ItemController {
 
 	}
 
-	@GetMapping(GET_ALL_ITEMS)
+	@GetMapping(GET_ALL_ITEM_COUNTS)
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemResponse> getAllItems(@AuthenticationPrincipal ClientDTO clientDTO){
+	public List<ItemResponse> getAllItemCounts(@AuthenticationPrincipal ClientDTO clientDTO){
 		Client client = clientService.findClient(clientDTO);
 		List<ItemResponse> itemResponseList = new ArrayList<ItemResponse>();
 		List<ItemCount> itemCounts = itemService.getAllItemCounts(client.getFamily());
