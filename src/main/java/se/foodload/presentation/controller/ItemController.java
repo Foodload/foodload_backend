@@ -9,16 +9,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import se.foodload.application.ClientService;
+import se.foodload.application.interfaces.IClientService;
 import se.foodload.application.interfaces.IItemService;
 import se.foodload.domain.Client;
 import se.foodload.domain.Item;
 import se.foodload.domain.ItemCount;
 import se.foodload.presentation.dto.ClientDTO;
-import se.foodload.presentation.models.IncrementModel;
-import se.foodload.presentation.models.ItemModel;
-import se.foodload.presentation.models.ItemPatternModel;
-import se.foodload.presentation.models.ItemResponse;
+import se.foodload.presentation.models.*;
 
 @RestController
 @Validated
@@ -27,7 +24,7 @@ public class ItemController {
 	@Autowired
 	IItemService itemService;
 	@Autowired
-	ClientService clientService;
+	IClientService clientService;
 
 	static final String SEARCH_ITEM = "/search-item";
 	static final String ADD_ITEM_QR = "/add-item";
@@ -38,6 +35,8 @@ public class ItemController {
 	static final String FIND_ITEM_QR = "/find-item-by-qr";
 	static final String FIND_ITEM_NAME = "/find-item-by-name";
 	static final String GET_ALL_ITEM_COUNTS = "/get-all-item-counts";
+	static final String MOVE_ITEM_TO = "/move-item-to";
+	static final String MOVE_ITEM_FROM = "/move-item-from";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -122,4 +121,31 @@ public class ItemController {
 		items = itemService.findItemPattern(itemPatternModel.getName(), itemPatternModel.getStart());
 		return items;
 	}
+
+	@PostMapping(MOVE_ITEM_TO)
+	@ResponseStatus(HttpStatus.OK)
+	public MoveItemResponse moveItemTo(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
+		int moveAmount = moveItemModel.getMoveAmount();
+		if(moveAmount == 0){ //TODO: does this work?
+			moveAmount = 1;
+		}
+		Client client = clientService.findClient(clientDTO);
+		int newAmount = itemService.moveItemTo(client.getFamily().getId(), moveItemModel.getItemCountId(), client.getFirebaseId(),
+				moveItemModel.getStorageType(), moveAmount, moveItemModel.getOldAmount());
+		return new MoveItemResponse(newAmount);
+	}
+	@PostMapping(MOVE_ITEM_FROM)
+	@ResponseStatus(HttpStatus.OK)
+	public MoveItemResponse moveItemFrom(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
+		int moveAmount = moveItemModel.getMoveAmount();
+		if(moveAmount == 0){ //TODO: does this work?
+			moveAmount = 1;
+		}
+		Client client = clientService.findClient(clientDTO);
+		int newAmount = itemService.moveItemFrom(client.getFamily().getId(), moveItemModel.getItemCountId(), client.getFirebaseId(),
+				moveItemModel.getStorageType(), moveAmount, moveItemModel.getOldAmount());
+		return new MoveItemResponse(newAmount);
+	}
+
+
 }

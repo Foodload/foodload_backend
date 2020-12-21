@@ -69,6 +69,10 @@ public class ItemCount {
 		this.count--;
 	}
 
+	public void setItemCount(int newCount){
+		this.count = newCount;
+	}
+
 	public void addItemCount(int amount) {
 		this.count = this.count + amount;
 	}

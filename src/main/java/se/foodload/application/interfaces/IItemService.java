@@ -23,4 +23,8 @@ public interface IItemService {
 	public List<Item> findItemPattern(String pattern, int start);
 
 	public void alterStorage(Family family, String qrCode, String storageName, String newStorageName);
+
+	public int moveItemTo(long familyId, long itemCountId, String clientId, String destStorageType, int moveAmount, int oldAmount);
+
+	public int moveItemFrom(long familyId, long itemCountId, String clientId, String srcStorageType, int moveAmount, int oldAmount);
 }
