@@ -131,7 +131,7 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public void deleteItem(String clientId, Family family, String qrCode, String storageType, int amount) {
+    public void removeItem(String clientId, Family family, String qrCode, String storageType, int amount) {
         Item item = findItem(qrCode);
 
         Optional<ItemCount> itemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
@@ -169,6 +169,7 @@ public class ItemService implements IItemService {
 
     }
 
+    @Override
     public int moveItemTo(long familyId, long itemCountId, String clientId, String destStorageType, int moveAmount, int oldAmount){
         ItemCount destItemCount;
 
@@ -225,6 +226,7 @@ public class ItemService implements IItemService {
         return srcItemCountDTO.getAmount();
     }
 
+    @Override
     public int moveItemFrom(long familyId, long itemCountId, String clientId, String srcStorageType, int moveAmount, int oldAmount){
         Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
         if (optItemCount.isEmpty()) {
@@ -286,6 +288,22 @@ public class ItemService implements IItemService {
         //TODO: Redis
     }
 
+    @Override
+    public void deleteItem(long familyId, long itemCountId, String clientId, int amount){
+        Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
+        if (optItemCount.isEmpty()) {
+            throw new ItemCountNotFoundException(
+                    ITEM_COUNT_NOT_FOUND_ID + itemCountId + ITEM_COUNT_NOT_FOUND_ID_2 + familyId);
+        }
+        ItemCount ic = optItemCount.get();
+        if(amount != ic.getCount()){
+            //TODO: amount is not the same, has been updated. Handle this
+            return;
+        }
+        itemCountRepo.delete(ic);
+        redisMessagePublisher.publishDeleteItem(clientId, familyId, itemCountId);
+    }
+
     private StorageType findStorageType(String storageName) {
         Optional<StorageType> storageType = storageTypeRepo.findByName(storageName);
         if (storageType.isEmpty()) {
@@ -302,5 +320,4 @@ public class ItemService implements IItemService {
         }
         return itemCount.get();
     }
-
 }

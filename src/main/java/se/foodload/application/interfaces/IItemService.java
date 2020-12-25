@@ -12,7 +12,7 @@ public interface IItemService {
 
 	public void addItem(String clientId, Family family, String qrCode, String storageType, int ammount);
 
-	public void deleteItem(String clientId, Family family, String qrCode, String storageType, int ammount);
+	public void removeItem(String clientId, Family family, String qrCode, String storageType, int ammount);
 
 	public void incrementItem(String clientId, long itemCountId, long familyId);
 
@@ -27,4 +27,6 @@ public interface IItemService {
 	public int moveItemTo(long familyId, long itemCountId, String clientId, String destStorageType, int moveAmount, int oldAmount);
 
 	public int moveItemFrom(long familyId, long itemCountId, String clientId, String srcStorageType, int moveAmount, int oldAmount);
+
+	public void deleteItem(long familyId, long itemCountId, String clientId, int amount);
 }

@@ -16,6 +16,8 @@ public class RedisMessagePublisher {
 	private static final String CHANGE_FAMILY = RedisMessageEnums.CHANGE_FAMILY.getMessageType();
 	private static final String FAMILY_INVITE = RedisMessageEnums.FAMILY_INVITE.getMessageType();
 	private static final String MOVE_ITEM = RedisMessageEnums.MOVE_ITEM.getMessageType();
+	private static final String DELETE_ITEM = RedisMessageEnums.DELETE_ITEM.getMessageType();
+
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
 	@Autowired
@@ -42,6 +44,11 @@ public class RedisMessagePublisher {
 
 	public void publishMoveItem(String clientId, long familyId, ItemCountDTO srcItemCountDTO, ItemCountDTO destItemCountDTO){
 		RedisMoveItem publishMsg = new RedisMoveItem(clientId, MOVE_ITEM, familyId, srcItemCountDTO, destItemCountDTO);
+		redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
+	}
+
+	public void publishDeleteItem(String clientId, long familyId, long itemCountId){
+		RedisDeleteItem publishMsg = new RedisDeleteItem(itemCountId, DELETE_ITEM, clientId, familyId);
 		redisTemplate.convertAndSend(topic.getTopic(), publishMsg);
 	}
 }

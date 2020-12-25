@@ -37,6 +37,7 @@ public class ItemController {
 	static final String GET_ALL_ITEM_COUNTS = "/get-all-item-counts";
 	static final String MOVE_ITEM_TO = "/move-item-to";
 	static final String MOVE_ITEM_FROM = "/move-item-from";
+	static final String DELETE_ITEM = "/delete-item";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -80,7 +81,7 @@ public class ItemController {
 		if (item.getAmount() == 0) {
 			item.setAmount(1);
 		}
-		itemService.deleteItem(client.getFirebaseId(), client.getFamily(), item.getQrCode(), item.getStorageType(),
+		itemService.removeItem(client.getFirebaseId(), client.getFamily(), item.getQrCode(), item.getStorageType(),
 				item.getAmount());
 
 	}
@@ -134,6 +135,7 @@ public class ItemController {
 				moveItemModel.getStorageType(), moveAmount, moveItemModel.getOldAmount());
 		return new MoveItemResponse(newAmount);
 	}
+
 	@PostMapping(MOVE_ITEM_FROM)
 	@ResponseStatus(HttpStatus.OK)
 	public MoveItemResponse moveItemFrom(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
@@ -146,6 +148,15 @@ public class ItemController {
 				moveItemModel.getStorageType(), moveAmount, moveItemModel.getOldAmount());
 		return new MoveItemResponse(newAmount);
 	}
+
+	@PostMapping(DELETE_ITEM)
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody DeleteItemModel deleteItemModel){
+		Client client = clientService.findClient(clientDTO);
+
+		itemService.deleteItem(client.getFamily().getId(), deleteItemModel.getItemCountId(), client.getFirebaseId(), deleteItemModel.getAmount());
+	}
+
 
 
 }
