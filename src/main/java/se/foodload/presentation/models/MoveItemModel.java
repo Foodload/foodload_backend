@@ -11,7 +11,7 @@ public class MoveItemModel {
     private long itemCountId;
 
     @NotNull(message = "storageType missing")
-    @NotBlank(message = "sStorageType cannot be blank")
+    @NotBlank(message = "storageType cannot be blank")
     private String storageType; //srcStorageType or destStorageType depending on moveTo or moveFrom
 
     private int moveAmount;
