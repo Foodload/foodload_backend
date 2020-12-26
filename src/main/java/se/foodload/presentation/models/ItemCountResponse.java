@@ -3,12 +3,12 @@ package se.foodload.presentation.models;
 import lombok.Data;
 
 @Data
-public class MoveItemResponse {
+public class ItemCountResponse {
     private int amount;
 
-    public MoveItemResponse(int amount){
+    public ItemCountResponse(int amount){
         this.amount = amount;
     }
 
-    public MoveItemResponse() {}
+    public ItemCountResponse() {}
 }

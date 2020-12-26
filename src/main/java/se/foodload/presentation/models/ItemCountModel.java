@@ -12,5 +12,7 @@ public class ItemCountModel {
     @NotNull(message = "amount for verification missing")
     private int amount;
 
+    private int newAmount;
+
     public ItemCountModel(){}
 }

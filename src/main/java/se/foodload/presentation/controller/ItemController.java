@@ -38,6 +38,7 @@ public class ItemController {
 	static final String MOVE_ITEM_TO = "/move-item-to";
 	static final String MOVE_ITEM_FROM = "/move-item-from";
 	static final String DELETE_ITEM = "/delete-item";
+	static final String CHANGE_ITEM_COUNT = "/change-item-count";
 
 	@PostMapping(SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
@@ -125,7 +126,7 @@ public class ItemController {
 
 	@PostMapping(MOVE_ITEM_TO)
 	@ResponseStatus(HttpStatus.OK)
-	public MoveItemResponse moveItemTo(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
+	public ItemCountResponse moveItemTo(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
 		int moveAmount = moveItemModel.getMoveAmount();
 		if(moveAmount == 0){ //TODO: does this work?
 			moveAmount = 1;
@@ -133,12 +134,12 @@ public class ItemController {
 		Client client = clientService.findClient(clientDTO);
 		int newAmount = itemService.moveItemTo(client.getFamily().getId(), moveItemModel.getItemCountId(), client.getFirebaseId(),
 				moveItemModel.getStorageType(), moveAmount, moveItemModel.getOldAmount());
-		return new MoveItemResponse(newAmount);
+		return new ItemCountResponse(newAmount);
 	}
 
 	@PostMapping(MOVE_ITEM_FROM)
 	@ResponseStatus(HttpStatus.OK)
-	public MoveItemResponse moveItemFrom(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
+	public ItemCountResponse moveItemFrom(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody MoveItemModel moveItemModel){
 		int moveAmount = moveItemModel.getMoveAmount();
 		if(moveAmount == 0){ //TODO: does this work?
 			moveAmount = 1;
@@ -146,17 +147,24 @@ public class ItemController {
 		Client client = clientService.findClient(clientDTO);
 		int newAmount = itemService.moveItemFrom(client.getFamily().getId(), moveItemModel.getItemCountId(), client.getFirebaseId(),
 				moveItemModel.getStorageType(), moveAmount, moveItemModel.getOldAmount());
-		return new MoveItemResponse(newAmount);
+		return new ItemCountResponse(newAmount);
 	}
 
 	@PostMapping(DELETE_ITEM)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody DeleteItemModel deleteItemModel){
+	public void deleteItem(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemCountModel itemCountModel){
 		Client client = clientService.findClient(clientDTO);
 
-		itemService.deleteItem(client.getFamily().getId(), deleteItemModel.getItemCountId(), client.getFirebaseId(), deleteItemModel.getAmount());
+		itemService.deleteItem(client.getFamily().getId(), itemCountModel.getItemCountId(), client.getFirebaseId(), itemCountModel.getAmount());
 	}
 
+	@PostMapping(CHANGE_ITEM_COUNT)
+	@ResponseStatus(HttpStatus.OK)
+	public ItemCountResponse changeItemCount(@AuthenticationPrincipal ClientDTO clientDTO, @RequestBody ItemCountModel itemCountModel){
+		Client client = clientService.findClient(clientDTO);
 
+		int newAmount = itemService.changeItemCount(itemCountModel.getItemCountId(), client.getFamily().getId(), clientDTO.getFirebaseId(), itemCountModel.getAmount(), itemCountModel.getNewAmount());
+		return new ItemCountResponse(newAmount);
+	}
 
 }
