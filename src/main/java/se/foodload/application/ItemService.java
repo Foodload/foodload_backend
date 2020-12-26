@@ -271,7 +271,8 @@ public class ItemService implements IItemService {
         return destItemCountDTO.getAmount();
     }
 
-    public void changeCount(long itemCountId, long familyId, String clientId, int oldCount, int newCount){
+    @Override
+    public int changeItemCount(long itemCountId, long familyId, String clientId, int oldCount, int newCount){
         Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
         if (optItemCount.isEmpty()) {
             throw new ItemCountNotFoundException(
@@ -281,11 +282,12 @@ public class ItemService implements IItemService {
         int currCount = ic.getCount();
         if(currCount != oldCount){
             //TODO: Count has been changed / dirty read, throw exception or something
-            return;
+            return currCount;
         }
         ic.setCount(newCount);
         itemCountRepo.save(ic);
-        //TODO: Redis
+        redisMessagePublisher.publishItem(itemCountId, ic.getItem(), clientId, familyId, newCount, ic.getStorageType().getName());
+        return newCount;
     }
 
     @Override

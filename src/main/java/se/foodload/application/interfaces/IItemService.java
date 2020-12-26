@@ -29,4 +29,6 @@ public interface IItemService {
 	public int moveItemFrom(long familyId, long itemCountId, String clientId, String srcStorageType, int moveAmount, int oldAmount);
 
 	public void deleteItem(long familyId, long itemCountId, String clientId, int amount);
+
+	public int changeItemCount(long itemCountId, long familyId, String clientId, int oldCount, int newCount);
 }
