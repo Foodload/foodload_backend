@@ -1,0 +1,82 @@
+spring:
+  profiles:
+    active:
+      - dev
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/foodload
+    username: foodload_acc
+    password: 123123
+  jpa:
+    properties:
+      hibernate:
+        dialect: se.foodload.repository.utils.MyPostgreSQLDialect
+        catalog: swedish
+        ddl-auto: update
+        show_sql: true
+        type: trace
+name: dev-YAML
+environment: development
+enabled: true
+jwt:
+  secret: hVmYq3s6v9y$B&E)H@McQfTjWnZr4u7w
+redis:
+  host: redis-18215.c228.us-central1-1.gce.cloud.redislabs.com
+  port: 18215
+  pw: XFrDm4xNwkulfHqaYEzrw0Fm5pYRhwnN
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+service:
+  account:
+    path: /foodload-auth-firebase-adminsdk-lyp0d-ebf49136d6.json
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  jpa:
+    properties:
+      hibernate:
+        dialect: se.foodload.repository.utils.MyPostgreSQLDialect
+        catalog: swedish
+        ddl-auto: update
+        show_sql: true
+        type: trace
+name: prod-YAML
+environment: production
+enabled: false
+jwt:
+  secret: ${JWT_SECRET}
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+  pw: ${REDIS_PW}
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+service:
+  account:
+    path: /foodload-auth-firebase-adminsdk-lyp0d-ebf49136d6.json
