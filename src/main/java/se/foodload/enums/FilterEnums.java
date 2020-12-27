@@ -2,16 +2,18 @@ package se.foodload.enums;
 
 public enum FilterEnums {
 
-	AUTH("Authorization"), BEARER("Bearer ");
+	AUTHORIZATION("Authorization"),
+	BEARER("Bearer ");
 
-	private String header;
+	private final String text;
 
-	FilterEnums(String header) {
-		this.header = header;
+	FilterEnums(final String text) {
+		this.text = text;
 	}
 
-	public String getHeader() {
-		return this.header;
+	@Override
+	public String toString() {
+		return text;
 	}
 
 }

@@ -42,10 +42,6 @@ public class Config extends WebSecurityConfigurerAdapter {
 
 	static final String ALL_URL = "/**";
 
-	private final String SERVICE_ACCOUNT_JSON = ConfigEnums.SERVICECONFIG.getConfig();
-	private final static String MESSAGE_WHITE_SPACE = ConfigEnums.MESSAGEWHITESPACE.getConfig();
-	private final String CHANNEL_TOPIC = ConfigEnums.CHANNELTOPIC.getConfig();
-
 	@Autowired
 	private FirebaseFilter firebaseFilter;
 	@Autowired
@@ -66,7 +62,7 @@ public class Config extends WebSecurityConfigurerAdapter {
 	public void firebaseInitialization() throws IOException {
 		if(ENV.equals("production")){
 			//Heroku
-			String serviceAccountJson = messageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
+			String serviceAccountJson = messageWhitespace(System.getenv(ConfigEnums.SERVICE_ACCOUNT_JSON.toString()));
 			InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
 
 			FirebaseOptions options = new FirebaseOptions.Builder()
@@ -102,7 +98,7 @@ public class Config extends WebSecurityConfigurerAdapter {
 	private static String messageWhitespace(String s) {
 		String newString = "";
 		for (Character c : s.toCharArray()) {
-			if (MESSAGE_WHITE_SPACE.equals(Integer.toHexString(c | 0x10000).substring(1))) {
+			if (ConfigEnums.MESSAGE_WHITE_SPACE.toString().equals(Integer.toHexString(c | 0x10000).substring(1))) {
 				newString += " ";
 			} else {
 				newString += c;
@@ -124,7 +120,7 @@ public class Config extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	ChannelTopic topic() {
-		return new ChannelTopic(CHANNEL_TOPIC);
+		return new ChannelTopic(ConfigEnums.CHANNEL_TOPIC.toString());
 	}
 
 	@Bean

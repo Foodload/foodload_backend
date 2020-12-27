@@ -19,10 +19,6 @@ import se.foodload.repository.ClientRepository;
 public class ClientService implements IClientService {
 	@Autowired
 	ClientRepository clientRepo;
-	@Autowired
-	ClientInitService clientInitService;
-
-	private final String CLIENT_NOT_FOUND = ErrorEnums.CLIENTNOTFOUND.getErrorMsg();
 
 	@Override
 	public Optional<Client> optionalFindClient(ClientDTO clientDTO) {
@@ -36,7 +32,7 @@ public class ClientService implements IClientService {
 	public Client findClient(ClientDTO clientDTO) {
 		Optional<Client> client = clientRepo.findByFirebaseId(clientDTO.getFirebaseId());
 		if (client.isEmpty()) {
-			throw new ClientNotFoundException(CLIENT_NOT_FOUND + clientDTO.getEmail());
+			throw new ClientNotFoundException(ErrorEnums.CLIENT_NOT_FOUND.toString());
 		}
 		return client.get();
 	}

@@ -1,41 +1,22 @@
 package se.foodload.enums;
 
 public enum ErrorEnums {
-	// CLIENT NOT FOUND ERRORS
-	CLIENTNOTFOUND("No client could be found with email: "),
-	// FAMILY INVITE ERRORS
-	FAMILYINVITENOTFOUND("No Family invite could be found with id: "),
+	CLIENT_NOT_FOUND("No client could be found."),
+	FAMILY_INVITE_NOT_FOUND("No family invite could be found."),
+	FAMILY_NOT_FOUND("No family could be found."),
+	ITEM_COUNT_NOT_FOUND("No item count could be found."),
+	STORAGE_TYPE_NOT_FOUND("No storage type could be found."),
+	ITEM_QR_NOT_FOUND("No item could be found for the given QR."),
+	ITEM_NAME_NOT_FOUND("No item could be found for the given name.");
 
-	// FAMILY NOT FOUND ERRORS
-	FAMILYNOTFOUND("No family could be found with id: "), ITEMCOUNTNOTFOUNDSTORAGE("No item count for storagetype: "),
+	private final String errorMsg;
 
-	// ITEMCOUNT ERRORS
-
-	ITEMCOUNTNOTFOUNDID("ItemCount with id: "), ITEMCOUNTNOTFOUNDID2(" does not belong to familyId: "),
-	ITEMCOUNTQFS("Item with qrCode "), ITEMCOUNTQSF2(" does not exist in "), ITEMCOUNTQSF3(" for family: "),
-	ITEMCOUNTDOESNOTEXIST("No item counts exist for familyid: "),
-
-	// STORAGE NOT FOUND ERRORS
-
-	// STORAGENOTFOUNDFAMILY("No storage could be found for family: "),
-	// STORAGENOTFOUNDFAMILY2(" with storageType "),
-
-	// STORAGETYPE NOT FOUND ERRORS
-
-	STORAGETYPENOTFOUND("No StorageType could be found by name: "),
-
-	// ITEM NOT FOUND ERRORS
-
-	ITEMNOTFOUND("Item could not be found with qrCode "),
-	ITEMNOTFOUNDCONTAININGNAME("No items could be found containing name: ");
-
-	private String errorMsg;
-
-	ErrorEnums(String errorMsg) {
+	ErrorEnums(final String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
 
-	public String getErrorMsg() {
-		return this.errorMsg;
+	@Override
+	public String toString() {
+		return errorMsg;
 	}
 }

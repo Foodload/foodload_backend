@@ -17,9 +17,7 @@ import se.foodload.repository.StorageTypeRepository;
 
 @Configuration
 public class DatabaseInit {
-	private static final String PANTRY = StorageTypeEnums.PANTRY.getStorageType();
-	private static final String FREEZER = StorageTypeEnums.FREEZER.getStorageType();
-	private static final String FRIDGE = StorageTypeEnums.FRIDGE.getStorageType();
+
 	@Autowired
 	StorageTypeRepository storageTypeRepo;
 	@Autowired
@@ -41,16 +39,16 @@ public class DatabaseInit {
 	CommandLineRunner initializeDatabase(StorageTypeRepository storageTypeRepo,
 			RedisMessagePublisher redisMessagePublisher, EntityManager em) {
 		return args -> {
-			if (storageTypeRepo.findByName(PANTRY).isEmpty()) {
-				StorageType pantry = new StorageType(PANTRY);
+			if (storageTypeRepo.findByName(StorageTypeEnums.PANTRY.toString()).isEmpty()) {
+				StorageType pantry = new StorageType(StorageTypeEnums.PANTRY.toString());
 				storageTypeRepo.save(pantry);
 			}
-			if (storageTypeRepo.findByName(FREEZER).isEmpty()) {
-				StorageType freezer = new StorageType(FREEZER);
+			if (storageTypeRepo.findByName(StorageTypeEnums.FREEZER.toString()).isEmpty()) {
+				StorageType freezer = new StorageType(StorageTypeEnums.FREEZER.toString());
 				storageTypeRepo.save(freezer);
 			}
-			if (storageTypeRepo.findByName(FRIDGE).isEmpty()) {
-				StorageType fridge = new StorageType(FRIDGE);
+			if (storageTypeRepo.findByName(StorageTypeEnums.FRIDGE.toString()).isEmpty()) {
+				StorageType fridge = new StorageType(StorageTypeEnums.FRIDGE.toString());
 				storageTypeRepo.save(fridge);
 			}
 		};

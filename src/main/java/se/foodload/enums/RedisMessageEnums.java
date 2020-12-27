@@ -7,13 +7,14 @@ public enum RedisMessageEnums {
 	MOVE_ITEM("move_item"),
 	DELETE_ITEM("delete_item");
 
-	private String messageType;
+	private final String messageType;
 
-	RedisMessageEnums(String messageType) {
+	RedisMessageEnums(final String messageType) {
 		this.messageType = messageType;
 	}
 
-	public String getMessageType() {
-		return this.messageType;
+	@Override
+	public String toString() {
+		return messageType;
 	}
 }

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import se.foodload.application.interfaces.IStorageService;
-import se.foodload.application.exception.ItemCountNotFoundException;
 import se.foodload.application.exception.StorageTypeNotFoundException;
 import se.foodload.domain.Family;
 import se.foodload.domain.ItemCount;
@@ -16,62 +15,39 @@ import se.foodload.domain.StorageType;
 import se.foodload.enums.ErrorEnums;
 import se.foodload.enums.StorageTypeEnums;
 import se.foodload.repository.ItemCountRepository;
-import se.foodload.repository.StorageRepository;
 import se.foodload.repository.StorageTypeRepository;
 
 @Service
 public class StorageService implements IStorageService {
 	@Autowired
-	StorageTypeRepository storageTypeRep;
-	@Autowired
-	StorageRepository storageRepo;
-	@Autowired
 	ItemCountRepository itemCountRepo;
 	@Autowired
 	StorageTypeRepository storageTypeRepo;
-	private static final String PANTRY = StorageTypeEnums.PANTRY.getStorageType();
-	private static final String FREEZER = StorageTypeEnums.FREEZER.getStorageType();
-	private static final String FRIDGE = StorageTypeEnums.FRIDGE.getStorageType();
-	private final String ITEM_COUNT_NOT_FOUND_STORAGE = ErrorEnums.ITEMCOUNTNOTFOUNDSTORAGE.getErrorMsg();
-	// private final String STORAGE_NOT_FOUND_FAMILY =
-	// ErrorEnums.STORAGENOTFOUNDFAMILY.getErrorMsg();
-	// private final String STORAGE_NOT_FOUND_FAMILY_2 =
-	// ErrorEnums.STORAGENOTFOUNDFAMILY2.getErrorMsg();
-	private final String STORAGE_TYPE_NOT_FOUND = ErrorEnums.STORAGETYPENOTFOUND.getErrorMsg();
-	private final String ITEMCOUNTDOESNOTEXIST = ErrorEnums.ITEMCOUNTDOESNOTEXIST.getErrorMsg();
-
-	/**
-	 * Registers a new Storage in the database.
-	 * 
-	 * @param <code>StorageType</code> The storage type to register.
-	 * @return <code>Storage</code>
-	 */
 
 	@Override
 	public List<ItemCount> getFreezer(Family family) {
 
-		Optional<StorageType> freezer = storageTypeRepo.findByName(FRIDGE);
+		Optional<StorageType> freezer = storageTypeRepo.findByName(StorageTypeEnums.FREEZER.toString());
 		if (freezer.isEmpty()) {
-			throw new StorageTypeNotFoundException(STORAGE_TYPE_NOT_FOUND + FRIDGE);
+			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 		Optional<List<ItemCount>> freezerCount = itemCountRepo.findByStorageTypeAndFamilyId(freezer.get(), family);
 		if (freezerCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + FREEZER);
+			return new ArrayList<>();
 		}
 		return freezerCount.get();
 	}
 
 	@Override
 	public List<ItemCount> getFridge(Family family) {
-		Optional<StorageType> fridge = storageTypeRepo.findByName(FRIDGE);
+		Optional<StorageType> fridge = storageTypeRepo.findByName(StorageTypeEnums.FRIDGE.toString());
 		if (fridge.isEmpty()) {
-			throw new StorageTypeNotFoundException(STORAGE_TYPE_NOT_FOUND + FRIDGE);
+			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 
 		Optional<List<ItemCount>> fridgeCount = itemCountRepo.findByStorageTypeAndFamilyId(fridge.get(), family);
 		if (fridgeCount.isEmpty()) {
-			return new ArrayList<ItemCount>();
-			// throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + FRIDGE);
+			return new ArrayList<>();
 		}
 
 		return fridgeCount.get();
@@ -80,14 +56,13 @@ public class StorageService implements IStorageService {
 
 	@Override
 	public List<ItemCount> getPantry(Family family) {
-		Optional<StorageType> pantry = storageTypeRepo.findByName(FRIDGE);
+		Optional<StorageType> pantry = storageTypeRepo.findByName(StorageTypeEnums.PANTRY.toString());
 		if (pantry.isEmpty()) {
-			throw new StorageTypeNotFoundException(STORAGE_TYPE_NOT_FOUND + FRIDGE);
+			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 		Optional<List<ItemCount>> pantryCount = itemCountRepo.findByStorageTypeAndFamilyId(pantry.get(), family);
 		if (pantryCount.isEmpty()) {
-			return new ArrayList<ItemCount>();
-			// throw new ItemCountNotFoundException(ITEM_COUNT_NOT_FOUND_STORAGE + PANTRY);
+			return new ArrayList<>();
 		}
 		return pantryCount.get();
 	}
@@ -96,43 +71,8 @@ public class StorageService implements IStorageService {
 	public List<ItemCount> getItemCounts(Family family) {
 		Optional<List<ItemCount>> storages = itemCountRepo.findByfamilyId(family);
 		if (storages.isEmpty()) {
-			return new ArrayList<ItemCount>();
-			// throw new ItemCountNotFoundException(ITEMCOUNTDOESNOTEXIST + PANTRY);
+			return new ArrayList<>();
 		}
 		return storages.get();
 	}
-	/*
-	 * REMOVED STORAGE:
-	 * 
-	 * @Override public Storage createStorage(StorageType storageType, Family
-	 * family) { Storage storage = new Storage(storageType, family); return
-	 * storageRepo.save(storage);
-	 * 
-	 * } REMOVED STORAGE:
-	 * 
-	 * @Override public void initStorages(Family family) {
-	 * createStorage(storageTypeRep.findByName(PANTRY).get(), family);
-	 * createStorage(storageTypeRep.findByName(FREEZER).get(), family);
-	 * createStorage(storageTypeRep.findByName(FRIDGE).get(), family); }
-	 */
-	/*
-	 * REMOVED STORAGE:
-	 * 
-	 * @Override public List<Storage> getStorages(Family family) { List<Storage>
-	 * storages = storageRepo.findByfamilyId(family).get(); if (storages == null) {
-	 * throw new StorageNotFoundException(STORAGE_NOT_FOUND_FAMILY +
-	 * family.getName()); } return storages; }
-	 */
-	/*
-	 * removed storage. private Storage getStorage(Family family, String
-	 * storageTypeString) { Optional<StorageType> storageType =
-	 * storageTypeRep.findByName(storageTypeString); if (storageType.isEmpty()) {
-	 * throw new StorageTypeNotFoundException(STORAGE_TYPE_NOT_FOUND +
-	 * storageTypeString); } Optional<Storage> storage =
-	 * storageRepo.findByFamilyIdAndStorageType(family, storageType.get()); if
-	 * (storage.isEmpty()) { throw new StorageNotFoundException(
-	 * STORAGE_NOT_FOUND_FAMILY + family.getName() + STORAGE_NOT_FOUND_FAMILY_2 +
-	 * storageTypeString); } return storage.get(); }
-	 */
-
 }

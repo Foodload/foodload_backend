@@ -2,6 +2,7 @@ package se.foodload.auth.filters;
 
 import java.io.IOException;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,19 +23,17 @@ import se.foodload.presentation.dto.ClientDTO;
 
 @Component
 public class FirebaseFilter extends OncePerRequestFilter {
-	private final String AUTH_HEADER = FilterEnums.AUTH.getHeader();
-	private final String BEARER_START = FilterEnums.BEARER.getHeader();
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-		final String requestHeader = request.getHeader(AUTH_HEADER);
+		final String requestHeader = request.getHeader(FilterEnums.AUTHORIZATION.toString());
 		String authToken = null;
 		FirebaseToken token = null;
 		// Parsa fram token.
-		if (requestHeader != null && requestHeader.startsWith(BEARER_START)) {
-			authToken = requestHeader.substring(BEARER_START.length());
+		if (requestHeader != null && requestHeader.startsWith(FilterEnums.BEARER.toString())) {
+			authToken = requestHeader.substring(FilterEnums.BEARER.toString().length());
 			// System.out.println(authToken);
 
 		} else {

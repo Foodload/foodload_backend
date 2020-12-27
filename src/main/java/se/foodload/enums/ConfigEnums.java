@@ -1,15 +1,18 @@
 package se.foodload.enums;
 
 public enum ConfigEnums {
-	SERVICECONFIG("SERVICE_ACCOUNT_JSON"), MESSAGEWHITESPACE("00a0"), CHANNELTOPIC("PublishItem");
+	SERVICE_ACCOUNT_JSON("SERVICE_ACCOUNT_JSON"),
+	MESSAGE_WHITE_SPACE("00a0"),
+	CHANNEL_TOPIC("PublishItem");
 
-	private String config;
+	private final String config;
 
-	ConfigEnums(String config) {
+	ConfigEnums(final String config) {
 		this.config = config;
 	}
 
-	public String getConfig() {
-		return this.config;
+	@Override
+	public String toString() {
+		return config;
 	}
 }
