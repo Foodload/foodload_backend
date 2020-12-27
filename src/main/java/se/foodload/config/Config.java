@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.redis.connection.RedisPassword;
@@ -37,8 +38,7 @@ import se.foodload.redis.RedisMessageSubscriber;
 
 @Configuration
 @EnableWebSecurity
-
-public class config extends WebSecurityConfigurerAdapter {
+public class Config extends WebSecurityConfigurerAdapter {
 
 	static final String ALL_URL = "/**";
 
@@ -50,42 +50,40 @@ public class config extends WebSecurityConfigurerAdapter {
 	private FirebaseFilter firebaseFilter;
 	@Autowired
 	FirebaseExceptionHandlerFilter firebaseExcFilter;
+	@Autowired
+	private Environment env;
 	@Value("${redis.host}")
 	private String REDIS_HOST;
 	@Value("${redis.port}")
 	private int REDIS_PORT;
 	@Value("${redis.pw}")
 	private String REDIS_PW;
-
-//UNCOMMENT FÖR HERUKO.
-
-	String serviceAccountJson = massageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
+	@Value("${environment}")
+	private String ENV;
 
 	@Bean
 	@Primary
 	public void firebaseInitialization() throws IOException {
+		if(ENV.equals("production")){
+			//Heroku
+			String serviceAccountJson = messageWhitespace(System.getenv(SERVICE_ACCOUNT_JSON));
+			InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
 
-		InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
-
-		FirebaseOptions options = new FirebaseOptions.Builder()
-				.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
-		FirebaseApp.initializeApp(options);
+			FirebaseOptions options = new FirebaseOptions.Builder()
+					.setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+			FirebaseApp.initializeApp(options);
+		} else {
+			//Local
+			String keyPath = env.getProperty("service.account.path");
+			Resource resource = new ClassPathResource(keyPath);
+			FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+			FirebaseOptions options = new FirebaseOptions.Builder().setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
+			if(FirebaseApp.getApps().isEmpty()){
+				FirebaseApp.initializeApp(options);
+			}
+		}
 	}
 
-	// LOCAL TESTING..
-	/*
-	 * @Value("${service.account.path}") private String keyPath;
-	 * 
-	 * @Bean
-	 * 
-	 * @Primary public void firebaseInitialization() throws IOException { Resource
-	 * resource = new ClassPathResource(keyPath); FileInputStream serviceAccount =
-	 * new FileInputStream(resource.getFile());
-	 * 
-	 * FirebaseOptions options = new FirebaseOptions.Builder()
-	 * .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build(); if
-	 * (FirebaseApp.getApps().isEmpty()) { FirebaseApp.initializeApp(options); } }
-	 */
 	/**
 	 * Layer below WebSecurity. Sets up security against the API and adds filters.
 	 * 
@@ -101,7 +99,7 @@ public class config extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(firebaseExcFilter, FirebaseFilter.class);
 	}
 
-	private static String massageWhitespace(String s) {
+	private static String messageWhitespace(String s) {
 		String newString = "";
 		for (Character c : s.toCharArray()) {
 			if (MESSAGE_WHITE_SPACE.equals(Integer.toHexString(c | 0x10000).substring(1))) {
@@ -137,7 +135,7 @@ public class config extends WebSecurityConfigurerAdapter {
 		return template;
 	}
 
-	// LISTNER
+	// LISTENER
 	@Bean
 	MessageListenerAdapter messageListener() {
 		return new MessageListenerAdapter(new RedisMessageSubscriber());

@@ -77,6 +77,3 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-service:
-  account:
-    path: /foodload-auth-firebase-adminsdk-lyp0d-ebf49136d6.json
