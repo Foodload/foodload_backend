@@ -5,30 +5,30 @@ package se.foodload.presentation.error;
  *
  */
 public class ErrorResponse {
-	private String logRef;
+	private String error;
 	private String message;
 	private int code;
 
 	/**
 	 * Creates an instance of <code>ErrorResponse</code>.
 	 * 
-	 * @param logRef  The error.
+	 * @param error  The error.
 	 * @param message The error message.
 	 */
-	ErrorResponse(String logRef, String message) {
-		this.logRef = logRef;
+	ErrorResponse(String error, String message) {
+		this.error = error;
 		this.message = message;
 	}
 
 	/**
 	 * Creates an instance of <code>ErrorResponse</code>.
 	 * 
-	 * @param logRef  The error.
+	 * @param error  The error.
 	 * @param message The error message.
 	 * @param code    The error code.
 	 */
-	ErrorResponse(String logRef, String message, int code) {
-		this.logRef = logRef;
+	ErrorResponse(String error, String message, int code) {
+		this.error = error;
 		this.message = message;
 		this.code = code;
 	}
@@ -36,8 +36,8 @@ public class ErrorResponse {
 	/**
 	 * @return the error.
 	 */
-	public String getLogRef() {
-		return this.logRef;
+	public String getError() {
+		return this.error;
 	}
 
 	/**
