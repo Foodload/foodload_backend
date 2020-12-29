@@ -8,11 +8,12 @@ public class ErrorResponse {
 	private String error;
 	private String message;
 	private int code;
+	private Object object;
 
 	/**
 	 * Creates an instance of <code>ErrorResponse</code>.
 	 * 
-	 * @param error  The error.
+	 * @param error   The error.
 	 * @param message The error message.
 	 */
 	ErrorResponse(String error, String message) {
@@ -23,7 +24,7 @@ public class ErrorResponse {
 	/**
 	 * Creates an instance of <code>ErrorResponse</code>.
 	 * 
-	 * @param error  The error.
+	 * @param error   The error.
 	 * @param message The error message.
 	 * @param code    The error code.
 	 */
@@ -31,6 +32,13 @@ public class ErrorResponse {
 		this.error = error;
 		this.message = message;
 		this.code = code;
+	}
+
+	public ErrorResponse(String reasonPhrase, String message2, int errorCode, Object object) {
+		this.error = error;
+		this.message = message;
+		this.code = code;
+		this.object = object;
 	}
 
 	/**
@@ -52,5 +60,12 @@ public class ErrorResponse {
 	 */
 	public int getCode() {
 		return this.code;
+	}
+
+	/**
+	 * @return the Object.
+	 */
+	public Object getObject() {
+		return this.object;
 	}
 }

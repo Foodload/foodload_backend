@@ -1,7 +1,7 @@
 spring:
   profiles:
     active:
-      - prod
+      - dev
 
 ---
 
@@ -15,8 +15,8 @@ spring:
     add-mappings: false
   datasource:
     url: jdbc:postgresql://localhost:5432/foodload
-    username: foodload_acc
-    password: 123123
+    username: postgres
+    password: 123
   jpa:
     properties:
       hibernate:

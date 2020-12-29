@@ -23,12 +23,26 @@ import se.foodload.application.exception.ItemCountNotFoundException;
 import se.foodload.application.exception.ItemNotFoundException;
 import se.foodload.application.exception.StorageNotFoundException;
 import se.foodload.application.exception.StorageTypeNotFoundException;
+import se.foodload.application.exception.ConflictException;
 
 @ControllerAdvice
 @ResponseBody
 public class ExceptionHandlers {
 	private final String INVALID_METHOD_ARGUMENTS = "Invalid method arguments";
 	private final String METHOD_ARGUMENT_TYPE_MISMATCH = "The type of the given arguments are wrong";
+
+	/**
+	 * Handles <code>ClientNotFoundException</code>.
+	 * 
+	 * @param exc The exception thrown, caused by invalid credentials.
+	 * @return the <code>ErrorResponse</code>.
+	 */
+	@ExceptionHandler(ConflictException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	ErrorResponse ConflictException(ConflictException exc) {
+		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode(),
+				exc.getObject());
+	}
 
 	/**
 	 * Handles <code>ClientNotFoundException</code>.
@@ -216,7 +230,6 @@ public class ExceptionHandlers {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	ErrorResponse generalExceptionHandler(Exception exc) {
-		System.out.println(exc.getClass());
 		exc.printStackTrace();
 
 		return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), exc.getMessage());
