@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import se.foodload.application.interfaces.IFamilyService;
-import se.foodload.application.exception.ClientNotFoundException;
-import se.foodload.application.exception.FamilyInviteNotFoundException;
-import se.foodload.application.exception.FamilyNotFoundException;
+
+import se.foodload.application.exception.NotFoundException;
 import se.foodload.domain.Client;
 import se.foodload.domain.Family;
 import se.foodload.domain.FamilyInvite;
@@ -45,7 +44,7 @@ public class FamilyService implements IFamilyService {
 	public Family changeFamilyName(long family_id, String newFamilyName) {
 		Optional<Family> foundFamily = familyRepo.findById(family_id);
 		if (foundFamily.isEmpty()) {
-			throw new FamilyNotFoundException(ErrorEnums.FAMILY_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.FAMILY_NOT_FOUND.toString());
 		}
 		Family family = foundFamily.get();
 		family.setName(newFamilyName);
@@ -58,7 +57,7 @@ public class FamilyService implements IFamilyService {
 
 		Optional<Client> client = clientRepo.findByEmail(email);
 		if (client.isEmpty()) {
-			throw new ClientNotFoundException(ErrorEnums.CLIENT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.CLIENT_NOT_FOUND.toString());
 		}
 		FamilyInvite familyInv = new FamilyInvite(family, client.get());
 		familyInviteRepo.save(familyInv);
@@ -69,7 +68,7 @@ public class FamilyService implements IFamilyService {
 	public FamilyInvite checkFamilyInvite(Client client) {
 		Optional<FamilyInvite> familyInv = familyInviteRepo.findByClientId(client);
 		if (familyInv.isEmpty()) {
-			throw new FamilyInviteNotFoundException(ErrorEnums.FAMILY_INVITE_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.FAMILY_INVITE_NOT_FOUND.toString());
 
 		}
 		return familyInv.get();
@@ -79,7 +78,7 @@ public class FamilyService implements IFamilyService {
 	public void acceptFamilyInvite(long familyInviteId) {
 		Optional<FamilyInvite> familyInvite = familyInviteRepo.findById(familyInviteId);
 		if (familyInvite.isEmpty()) {
-			throw new FamilyInviteNotFoundException(ErrorEnums.FAMILY_INVITE_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.FAMILY_INVITE_NOT_FOUND.toString());
 		}
 		Client client = familyInvite.get().getClientId();
 		Family prevFamily = client.getFamily();

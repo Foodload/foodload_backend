@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.foodload.application.interfaces.IClientService;
-import se.foodload.application.exception.ClientNotFoundException;
+
+import se.foodload.application.exception.NotFoundException;
 import se.foodload.domain.Client;
 import se.foodload.enums.ErrorEnums;
 import se.foodload.presentation.dto.ClientDTO;
@@ -32,7 +33,7 @@ public class ClientService implements IClientService {
 	public Client findClient(ClientDTO clientDTO) {
 		Optional<Client> client = clientRepo.findByFirebaseId(clientDTO.getFirebaseId());
 		if (client.isEmpty()) {
-			throw new ClientNotFoundException(ErrorEnums.CLIENT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.CLIENT_NOT_FOUND.toString());
 		}
 		return client.get();
 	}

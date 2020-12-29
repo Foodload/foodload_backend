@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import se.foodload.application.interfaces.IStorageService;
-import se.foodload.application.exception.StorageTypeNotFoundException;
+import se.foodload.application.exception.NotFoundException;
 import se.foodload.domain.Family;
 import se.foodload.domain.ItemCount;
 import se.foodload.domain.StorageType;
@@ -29,7 +29,7 @@ public class StorageService implements IStorageService {
 
 		Optional<StorageType> freezer = storageTypeRepo.findByName(StorageTypeEnums.FREEZER.toString());
 		if (freezer.isEmpty()) {
-			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 		Optional<List<ItemCount>> freezerCount = itemCountRepo.findByStorageTypeAndFamilyId(freezer.get(), family);
 		if (freezerCount.isEmpty()) {
@@ -42,7 +42,7 @@ public class StorageService implements IStorageService {
 	public List<ItemCount> getFridge(Family family) {
 		Optional<StorageType> fridge = storageTypeRepo.findByName(StorageTypeEnums.FRIDGE.toString());
 		if (fridge.isEmpty()) {
-			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 
 		Optional<List<ItemCount>> fridgeCount = itemCountRepo.findByStorageTypeAndFamilyId(fridge.get(), family);
@@ -58,7 +58,7 @@ public class StorageService implements IStorageService {
 	public List<ItemCount> getPantry(Family family) {
 		Optional<StorageType> pantry = storageTypeRepo.findByName(StorageTypeEnums.PANTRY.toString());
 		if (pantry.isEmpty()) {
-			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 		Optional<List<ItemCount>> pantryCount = itemCountRepo.findByStorageTypeAndFamilyId(pantry.get(), family);
 		if (pantryCount.isEmpty()) {

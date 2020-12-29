@@ -16,14 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import se.foodload.application.exception.ClientNotFoundException;
-import se.foodload.application.exception.FamilyInviteNotFoundException;
-import se.foodload.application.exception.FamilyNotFoundException;
-import se.foodload.application.exception.ItemCountNotFoundException;
-import se.foodload.application.exception.ItemNotFoundException;
-import se.foodload.application.exception.StorageNotFoundException;
-import se.foodload.application.exception.StorageTypeNotFoundException;
 import se.foodload.application.exception.ConflictException;
+import se.foodload.application.exception.NotFoundException;
 
 @ControllerAdvice
 @ResponseBody
@@ -50,81 +44,9 @@ public class ExceptionHandlers {
 	 * @param exc The exception thrown, caused by invalid credentials.
 	 * @return the <code>ErrorResponse</code>.
 	 */
-	@ExceptionHandler(ClientNotFoundException.class)
+	@ExceptionHandler(NotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse ClientNotFoundException(ClientNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
-	}
-
-	/**
-	 * Handles <code>FamilyInviteNotFoundException</code>.
-	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
-	 * @return the <code>ErrorResponse</code>.
-	 */
-	@ExceptionHandler(FamilyInviteNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse familyInviteNotFoundException(FamilyInviteNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
-	}
-
-	/**
-	 * Handles <code>FamilyNotFoundException</code>.
-	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
-	 * @return the <code>ErrorResponse</code>.
-	 */
-	@ExceptionHandler(FamilyNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse familyNotFoundException(FamilyNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
-	}
-
-	/**
-	 * Handles <code>ItemCountNotFoundException</code>.
-	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
-	 * @return the <code>ErrorResponse</code>.
-	 */
-	@ExceptionHandler(ItemCountNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse itemCountNotFoundException(ItemCountNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
-	}
-
-	/**
-	 * Handles <code>ItemNotFoundException</code>.
-	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
-	 * @return the <code>ErrorResponse</code>.
-	 */
-	@ExceptionHandler(ItemNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse itemNotFoundException(ItemNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
-	}
-
-	/**
-	 * Handles <code>StorageNotFoundException</code>.
-	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
-	 * @return the <code>ErrorResponse</code>.
-	 */
-	@ExceptionHandler(StorageNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse storageNotFoundException(StorageNotFoundException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
-	}
-
-	/**
-	 * Handles <code>StorageTypeNotFoundException</code>.
-	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
-	 * @return the <code>ErrorResponse</code>.
-	 */
-	@ExceptionHandler(StorageTypeNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ErrorResponse storageTypeNotFound(StorageTypeNotFoundException exc) {
+	ErrorResponse NotFoundException(NotFoundException exc) {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode());
 	}
 

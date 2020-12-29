@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.foodload.application.interfaces.IItemService;
 import se.foodload.application.exception.ConflictException;
-import se.foodload.application.exception.ItemCountNotFoundException;
-import se.foodload.application.exception.ItemNotFoundException;
-import se.foodload.application.exception.StorageTypeNotFoundException;
+
+import se.foodload.application.exception.NotFoundException;
+
 import se.foodload.application.exception.dto.ConflictDTO;
 import se.foodload.domain.Family;
 import se.foodload.domain.Item;
@@ -44,7 +44,7 @@ public class ItemService implements IItemService {
 
 		Optional<Item> item = itemRepo.findByQrCode(qrCode);
 		if (item.isEmpty()) {
-			throw new ItemNotFoundException(ErrorEnums.ITEM_QR_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_QR_NOT_FOUND.toString());
 		}
 		return item.get();
 	}
@@ -70,7 +70,7 @@ public class ItemService implements IItemService {
 	public void incrementItem(String clientId, long itemCountId, long familyId) {
 		Optional<ItemCount> itemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
 		if (itemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount ic = itemCount.get();
 		ic.incrementItemCount();
@@ -85,7 +85,7 @@ public class ItemService implements IItemService {
 	public void decrementItem(String clientId, long itemCountId, long familyId) {
 		Optional<ItemCount> itemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
 		if (itemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount ic = itemCount.get();
 		ic.decrementItemCount();
@@ -109,7 +109,7 @@ public class ItemService implements IItemService {
 			Optional<ItemCount> ic = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
 					storageType);
 			if (ic.isEmpty()) {
-				throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+				throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 			}
 			long itemCountId = ic.get().getId();
 			redisMessagePublisher.publishItem(itemCountId, item, clientId, family.getId(), amount, storageType);
@@ -130,7 +130,7 @@ public class ItemService implements IItemService {
 		Optional<ItemCount> itemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
 				storageType);
 		if (itemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount ic = itemCount.get();
 		ic.removeItemCount(amount);
@@ -168,7 +168,7 @@ public class ItemService implements IItemService {
 
 		Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
 		if (optItemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount srcItemCount = optItemCount.get();
 		String qrCode = srcItemCount.getItem().getQrCode();
@@ -198,7 +198,7 @@ public class ItemService implements IItemService {
 			}
 			optItemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, familyId, destStorageType);
 			if (optItemCount.isEmpty()) {
-				throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+				throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 			} else {
 				destItemCount = optItemCount.get();
 			}
@@ -220,7 +220,7 @@ public class ItemService implements IItemService {
 			int oldAmount) {
 		Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
 		if (optItemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount destItemCount = optItemCount.get(); // the destination is the sent in itemCount
 		String qrCode = destItemCount.getItem().getQrCode();
@@ -263,7 +263,7 @@ public class ItemService implements IItemService {
 	public int changeItemCount(long itemCountId, long familyId, String clientId, int oldCount, int newCount) {
 		Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
 		if (optItemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount ic = optItemCount.get();
 		int currCount = ic.getCount();
@@ -282,7 +282,7 @@ public class ItemService implements IItemService {
 	public void deleteItem(long familyId, long itemCountId, String clientId, int amount) {
 		Optional<ItemCount> optItemCount = itemCountRepo.findByItemCountIdAndFamilyId(itemCountId, familyId);
 		if (optItemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		ItemCount ic = optItemCount.get();
 		if (amount != ic.getCount()) {
@@ -296,7 +296,7 @@ public class ItemService implements IItemService {
 	private StorageType findStorageType(String storageName) {
 		Optional<StorageType> storageType = storageTypeRepo.findByName(storageName);
 		if (storageType.isEmpty()) {
-			throw new StorageTypeNotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.STORAGE_TYPE_NOT_FOUND.toString());
 		}
 		return storageType.get();
 	}
@@ -304,7 +304,7 @@ public class ItemService implements IItemService {
 	private ItemCount findItemCount(StorageType storageType, Item item) {
 		Optional<ItemCount> itemCount = itemCountRepo.findByStorageTypeAndItem(storageType, item);
 		if (itemCount.isEmpty()) {
-			throw new ItemCountNotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
+			throw new NotFoundException(ErrorEnums.ITEM_COUNT_NOT_FOUND.toString());
 		}
 		return itemCount.get();
 	}
