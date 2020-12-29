@@ -177,7 +177,7 @@ public class ItemService implements IItemService {
 		if (icCount != oldAmount) {
 			// Dirty read, return new count
 			// TODO: Throw exception or something to indicate dirty read / old value
-			throw new ConflictException("test", new ConflictDTO(icCount));
+			throw new ConflictException(ErrorEnums.ITEM_MOVE_CONFLICT.toString(), new ConflictDTO(icCount));
 			// return icCount;
 		}
 

@@ -7,7 +7,8 @@ public enum ErrorEnums {
 	ITEM_COUNT_NOT_FOUND("No item count could be found."),
 	STORAGE_TYPE_NOT_FOUND("No storage type could be found."),
 	ITEM_QR_NOT_FOUND("No item could be found for the given QR."),
-	ITEM_NAME_NOT_FOUND("No item could be found for the given name.");
+	ITEM_NAME_NOT_FOUND("No item could be found for the given name."),
+	ITEM_MOVE_CONFLICT("The item ammount does not match, update conflict");
 
 	private final String errorMsg;
 
