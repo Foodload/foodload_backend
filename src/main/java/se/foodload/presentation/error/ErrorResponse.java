@@ -5,10 +5,10 @@ package se.foodload.presentation.error;
  *
  */
 public class ErrorResponse {
-	private String error;
-	private String message;
+	private final String error;
+	private final String message;
 	private int code;
-	private Object object;
+	private Object errorObject;
 
 	/**
 	 * Creates an instance of <code>ErrorResponse</code>.
@@ -34,11 +34,11 @@ public class ErrorResponse {
 		this.code = code;
 	}
 
-	public ErrorResponse(String reasonPhrase, String message2, int errorCode, Object object) {
+	public ErrorResponse(String error, String message, int code, Object errorObject) {
 		this.error = error;
 		this.message = message;
 		this.code = code;
-		this.object = object;
+		this.errorObject = errorObject;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class ErrorResponse {
 	/**
 	 * @return the Object.
 	 */
-	public Object getObject() {
-		return this.object;
+	public Object getErrorObject() {
+		return this.errorObject;
 	}
 }
