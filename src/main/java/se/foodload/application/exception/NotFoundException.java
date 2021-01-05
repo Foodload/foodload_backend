@@ -1,16 +1,13 @@
 package se.foodload.application.exception;
 
 public class NotFoundException extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final int errorCode = 1;
-	private Object object;
 
-	public NotFoundException(String msg, Object object) {
+	private final static int errorCode = 1;
+	private Object errorObject;
+
+	public NotFoundException(String msg, Object errorObject) {
 		super(msg);
-		this.object = object;
+		this.errorObject = errorObject;
 	}
 
 	public NotFoundException(String msg) {
@@ -27,8 +24,8 @@ public class NotFoundException extends RuntimeException {
 	/**
 	 * @return the object code.
 	 */
-	public Object getObject() {
-		return this.object;
+	public Object getErrorObject() {
+		return this.errorObject;
 	}
 
 }

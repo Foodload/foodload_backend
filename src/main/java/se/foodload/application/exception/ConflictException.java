@@ -1,16 +1,13 @@
 package se.foodload.application.exception;
 
-import se.foodload.application.exception.dto.ConflictDTO;
-
 public class ConflictException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
-	private final int errorCode = 8;
-	private Object object;
+	private static final int errorCode = 8;
+	private Object errorObject;
 
-	public ConflictException(String msg, Object object) {
+	public ConflictException(String msg, Object errorObject) {
 		super(msg);
-		this.object = object;
+		this.errorObject = errorObject;
 
 	}
 
@@ -22,10 +19,10 @@ public class ConflictException extends RuntimeException {
 	 * @return the exception code.
 	 */
 	public int getErrorCode() {
-		return this.errorCode;
+		return errorCode;
 	}
 
 	public Object getObject() {
-		return this.object;
+		return this.errorObject;
 	}
 }
