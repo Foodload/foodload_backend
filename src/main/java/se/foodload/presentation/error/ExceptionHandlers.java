@@ -17,6 +17,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import se.foodload.application.exception.ConflictException;
+import se.foodload.application.exception.InsertionException;
 import se.foodload.application.exception.NotFoundException;
 
 @ControllerAdvice
@@ -25,23 +26,49 @@ public class ExceptionHandlers {
 	private final String INVALID_METHOD_ARGUMENTS = "Invalid method arguments";
 	private final String METHOD_ARGUMENT_TYPE_MISMATCH = "The type of the given arguments are wrong";
 
+
 	/**
-	 * Handles <code>ClientNotFoundException</code>.
+	 * Handles <code>InsertionException</code>.
+	 *
+	 * @param exc The exception thrown, caused by a failed insertion.
+	 * @return the <code>ErrorResponse</code>.
+	 */
+	@ExceptionHandler(InsertionException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	ErrorResponse InsertionException(InsertionException exc) {
+		return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), exc.getMessage());
+	}
+
+	/**
+	 * Handles <code>IllegalArgumentException</code>.
+	 *
+	 * @param exc The exception thrown, caused by an illegal argument that the application does not accept to go further with.
+	 * @return the <code>ErrorResponse</code>.
+	 */
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	ErrorResponse IllegalArgumentException(IllegalArgumentException exc) {
+		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage());
+	}
+
+
+	/**
+	 * Handles <code>ConflictException</code>.
 	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
+	 * @param exc The exception thrown, caused by a conflict.
 	 * @return the <code>ErrorResponse</code>.
 	 */
 	@ExceptionHandler(ConflictException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.CONFLICT)
 	ErrorResponse ConflictException(ConflictException exc) {
-		return new ErrorResponse(HttpStatus.NOT_FOUND.getReasonPhrase(), exc.getMessage(), exc.getErrorCode(),
+		return new ErrorResponse(HttpStatus.CONFLICT.getReasonPhrase(), exc.getMessage(), exc.getErrorCode(),
 				exc.getObject());
 	}
 
 	/**
 	 * Handles <code>ClientNotFoundException</code>.
 	 * 
-	 * @param exc The exception thrown, caused by invalid credentials.
+	 * @param exc The exception thrown, caused by failed search.
 	 * @return the <code>ErrorResponse</code>.
 	 */
 	@ExceptionHandler(NotFoundException.class)

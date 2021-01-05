@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import se.foodload.application.exception.InsertionException;
 import se.foodload.application.interfaces.IItemService;
 import se.foodload.application.exception.ConflictException;
 
@@ -104,7 +105,7 @@ public class ItemService implements IItemService {
 		if (itemCount.isEmpty()) {
 			int iCount = itemCountRepo.insertItemCount(qrCode, family.getId(), storageType, amount);
 			if (iCount == 0) {
-				// TODO: Throw insert failed..
+				throw new InsertionException(ErrorEnums.INSERTION_FAIL.toString());
 			}
 			Optional<ItemCount> ic = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, family.getId(),
 					storageType);
@@ -124,6 +125,7 @@ public class ItemService implements IItemService {
 	}
 
 	@Override
+	@Deprecated
 	public void removeItem(String clientId, Family family, String qrCode, String storageType, int amount) {
 		Item item = findItem(qrCode);
 
@@ -175,15 +177,11 @@ public class ItemService implements IItemService {
 
 		int icCount = srcItemCount.getCount();
 		if (icCount != oldAmount) {
-			// Dirty read, return new count
-			// TODO: Throw exception or something to indicate dirty read / old value
 			throw new ConflictException(ErrorEnums.ITEM_MOVE_CONFLICT.toString(), new ConflictDTO(icCount));
-			// return icCount;
 		}
 
 		if (moveAmount > icCount) {
-			// TODO: Throw error since you are trying to move more than it already exists.
-			return -1337;
+			throw new IllegalArgumentException("Not enough items to move");
 		}
 
 		srcItemCount.setCount(icCount - moveAmount);
@@ -194,7 +192,7 @@ public class ItemService implements IItemService {
 			// Create new
 			int itemCountRow = itemCountRepo.insertItemCount(qrCode, familyId, destStorageType, moveAmount);
 			if (itemCountRow == 0) {
-				// TODO: Throw insert failed..
+				throw new InsertionException(ErrorEnums.INSERTION_FAIL.toString());
 			}
 			optItemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, familyId, destStorageType);
 			if (optItemCount.isEmpty()) {
@@ -227,25 +225,20 @@ public class ItemService implements IItemService {
 
 		int destICCount = destItemCount.getCount();
 		if (destICCount != oldAmount) {
-			// Dirty read, return new count
-			// TODO: Throw exception or something to indicate dirty read / old value
-			return destICCount;
+			throw new ConflictException(ErrorEnums.ITEM_MOVE_CONFLICT.toString(), new ConflictDTO(destICCount));
 		}
 
 		optItemCount = itemCountRepo.findByQrcodeAndFamilyIdAndStorageType(qrCode, familyId, srcStorageType);
 
 		if (optItemCount.isEmpty()) {
-			// Cannot move from non-existing in other storage
-			return oldAmount;
+			throw new NotFoundException("Could not find item in other storage");
 		}
 
 		// Move from src storage
 		ItemCount srcItemCount = optItemCount.get();
 
 		if (moveAmount > srcItemCount.getCount()) {
-			// Cannot move more than it exists...
-			// TODO: Throw exception or something to indicate invalid action
-			return oldAmount;
+			throw new IllegalArgumentException("The storage does not have enough items to move");
 		}
 
 		srcItemCount.setCount(srcItemCount.getCount() - moveAmount);
@@ -268,8 +261,7 @@ public class ItemService implements IItemService {
 		ItemCount ic = optItemCount.get();
 		int currCount = ic.getCount();
 		if (currCount != oldCount) {
-			// TODO: Count has been changed / dirty read, throw exception or something
-			return currCount;
+			throw new ConflictException(ErrorEnums.ITEM_MOVE_CONFLICT.toString(), new ConflictDTO(currCount));
 		}
 		ic.setCount(newCount);
 		itemCountRepo.save(ic);
@@ -286,8 +278,7 @@ public class ItemService implements IItemService {
 		}
 		ItemCount ic = optItemCount.get();
 		if (amount != ic.getCount()) {
-			// TODO: amount is not the same, has been updated. Handle this
-			return;
+			throw new ConflictException(ErrorEnums.ITEM_MOVE_CONFLICT.toString(), new ConflictDTO(ic.getCount()));
 		}
 		itemCountRepo.delete(ic);
 		redisMessagePublisher.publishDeleteItem(clientId, familyId, itemCountId);

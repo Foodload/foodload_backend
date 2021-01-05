@@ -8,7 +8,8 @@ public enum ErrorEnums {
 	STORAGE_TYPE_NOT_FOUND("No storage type could be found."),
 	ITEM_QR_NOT_FOUND("No item could be found for the given QR."),
 	ITEM_NAME_NOT_FOUND("No item could be found for the given name."),
-	ITEM_MOVE_CONFLICT("The item ammount does not match, update conflict");
+	ITEM_MOVE_CONFLICT("The item amount does not match yours."),
+	INSERTION_FAIL("Insertion failed.");
 
 	private final String errorMsg;
 
