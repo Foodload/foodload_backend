@@ -6,11 +6,11 @@ import se.foodload.presentation.dto.ClientDTO;
 public interface IClientInitService {
 
 	/**
-	 * Registers a client in the database.
+	 * Initiates a client in the database.
 	 * 
 	 * @param clientDTO The Client to register.
 	 * @return
 	 */
-	public Client registerClient(ClientDTO clientDTO);
+	public Client initClient(ClientDTO clientDTO);
 
 }

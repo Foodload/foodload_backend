@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.jsonwebtoken.Claims;
-import se.foodload.application.ClientInitService;
-import se.foodload.application.ClientService;
-import se.foodload.application.FamilyService;
-import se.foodload.application.StorageService;
+import se.foodload.application.interfaces.IClientInitService;
 import se.foodload.domain.Client;
 import se.foodload.jwt.JwtTokenUtil;
 import se.foodload.presentation.dto.ClientDTO;
@@ -24,29 +20,22 @@ import se.foodload.presentation.models.InitResponse;
 @CrossOrigin
 public class ClientInitController {
 	@Autowired
-	ClientInitService clientInitService;
-	@Autowired
-	ClientService clientService;
-	@Autowired
-	StorageService storageService;
-	@Autowired
-	FamilyService familyService;
+	IClientInitService clientInitService;
+
 	@Autowired
 	JwtTokenUtil jwtTokenUtil;
 
-	static final String LOGIN_URL = "/login";
+	static final String INIT = "/init";
 
 	@ResponseStatus(HttpStatus.OK)
-	// @PostMapping(LOGIN_URL)
-	@GetMapping(LOGIN_URL)
-	public InitResponse login(@AuthenticationPrincipal ClientDTO clientDTO) throws Exception {
+	@GetMapping(INIT)
+	public InitResponse init(@AuthenticationPrincipal ClientDTO clientDTO) {
 		Client client = clientInitService.initClient(clientDTO);
 		String token = jwtTokenUtil.createToken(client);
-		System.out.println(token);
-		System.out.println(jwtTokenUtil.exctractTokenClaim(token, Claims::getSubject));
-		InitResponse response = new InitResponse(client, token);
+		//System.out.println(token);
+		//System.out.println(jwtTokenUtil.exctractTokenClaim(token, Claims::getSubject));
 
-		return response;
+		return  new InitResponse(client, token);
 	}
 
 }

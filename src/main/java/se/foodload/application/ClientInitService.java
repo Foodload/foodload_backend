@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.foodload.application.interfaces.IClientInitService;
 import se.foodload.domain.Client;
-import se.foodload.domain.Family;
 import se.foodload.presentation.dto.ClientDTO;
 import se.foodload.repository.ClientRepository;
 
@@ -23,8 +22,6 @@ public class ClientInitService implements IClientInitService {
 	ClientService clientService;
 	@Autowired
 	FamilyService familyService;
-	@Autowired
-	StorageService storageService;
 
 	/**
 	 * Initiates a client if not found in the database already.
@@ -32,24 +29,21 @@ public class ClientInitService implements IClientInitService {
 	 * @param clientDTO The client info init or find.
 	 * @return the client.
 	 */
+	@Override
 	public Client initClient(ClientDTO clientDTO) {
 		Optional<Client> foundClient = clientService.optionalFindClient(clientDTO);
-		Client client = null;
+		Client client;
 		if (foundClient.isEmpty()) {
 			client = registerClient(clientDTO);
-			Family family = familyService.createFamily(client, clientDTO.getUsername());
-			// storageService.initStorages(family); REMOVED STORAGE.
+			familyService.createFamily(client, clientDTO.getUsername());
 		} else {
 			client = foundClient.get();
 		}
-		// Client client = foundClient.isPresent() ? foundClient.get() :
-		// registerClient(clientDTO); FUNKAR EJ dono whie
 
 		return client;
 	}
 
-	@Override
-	public Client registerClient(ClientDTO clientDTO) {
+	private Client registerClient(ClientDTO clientDTO) {
 		Client newClient = new Client(clientDTO);
 		return clientRepository.save(newClient);
 	}
