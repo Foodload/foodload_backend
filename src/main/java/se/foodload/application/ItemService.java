@@ -144,7 +144,7 @@ public class ItemService implements IItemService {
 
 	@Override
 	public List<ItemCount> getAllItemCounts(Family family) {
-		Optional<List<ItemCount>> itemCounts = itemCountRepo.findByfamilyId(family);
+		Optional<List<ItemCount>> itemCounts = itemCountRepo.findByFamilyId(family);
 		if (itemCounts.isEmpty()) {
 			return new ArrayList<>();
 		}

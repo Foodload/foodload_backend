@@ -69,7 +69,7 @@ public class StorageService implements IStorageService {
 
 	@Override
 	public List<ItemCount> getItemCounts(Family family) {
-		Optional<List<ItemCount>> storages = itemCountRepo.findByfamilyId(family);
+		Optional<List<ItemCount>> storages = itemCountRepo.findByFamilyId(family);
 		if (storages.isEmpty()) {
 			return new ArrayList<>();
 		}
