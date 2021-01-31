@@ -15,14 +15,15 @@ spring:
     add-mappings: false
   datasource:
     url: jdbc:postgresql://localhost:5432/foodload
-    username: postgres
-    password: 123
+    username: foodload_acc
+    password: 123123
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         dialect: se.foodload.repository.utils.MyPostgreSQLDialect
         catalog: swedish
-        ddl-auto: update
         show_sql: true
         type: trace
 name: dev-YAML
@@ -55,11 +56,12 @@ spring:
   resources:
     add-mappings: false
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         dialect: se.foodload.repository.utils.MyPostgreSQLDialect
         catalog: swedish
-        ddl-auto: update
         show_sql: true
         type: trace
 name: prod-YAML
