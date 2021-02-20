@@ -16,6 +16,7 @@ import se.foodload.domain.Item;
 import se.foodload.domain.ItemCount;
 import se.foodload.presentation.dto.ClientDTO;
 import se.foodload.presentation.models.*;
+import se.foodload.presentation.models.requests.AddItemToDbRequestModel;
 
 @RestController
 @Validated
@@ -40,7 +41,15 @@ public class ItemController {
 	static final String DELETE_ITEM = "/delete-item";
 	static final String CHANGE_ITEM_COUNT = "/change-item-count";
 
-	@PostMapping(SEARCH_ITEM)
+	//TODO: Remove
+	static final String ADD_ITEM_TO_DB = "/add-item-to-db";
+	@PostMapping(ADD_ITEM_TO_DB)
+	@ResponseStatus(HttpStatus.OK)
+	public void addItemToDb(@RequestBody AddItemToDbRequestModel body){
+		itemService.addItemToDb(body.qr, body.name, body.brand);
+	}
+
+	@PostMapping(value = SEARCH_ITEM)
 	@ResponseStatus(HttpStatus.OK)
 	public Item searchItem(@RequestBody ItemModel Item) {
 		return itemService.findItem(Item.getQrCode());

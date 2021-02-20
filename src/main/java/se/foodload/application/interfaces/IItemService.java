@@ -31,4 +31,6 @@ public interface IItemService {
 	public void deleteItem(long familyId, long itemCountId, String clientId, int amount);
 
 	public int changeItemCount(long itemCountId, long familyId, String clientId, int oldCount, int newCount);
+
+	public void addItemToDb(String qr, String name, String brand);
 }

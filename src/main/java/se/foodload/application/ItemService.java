@@ -284,6 +284,12 @@ public class ItemService implements IItemService {
 		redisMessagePublisher.publishDeleteItem(clientId, familyId, itemCountId);
 	}
 
+	@Override
+	public void addItemToDb(String qr, String name, String brand){
+		Item newItem = new Item(name, brand, qr);
+		itemRepo.save(newItem);
+	}
+
 	private StorageType findStorageType(String storageName) {
 		Optional<StorageType> storageType = storageTypeRepo.findByName(storageName);
 		if (storageType.isEmpty()) {
