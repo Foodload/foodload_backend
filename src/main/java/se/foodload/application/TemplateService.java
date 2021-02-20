@@ -11,7 +11,6 @@ import se.foodload.enums.ErrorEnums;
 import se.foodload.presentation.models.requests.CreateTemplateItemRequestModel;
 import se.foodload.presentation.models.requests.CreateTemplateRequestModel;
 import se.foodload.presentation.models.requests.UpdateTemplateItemRequestModel;
-import se.foodload.presentation.models.requests.UpdateTemplateRequestModel;
 import se.foodload.presentation.models.responses.BuyListResponseModel;
 import se.foodload.repository.ItemCountRepository;
 import se.foodload.repository.ItemRepository;
@@ -43,8 +42,6 @@ public class TemplateService implements ITemplateService {
     public Template createTemplate(Family family, CreateTemplateRequestModel request) {
         String name = request.getName();
         Template template = new Template(name);
-        //TODO: if addTempalteItemModelsToTemplate returns false. Notify user.
-        //addNewTemplateItemsToTemplate(request.getTemplateItems(), template);
         family.addTemplate(template);
         return template;
     }
@@ -64,9 +61,14 @@ public class TemplateService implements ITemplateService {
          }
          Item item = itemOpt.get();
 
-         TemplateItem templateItem = new TemplateItem(item, request.getCount());
-         template.addTemplateItem(templateItem);
-         return templateItem;
+         Optional<TemplateItem> templateItemOpt = templateItemRepository.findByTemplateAndItem(template, item);
+         if(templateItemOpt.isEmpty()){
+             TemplateItem templateItem = new TemplateItem(item, request.getCount());
+             template.addTemplateItem(templateItem);
+             return templateItem;
+         } else {
+           throw new IllegalArgumentException("Item already exists in this template. Try editing it.");
+         }
     }
 
     @Override
@@ -88,22 +90,6 @@ public class TemplateService implements ITemplateService {
         TemplateItem templateItem = templateItemOpt.get();
         templateItem.setCount(request.getCount());
         templateItemRepository.save(templateItem);
-
-        /*
-        for(UpdateTemplateItemRequestModel tempItemModel : request.getUpdatedTemplateItems()){
-            Optional<TemplateItem> templateItemOpt = templateItemRepository.findByIdAndTemplate(tempItemModel.getTemplateItemId(), template);
-            if(templateItemOpt.isEmpty()){
-                //TODO: Throw exception or skip and telling user?
-                continue;
-            }
-
-            TemplateItem templateItem = templateItemOpt.get();
-            templateItem.setCount(tempItemModel.getCount());
-        }
-
-        templateRepository.save(template);
-        return template;
-         */
     }
 
     @Override
@@ -175,31 +161,12 @@ public class TemplateService implements ITemplateService {
         return new BuyListResponseModel(buyList);
     }
 
-    /*
     @Override
-    public Template getTemplate(Family family, long templateId) {
+    public Template getTemplate(Family family, Long templateId) {
         Optional<Template> templateOpt = templateRepository.findByIdAndFamily(templateId, family);
         if(templateOpt.isEmpty()){
             throw new NotFoundException(ErrorEnums.TEMPLATE_NOT_FOUND.toString());
         }
         return templateOpt.get();
-    }
-     */
-
-    private boolean addNewTemplateItemsToTemplate(List<CreateTemplateItemRequestModel> newTemplateItems, Template template){
-        boolean isSuccessful = true;
-        for(CreateTemplateItemRequestModel newTempItem : newTemplateItems){
-            Optional<Item> itemOpt = itemRepository.findById(newTempItem.getItemId());
-            if(itemOpt.isEmpty()){
-                //TODO: Throw exception or skip and telling user?
-                isSuccessful = false;
-                continue;
-            }
-            Item item = itemOpt.get();
-
-            TemplateItem templateItem = new TemplateItem(item, newTempItem.getCount());
-            template.addTemplateItem(templateItem);
-        }
-        return isSuccessful;
     }
 }

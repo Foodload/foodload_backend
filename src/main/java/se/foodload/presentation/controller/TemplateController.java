@@ -26,6 +26,7 @@ import java.util.Set;
 @CrossOrigin
 public class TemplateController {
     static final String GET_TEMPLATES = "/get-templates";
+    static final String GET_TEMPLATE = "/get-templates";
     static final String CREATE_TEMPLATE = "/create-template";
     static final String ADD_TEMPLATE_ITEM = "/add-template-item";
     static final String UPDATE_TEMPLATE_ITEM = "/update-template-item";
@@ -43,6 +44,13 @@ public class TemplateController {
     public Set<Template> getTemplates(@AuthenticationPrincipal ClientDTO clientDTO){
         Client client = clientService.findClient(clientDTO);
         return templateService.getTemplates(client.getFamily());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(GET_TEMPLATE + "/{templateId}")
+    public Template getTemplate(@AuthenticationPrincipal ClientDTO clientDTO, @PathVariable Long templateId){
+        Client client = clientService.findClient(clientDTO);
+        return templateService.getTemplate(client.getFamily(), templateId);
     }
 
     @ResponseStatus(HttpStatus.OK)

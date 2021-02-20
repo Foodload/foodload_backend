@@ -18,6 +18,8 @@ public interface ITemplateService {
 
     Template createTemplate(Family family, CreateTemplateRequestModel request);
 
+    Template getTemplate(Family family, Long templateId);
+
     TemplateItem addNewTemplateItem(Family family, Long templateId, CreateTemplateItemRequestModel request);
 
     void updateTemplateItem(Family family, UpdateTemplateItemRequestModel request);
